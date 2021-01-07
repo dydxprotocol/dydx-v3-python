@@ -19,7 +19,7 @@ REQUIREMENTS = [
 
 setup(
     name='dydx-v3-python',
-    version='0.1.0',
+    version='0.2.0',
     packages=find_packages(),
     package_data={
         'dydx3': ['starkex/starkex_resources/*.json'],

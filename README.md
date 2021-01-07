@@ -13,7 +13,7 @@
 </div>
 <br>
 
-Python client for dYdX (API v3).
+Python client for dYdX (v3 API).
 
 The library is currently tested against Python versions 2.7, 3.4, 3.5, and 3.6
 

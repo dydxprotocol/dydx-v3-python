@@ -12,4 +12,8 @@ def generate_api_key_action(
     method,
     data={},
 ):
-    return (json_stringify(data) if data else '') + request_path + method
+    return (
+        method +
+        request_path +
+        (json_stringify(data) if data else '')
+    )
