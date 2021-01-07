@@ -58,7 +58,7 @@ class TestIntegration():
         # Get the registration signature.
         get_registration_result = client.private.get_registration()
         assert re.match(
-            '[0-9a-f]{128}$',
+            '0x[0-9a-f]{130}$',
             get_registration_result['signature'],
         ) is not None, (
             'Invalid registration result: {}'.format(get_registration_result)
