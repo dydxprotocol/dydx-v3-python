@@ -9,8 +9,9 @@ from dydx3 import constants
 from dydx3 import epoch_seconds_to_iso
 from dydx3 import generate_private_key_hex_unsafe
 from dydx3 import private_key_to_public_hex
-
 from tests.constants import DEFAULT_HOST
+
+from integration_tests.util import wait_for_condition
 
 
 class TestIntegration():
@@ -100,7 +101,14 @@ class TestIntegration():
         # Create a test deposit.
         client.private.create_test_deposit(
             from_address=ethereum_address,
-            credit_amount='200',
+            credit_amount='2',
+        )
+
+        # Wait for the deposit to be processed.
+        wait_for_condition(
+            lambda: client.private.get_account()['account']['quoteBalance'],
+            '2',
+            5,
         )
 
         # Post an order.
