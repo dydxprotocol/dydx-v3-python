@@ -17,8 +17,12 @@ class Client(object):
         host,
         api_timeout=3000,  # TODO: Actually use this.
         api_private_key=None,
-        stark_private_key=None,
+        api_public_key=None,
+        default_ethereum_address=None,
         eth_private_key=None,
+        eth_send_options=None,
+        stark_private_key=None,
+        stark_public_key=None,
         web3=None,
         web3_account=None,
         web3_provider=None,
@@ -30,6 +34,7 @@ class Client(object):
         self.host = host
         self.api_timeout = api_timeout
         self.api_private_key = api_private_key
+        self.eth_send_options = eth_send_options or {}
         self.stark_private_key = stark_private_key
 
         self.web3 = None
@@ -37,6 +42,8 @@ class Client(object):
         self.default_address = None
 
         if web3 is not None or web3_provider is not None:
+            if isinstance(web3_provider, str):
+                web3_provider = Web3.HTTPProvider(web3_provider)
             self.web3 = web3 or Web3(web3_provider)
             self.eth_signer = SignWithWeb3(self.web3)
             self.default_address = self.web3.eth.defaultAccount or None
@@ -46,6 +53,8 @@ class Client(object):
             key = eth_private_key or web3_account.key
             self.eth_signer = SignWithKey(key)
             self.default_address = self.eth_signer.address
+
+        self.default_address = default_ethereum_address or self.default_address
 
         # Initialize the public module. Other modules are initialized on
         # demand, if the necessary configuration options were provided.
@@ -60,14 +69,24 @@ class Client(object):
             self.stark_public_key = private_key_to_public_hex(
                 stark_private_key,
             )
+            if (
+                stark_public_key is not None and
+                stark_public_key != self.stark_public_key
+            ):
+                raise ValueError('STARK public/private key mismatch')
         else:
-            self.stark_public_key = None
+            self.stark_public_key = stark_public_key
         if api_private_key is not None:
             self.api_public_key = private_key_to_public_hex(
                 api_private_key,
             )
+            if (
+                api_public_key is not None and
+                api_public_key != self.api_public_key
+            ):
+                raise ValueError('API public/private key mismatch')
         else:
-            self.api_public_key = None
+            self.api_public_key = api_public_key
 
     @property
     def public(self):
@@ -93,7 +112,7 @@ class Client(object):
                 )
             else:
                 raise Exception(
-                    'Private endpoints not supported' +
+                    'Private endpoints not supported ' +
                     'since api_private_key was not specified',
                 )
         return self._private
@@ -148,11 +167,19 @@ class Client(object):
         Get the eth module, used for interacting with Ethereum smart contracts.
         '''
         if not self._eth:
-            if self.web3:
-                self._eth = Eth(self.web3)
+            eth_private_key = getattr(self.eth_signer, '_private_key', None)
+            if self.web3 and eth_private_key:
+                self._eth = Eth(
+                    web3=self.web3,
+                    eth_private_key=eth_private_key,
+                    default_address=self.default_address,
+                    stark_public_key=self.stark_public_key,
+                    send_options=self.eth_send_options,
+                )
             else:
                 raise Exception(
                     'Eth module is not supported since neither web3 ' +
-                    'nor web3_provider was specified',
+                    'nor web3_provider was provided OR since neither ' +
+                    'eth_private_key nor web3_account was provided',
                 )
         return self._eth

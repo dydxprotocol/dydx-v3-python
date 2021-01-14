@@ -2,7 +2,7 @@ import json
 
 import requests
 
-from dydx3.helpers.api_error import DydxApiError
+from dydx3.errors import DydxApiError
 from dydx3.helpers.request_helpers import remove_nones
 
 # TODO: Use a separate session per client instance.

@@ -1,7 +1,9 @@
 from dydx3.dydx_client import Client
+from dydx3.errors import DydxError
+from dydx3.errors import DydxApiError
+from dydx3.errors import TransactionReverted
 
 # Export useful helper functions and objects.
-from dydx3.helpers.api_error import DydxApiError
 from dydx3.helpers.request_helpers import epoch_seconds_to_iso
 from dydx3.helpers.request_helpers import iso_to_epoch_seconds
 from dydx3.starkex.helpers import generate_private_key_hex_unsafe

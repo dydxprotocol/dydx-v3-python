@@ -77,6 +77,12 @@ ASSET_ID_MAP = {
 }
 COLLATERAL_ASSET_ID = ASSET_ID_MAP[COLLATERAL_ASSET]
 
+# TODO: There should only be one COLLATERAL_ASSET_ID.
+ON_CHAIN_COLLATERAL_ASSET_ID = int(
+    '0x02c04d8b650f44092278a7cb1e1028c82025dff622db96c934b611b84cc8de5a',
+    16,
+)
+
 # ------------ Asset Resolution (Quantum Size) ------------
 #
 # The asset resolution is the number of quantums (Starkware units) that fit
@@ -92,4 +98,22 @@ ASSET_RESOLUTION = {
     ASSET_BTC: '1e10',
     ASSET_ETH: '1e8',
     ASSET_LINK: '1e7',
+}
+
+# ------------ Ethereum Transactions ------------
+DEFAULT_GAS_AMOUNT = 250000
+DEFAULT_GAS_MULTIPLIER = 1.5
+DEFAULT_GAS_PRICE = 4000000000
+DEFAULT_GAS_PRICE_ADDITION = 3
+MAX_SOLIDITY_UINT = 115792089237316195423570985008687907853269984665640564039457584007913129639935  # noqa: E501
+STARKWARE_PERPETUALS_CONTRACT = {
+    '3': '0xF0Adc3DeF31ED27381eeF27ab3FA1C8e3EEbdB64',
+}
+TOKEN_CONTRACTS = {
+    '1': {
+        ASSET_USDC: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+    },
+    '3': {
+        ASSET_USDC: '0x8707A5bf4C2842d46B31A405Ba41b858C0F876c4',
+    },
 }

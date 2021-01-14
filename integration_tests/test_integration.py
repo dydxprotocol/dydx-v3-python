@@ -1,3 +1,9 @@
+'''Integration test.
+
+This test can be very slow due to on-chain calls.
+Run with `pytest -s` to enable print statements.
+'''
+
 import re
 import os
 import time
@@ -9,31 +15,62 @@ from dydx3 import constants
 from dydx3 import epoch_seconds_to_iso
 from dydx3 import generate_private_key_hex_unsafe
 from dydx3 import private_key_to_public_hex
-
 from tests.constants import DEFAULT_HOST
+
+from integration_tests.util import wait_for_condition
 
 
 class TestIntegration():
 
     def test_integration(self):
-        # Create an Ethereum account.
+        source_private_key = os.environ.get('TEST_SOURCE_PRIVATE_KEY')
+        if source_private_key is None:
+            raise ValueError('TEST_SOURCE_PRIVATE_KEY must be set')
+
+        web3_provider = os.environ.get('TEST_WEB3_PROVIDER_URL')
+        if web3_provider is None:
+            raise ValueError('TEST_WEB3_PROVIDER_URL must be set')
+
+        host = os.environ.get('V3_API_HOST', DEFAULT_HOST)
+
+        # Create client that will be used to fund the new user.
+        source_client = Client(
+            eth_private_key=source_private_key,
+            host='',
+            web3_provider=web3_provider,
+        )
+
+        # Create an Ethereum account and STARK keys for the new user.
         web3 = Web3(None)
         web3_account = web3.eth.account.create()
         ethereum_address = web3_account.address
-
-        # Generate STARK keys.
         api_private_key = generate_private_key_hex_unsafe()
         stark_private_key = generate_private_key_hex_unsafe()
 
-        # Create client.
+        # Fund the new user with ETH and USDC.
+        fund_eth_hash = source_client.eth.transfer_eth(
+            to_address=ethereum_address,
+            human_amount=0.001,
+        )
+        fund_usdc_hash = source_client.eth.transfer_token(
+            to_address=ethereum_address,
+            human_amount=2,
+        )
+        print('Waiting for funds...')
+        source_client.eth.wait_for_tx(fund_eth_hash)
+        source_client.eth.wait_for_tx(fund_usdc_hash)
+        print('...done.')
+
+        # Create client for the new user.
         client = Client(
-            host=os.environ.get('V3_API_HOST', DEFAULT_HOST),
+            host=host,
             api_private_key=api_private_key,
             stark_private_key=stark_private_key,
             web3_account=web3_account,
+            web3_provider=web3_provider,
         )
 
-        # Onboard user.
+        # Onboard the user.
         client.onboarding.create_user(
             ethereum_address=ethereum_address,
         )
@@ -56,13 +93,17 @@ class TestIntegration():
         }
 
         # Get the registration signature.
-        get_registration_result = client.private.get_registration()
-        assert re.match(
-            '0x[0-9a-f]{130}$',
-            get_registration_result['signature'],
-        ) is not None, (
-            'Invalid registration result: {}'.format(get_registration_result)
+        registration_result = client.private.get_registration()
+        signature = registration_result['signature']
+        assert re.match('0x[0-9a-f]{130}$', signature) is not None, (
+            'Invalid registration result: {}'.format(registration_result)
         )
+
+        # Register the user on-chain.
+        registration_tx_hash = client.eth.register_user(signature)
+        print('Waiting for registration...')
+        client.eth.wait_for_tx(registration_tx_hash)
+        print('...done.')
 
         # Set the user's username.
         username = 'integration_user_{}'.format(int(time.time()))
@@ -93,15 +134,41 @@ class TestIntegration():
         assert client.stark_public_key in get_all_accounts_public_keys
         assert stark_public_key_2 in get_all_accounts_public_keys
 
-        # Get postiions.
+        # Get positions.
         get_positions_result = client.private.get_positions(market='BTC-USD')
         assert get_positions_result == {'positions': []}
 
-        # Create a test deposit.
-        client.private.create_test_deposit(
-            from_address=ethereum_address,
-            credit_amount='200',
+        # Set allowance on the Starkware perpetual contract, for the deposit.
+        approve_tx_hash = client.eth.set_token_max_allowance(
+            client.eth.get_exchange_contract().address,
         )
+        print('Waiting for allowance...')
+        client.eth.wait_for_tx(approve_tx_hash)
+        print('...done.')
+
+        # Send an on-chain deposit.
+        deposit_tx_hash = client.eth.deposit_to_exchange(
+            account['positionId'],
+            2,
+        )
+        print('Waiting for deposit...')
+        client.eth.wait_for_tx(deposit_tx_hash)
+        print('...done.')
+
+        # Wait for the deposit to be processed.
+        print('Waiting for deposit to be processed on dYdX...')
+        wait_for_condition(
+            lambda: len(client.private.get_transfers()['transfers']) > 0,
+            True,
+            30,
+        )
+        print('...transfer was recorded, waiting for confirmation...')
+        wait_for_condition(
+            lambda: client.private.get_account()['account']['quoteBalance'],
+            '2',
+            120,
+        )
+        print('...done.')
 
         # Post an order.
         one_minute_from_now_iso = epoch_seconds_to_iso(time.time() + 60)

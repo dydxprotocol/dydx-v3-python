@@ -8,6 +8,7 @@ from dydx3.eth_signing import util
 
 DOMAIN = 'dYdX'
 VERSION = '1.0'
+# TODO: NETWORK_ID should be configurable.
 NETWORK_ID = 1
 EIP712_DOMAIN_STRING_NO_CONTRACT = (
     'EIP712Domain(' +
