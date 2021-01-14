@@ -1,3 +1,9 @@
+'''Integration test.
+
+This test can be very slow due to on-chain calls.
+Run with `pytest -s` to enable print statements.
+'''
+
 import re
 import os
 import time
@@ -48,7 +54,7 @@ class TestIntegration():
         )
         fund_usdc_hash = source_client.eth.transfer_token(
             to_address=ethereum_address,
-            human_amount=0.000002  # 2 base token units.
+            human_amount=2,
         )
         print('Waiting for funds...')
         source_client.eth.wait_for_tx(fund_eth_hash)
@@ -143,7 +149,7 @@ class TestIntegration():
         # Send an on-chain deposit.
         deposit_tx_hash = client.eth.deposit_to_exchange(
             account['positionId'],
-            0.000002  # 2 base token units.
+            2,
         )
         print('Waiting for deposit...')
         client.eth.wait_for_tx(deposit_tx_hash)
@@ -154,13 +160,13 @@ class TestIntegration():
         wait_for_condition(
             lambda: len(client.private.get_transfers()['transfers']) > 0,
             True,
-            60,
+            30,
         )
         print('...transfer was recorded, waiting for confirmation...')
         wait_for_condition(
             lambda: client.private.get_account()['account']['quoteBalance'],
-            '0.000002',
-            60,
+            '2',
+            120,
         )
         print('...done.')
 
