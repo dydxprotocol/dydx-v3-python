@@ -166,18 +166,19 @@ class Client(object):
         Get the eth module, used for interacting with Ethereum smart contracts.
         '''
         if not self._eth:
-            if self.web3:
+            eth_private_key = getattr(self.eth_signer, '_private_key', None)
+            if self.web3 and eth_private_key:
                 self._eth = Eth(
                     web3=self.web3,
-                    eth_private_key=self.eth_signer._private_key,  # TODO: DO NOT MERGE
+                    eth_private_key=eth_private_key,
                     default_address=self.default_address,
                     stark_public_key=self.stark_public_key,
                     send_options=self.eth_send_options,
                 )
             else:
-                # TODO: DO NOT MERGE
                 raise Exception(
                     'Eth module is not supported since neither web3 ' +
-                    'nor web3_provider was specified',
+                    'nor web3_provider was provided OR since neither ' +
+                    'eth_private_key nor web3_account was provided',
                 )
         return self._eth
