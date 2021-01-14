@@ -39,6 +39,7 @@ class Client(object):
 
         self.web3 = None
         self.eth_signer = None
+        self.default_address = None
 
         if web3 is not None or web3_provider is not None:
             if isinstance(web3_provider, str):
