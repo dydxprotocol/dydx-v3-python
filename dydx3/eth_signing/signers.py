@@ -35,8 +35,8 @@ class SignWithWeb3(Signer):
 class SignWithKey(Signer):
 
     def __init__(self, private_key):
-        self.private_key = private_key
         self.address = eth_account.Account.from_key(private_key).address
+        self._private_key = private_key
 
     def sign(self, message_hash, opt_signer_address):
         if (
@@ -49,5 +49,5 @@ class SignWithKey(Signer):
             )
         return eth_account.Account.sign_message(
             eth_account.messages.encode_defunct(hexstr=message_hash.hex()),
-            self.private_key,
+            self._private_key,
         ).signature.hex()

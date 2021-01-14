@@ -726,50 +726,6 @@ class Private(object):
             },
         )
 
-    def create_test_deposit(
-        self,
-        from_address,
-        credit_amount,
-        debit_amount=None,
-        debit_asset='USDC',
-    ):
-        '''
-        Post a deposit
-
-        :param from_address: required
-        :param from_address: str
-
-        :param credit_amount: required
-        :type credit_amount: str
-
-        :param debit_amount: optional
-        :type debit_amount: str
-
-        :param debit_asset: optional
-        :type debit_asset: str in list [
-            "ETH",
-            "LINK",
-            "BTC",
-            "USDC",
-            "USDT",
-            "USD",
-        ]
-
-        :returns: Transfer
-
-        :raises: DydxAPIError
-        '''
-        return self._post(
-            'deposits',
-            {
-                'creditAmount': credit_amount,
-                'debitAmount': debit_amount or credit_amount,
-                'debitAsset': debit_asset,
-                # TODO: Signature verification should work regardless of case.
-                'fromAddress': from_address.lower(),
-            },
-        )
-
     def get_funding_payments(
         self,
         market=None,

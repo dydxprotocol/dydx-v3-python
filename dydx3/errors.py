@@ -23,3 +23,9 @@ class DydxApiError(DydxError):
             self.status_code,
             self.msg,
         )
+
+
+class TransactionReverted(DydxError):
+
+    def __init__(self, tx_receipt):
+        self.tx_receipt = tx_receipt
