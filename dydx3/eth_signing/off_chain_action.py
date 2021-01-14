@@ -99,7 +99,7 @@ def get_off_chain_action_hash(
                 str(dp.parse(expiration, settings={'TIMEZONE': 'UTC'})),
             ),
         )
-    struct_hash = Web3.solidityKeccak(data[0], data[1])
+    struct_hash = Web3.solidityKeccak(*data)
     return get_eip712_hash(struct_hash)
 
 

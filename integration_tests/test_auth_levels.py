@@ -27,7 +27,7 @@ class TestAuthLevels():
         client.public.get_markets()
 
     def test_private_with_private_keys(self):
-        # Generate STARK keys and Ethhereum account.
+        # Generate STARK keys and Ethereum account.
         api_private_key = generate_private_key_hex_unsafe()
         stark_private_key = generate_private_key_hex_unsafe()
         eth_account = Web3(None).eth.account.create()
@@ -74,7 +74,7 @@ class TestAuthLevels():
         )
 
     def test_private_without_stark_private_key(self):
-        # Generate STARK keys and Ethhereum account.
+        # Generate STARK keys and Ethereum account.
         api_private_key = generate_private_key_hex_unsafe()
         stark_private_key = generate_private_key_hex_unsafe()
         eth_account = Web3(None).eth.account.create()
@@ -183,8 +183,9 @@ class TestAuthLevels():
             )
 
         # If the Ethereum address was already onboarded, ignore the error.
-        except DydxApiError:
-            pass
+        except DydxApiError as e:
+            if 'unique' not in str(e):
+                raise
 
         # Register and then revoke a second API key.
         api_private_key_2 = generate_private_key_hex_unsafe()
@@ -228,8 +229,9 @@ class TestAuthLevels():
             )
 
         # If the Ethereum address was already onboarded, ignore the error.
-        except DydxApiError:
-            pass
+        except DydxApiError as e:
+            if 'unique' not in str(e):
+                raise
 
         # Register and then revoke a second API key.
         api_private_key_2 = generate_private_key_hex_unsafe()

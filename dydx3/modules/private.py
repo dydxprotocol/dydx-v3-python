@@ -1,6 +1,8 @@
+import time
+
 from dydx3 import constants
 from dydx3.helpers.db import get_account_id
-from dydx3.helpers.request_helpers import generate_now_iso
+from dydx3.helpers.request_helpers import epoch_seconds_to_iso
 from dydx3.helpers.request_helpers import generate_query_path
 from dydx3.helpers.request_helpers import random_client_id
 from dydx3.helpers.request_helpers import iso_to_epoch_seconds
@@ -10,6 +12,9 @@ from dydx3.helpers.requests import request
 from dydx3.starkex.api_request import SignableApiRequest
 from dydx3.starkex.order import SignableOrder
 from dydx3.starkex.withdrawal import SignableWithdrawal
+
+# Expire API key signatures after one minute.
+SIGNATURE_EXPIRY_S = 60
 
 
 class Private(object):
@@ -36,18 +41,18 @@ class Private(object):
         endpoint,
         data={},
     ):
-        now_iso_string = generate_now_iso()
+        iso_timestamp = epoch_seconds_to_iso(time.time() + SIGNATURE_EXPIRY_S)
         request_path = '/'.join(['/v3', endpoint])
         signature = self.sign(
             request_path=request_path,
             method=method.upper(),
-            iso_timestamp=now_iso_string,
+            iso_timestamp=iso_timestamp,
             data=remove_nones(data),
         )
         headers = {
             'DYDX-SIGNATURE': signature,
             'DYDX-API-KEY': self.api_public_key,
-            'DYDX-TIMESTAMP': now_iso_string,
+            'DYDX-TIMESTAMP': iso_timestamp,
         }
         return request(
             self.host + request_path,

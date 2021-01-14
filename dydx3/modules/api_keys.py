@@ -1,3 +1,5 @@
+import time
+
 from dydx3.helpers.request_helpers import generate_now_iso
 from dydx3.helpers.request_helpers import generate_query_path
 from dydx3.eth_signing import generate_api_key_action
@@ -31,14 +33,15 @@ class ApiKeys(object):
 
         request_path = '/'.join(['/v3', endpoint])
         timestamp = generate_now_iso()
+        action = generate_api_key_action(
+            request_path,
+            method.upper(),
+            data,
+        )
         signature = sign_off_chain_action(
             self.eth_signer,
             ethereum_address,
-            generate_api_key_action(
-                request_path,
-                method,
-                data,
-            ),
+            action,
             timestamp,
         )
 

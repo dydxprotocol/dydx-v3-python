@@ -30,12 +30,10 @@ class Onboarding(object):
     ):
         ethereum_address = opt_ethereum_address or self.default_address
 
-        timestamp = generate_now_iso()
         signature = sign_off_chain_action(
             self.eth_signer,
             ethereum_address,
             generate_onboarding_action(),
-            timestamp,
         )
 
         request_path = '/'.join(['/v3', endpoint])
