@@ -11,6 +11,7 @@ import time
 from web3 import Web3
 
 from dydx3 import Client
+from dydx3 import DydxApiError
 from dydx3 import constants
 from dydx3 import epoch_seconds_to_iso
 from dydx3 import generate_private_key_hex_unsafe
@@ -26,9 +27,10 @@ NETWORK_ID = os.environ.get('NETWORK_ID', DEFAULT_NETWORK_ID)
 
 class TestIntegration():
 
-    def test_onboarding_and_api_keys(self):
+    def test_integration_without_funds(self):
         # Create an Ethereum account and STARK keys for the new user.
         web3_account = Web3(None).eth.account.create()
+        ethereum_address = web3_account.address
         api_private_key = generate_private_key_hex_unsafe()
         stark_private_key = generate_private_key_hex_unsafe()
 
@@ -50,6 +52,33 @@ class TestIntegration():
         client.api_keys.register_api_key(
             api_public_key=api_public_key_2,
         )
+
+        # Get the primary account.
+        get_account_result = client.private.get_account(
+            ethereum_address=ethereum_address,
+        )
+        account = get_account_result['account']
+        assert account['starkKey'] == client.stark_public_key
+
+        # Initiate a regular (slow) withdrawal.
+        #
+        # Expect signature validation to pass, although the collateralization
+        # check will fail.
+        expected_error = (
+            'Withdrawal would put account under collateralization minumum'
+        )
+        one_minute_from_now_iso = epoch_seconds_to_iso(time.time() + 60)
+        try:
+            client.private.create_withdrawal(
+                position_id=account['positionId'],
+                amount='1',
+                asset=constants.ASSET_USDC,
+                to_address=ethereum_address,
+                expiration=one_minute_from_now_iso,
+            )
+        except DydxApiError as e:
+            if expected_error not in str(e):
+                raise
 
     def test_integration(self):
         source_private_key = os.environ.get('TEST_SOURCE_PRIVATE_KEY')
