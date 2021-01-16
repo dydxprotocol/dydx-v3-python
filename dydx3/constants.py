@@ -68,7 +68,7 @@ SYNTHETIC_ASSET_MAP = {
 # ------------ Asset IDs ------------
 ASSET_ID_MAP = {
     ASSET_USDC: int(
-        '0x24d6ea88d53b68601dcf03b3f204cbe829d3689194f823bd6a7f74292c22334',
+        '0x02c04d8b650f44092278a7cb1e1028c82025dff622db96c934b611b84cc8de5a',
         16,
     ),
     ASSET_BTC: 0,
@@ -76,12 +76,6 @@ ASSET_ID_MAP = {
     ASSET_LINK: 2,
 }
 COLLATERAL_ASSET_ID = ASSET_ID_MAP[COLLATERAL_ASSET]
-
-# TODO: There should only be one COLLATERAL_ASSET_ID.
-ON_CHAIN_COLLATERAL_ASSET_ID = int(
-    '0x02c04d8b650f44092278a7cb1e1028c82025dff622db96c934b611b84cc8de5a',
-    16,
-)
 
 # ------------ Asset Resolution (Quantum Size) ------------
 #
