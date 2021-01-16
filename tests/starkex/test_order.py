@@ -11,8 +11,8 @@ MOCK_PRIVATE_KEY = (
     '58c7d5a90b1776bde86ebac077e053ed85b0f7164f53b080304a531947f46e3'
 )
 MOCK_SIGNATURE = (
-    '01ac25fb542c7f58953cbbaec0bd774e480d6e22d7c7145f531986c32ce28e09' +
-    '0038738abd1a7a960a45376c926fc7e41889d0f365c8749a80306e355dcf78ec'
+    '059487ea7c537f34516f4dc7c54ad30ab0096823269ba18aea0e64e13fb03462' +
+    '03be73ed4dafbf99baeeaee6dce315cd834b5e3257d4e74371d14cf8f2189a59'
 )
 
 # Test data where the public key y-coordinate is even.
@@ -20,8 +20,8 @@ MOCK_PUBLIC_KEY_EVEN_Y = (
     '5c749cd4c44bdc730bc90af9bfbdede9deb2c1c96c05806ce1bc1cb4fed64f7'
 )
 MOCK_SIGNATURE_EVEN_Y = (
-    '05de75d37686126262e31560aca7e3e3782210d1ed5395b8c8704b1a51831a7a' +
-    '01427d9b50773cd537e357c969aeb8dc24e23365418b641a11b5902d1140b8de'
+    '030644ef5b2de9e93f13df5a4cf8284e7256223366b5da29bf2002ed40825171' +
+    '03961ec47c34c49e97095c546895cc22afa6e563474615729720fd8b768c5b87'
 )
 
 # Mock order params.
@@ -31,7 +31,7 @@ ORDER_PARAMS = {
     "position_id": 12345,
     "human_size": '145.0005',
     "human_price": '350.00067',
-    "human_limit_fee": '0.032985',
+    "limit_fee": '0.125',
     "client_id": (
         'This is an ID that the client came up with ' +
         'to describe this order'
@@ -59,3 +59,20 @@ class TestOrder():
             MOCK_SIGNATURE_EVEN_Y,
             MOCK_PUBLIC_KEY_EVEN_Y,
         )
+
+    def test_starkware_amounts(self):
+        order = SignableOrder(**ORDER_PARAMS)
+        starkware_order = order.to_starkware()
+        assert starkware_order.quantums_amount_synthetic == 14500050000
+        assert starkware_order.quantums_amount_collateral == 50750272151
+        assert starkware_order.quantums_amount_fee == 6343784019
+
+    def test_convert_order_fee_edge_case(self):
+        order = SignableOrder(
+            **dict(
+                ORDER_PARAMS,
+                limit_fee='0.000001999999999999999999999999999999999999999999',
+            ),
+        )
+        starkware_order = order.to_starkware()
+        assert starkware_order.quantums_amount_fee == 50751
