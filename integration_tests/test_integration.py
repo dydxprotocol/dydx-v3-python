@@ -16,11 +16,40 @@ from dydx3 import epoch_seconds_to_iso
 from dydx3 import generate_private_key_hex_unsafe
 from dydx3 import private_key_to_public_hex
 from tests.constants import DEFAULT_HOST
+from tests.constants import DEFAULT_NETWORK_ID
 
 from integration_tests.util import wait_for_condition
 
+HOST = os.environ.get('V3_API_HOST', DEFAULT_HOST)
+NETWORK_ID = os.environ.get('NETWORK_ID', DEFAULT_NETWORK_ID)
+
 
 class TestIntegration():
+
+    def test_onboarding_and_api_keys(self):
+        # Create an Ethereum account and STARK keys for the new user.
+        web3_account = Web3(None).eth.account.create()
+        api_private_key = generate_private_key_hex_unsafe()
+        stark_private_key = generate_private_key_hex_unsafe()
+
+        # Create client for the new user.
+        client = Client(
+            host=HOST,
+            network_id=NETWORK_ID,
+            api_private_key=api_private_key,
+            stark_private_key=stark_private_key,
+            web3_account=web3_account,
+        )
+
+        # Onboard the user.
+        client.onboarding.create_user()
+
+        # Register a new API key.
+        api_private_key_2 = generate_private_key_hex_unsafe()
+        api_public_key_2 = private_key_to_public_hex(api_private_key_2)
+        client.api_keys.register_api_key(
+            api_public_key=api_public_key_2,
+        )
 
     def test_integration(self):
         source_private_key = os.environ.get('TEST_SOURCE_PRIVATE_KEY')
@@ -31,18 +60,15 @@ class TestIntegration():
         if web3_provider is None:
             raise ValueError('TEST_WEB3_PROVIDER_URL must be set')
 
-        host = os.environ.get('V3_API_HOST', DEFAULT_HOST)
-
         # Create client that will be used to fund the new user.
         source_client = Client(
-            eth_private_key=source_private_key,
             host='',
+            eth_private_key=source_private_key,
             web3_provider=web3_provider,
         )
 
         # Create an Ethereum account and STARK keys for the new user.
-        web3 = Web3(None)
-        web3_account = web3.eth.account.create()
+        web3_account = Web3(None).eth.account.create()
         ethereum_address = web3_account.address
         api_private_key = generate_private_key_hex_unsafe()
         stark_private_key = generate_private_key_hex_unsafe()
@@ -63,7 +89,8 @@ class TestIntegration():
 
         # Create client for the new user.
         client = Client(
-            host=host,
+            host=HOST,
+            network_id=NETWORK_ID,
             api_private_key=api_private_key,
             stark_private_key=stark_private_key,
             web3_account=web3_account,
@@ -71,9 +98,7 @@ class TestIntegration():
         )
 
         # Onboard the user.
-        client.onboarding.create_user(
-            ethereum_address=ethereum_address,
-        )
+        client.onboarding.create_user()
 
         # Get the user.
         get_user_result = client.private.get_user()

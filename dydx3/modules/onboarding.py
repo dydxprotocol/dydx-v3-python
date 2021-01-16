@@ -1,6 +1,4 @@
-from dydx3.helpers.request_helpers import generate_now_iso
-from dydx3.eth_signing import generate_onboarding_action
-from dydx3.eth_signing import sign_off_chain_action
+from dydx3.eth_signing import SignOnboardingAction
 from dydx3.helpers.requests import request
 
 
@@ -10,15 +8,17 @@ class Onboarding(object):
         self,
         host,
         eth_signer,
+        network_id,
         default_address,
         stark_public_key,
         api_public_key,
     ):
         self.host = host
-        self.eth_signer = eth_signer
         self.default_address = default_address
         self.stark_public_key = stark_public_key
         self.api_public_key = api_public_key
+
+        self.signer = SignOnboardingAction(eth_signer, network_id)
 
     # ============ Request Helpers ============
 
@@ -30,13 +30,7 @@ class Onboarding(object):
     ):
         ethereum_address = opt_ethereum_address or self.default_address
 
-        timestamp = generate_now_iso()
-        signature = sign_off_chain_action(
-            self.eth_signer,
-            ethereum_address,
-            generate_onboarding_action(),
-            timestamp,
-        )
+        signature = self.signer.sign(ethereum_address)
 
         request_path = '/'.join(['/v3', endpoint])
         return request(
