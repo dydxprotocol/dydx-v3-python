@@ -1,3 +1,4 @@
+from dydx3.helpers.request_helpers import iso_to_epoch_seconds
 from dydx3.starkex.withdrawal import SignableWithdrawal
 
 MOCK_PUBLIC_KEY = (
@@ -19,7 +20,9 @@ WITHDRAWAL_PARAMS = {
         'This is an ID that the client came up with ' +
         'to describe this withdrawal'
     ),
-    "expiration_epoch_seconds": 1600316155,
+    "expiration_epoch_seconds": iso_to_epoch_seconds(
+        '2020-09-17T04:15:55.028Z',
+    ),
 }
 
 
