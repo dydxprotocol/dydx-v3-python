@@ -21,6 +21,7 @@ class Client(object):
         default_ethereum_address=None,
         eth_private_key=None,
         eth_send_options=None,
+        network_id=None,
         stark_private_key=None,
         stark_public_key=None,
         web3=None,
@@ -40,6 +41,7 @@ class Client(object):
         self.web3 = None
         self.eth_signer = None
         self.default_address = None
+        self.network_id = None
 
         if web3 is not None or web3_provider is not None:
             if isinstance(web3_provider, str):
@@ -47,6 +49,7 @@ class Client(object):
             self.web3 = web3 or Web3(web3_provider)
             self.eth_signer = SignWithWeb3(self.web3)
             self.default_address = self.web3.eth.defaultAccount or None
+            self.network_id = self.web3.net.version
 
         if eth_private_key is not None or web3_account is not None:
             # May override web3 or web3_provider configuration.
@@ -55,6 +58,7 @@ class Client(object):
             self.default_address = self.eth_signer.address
 
         self.default_address = default_ethereum_address or self.default_address
+        self.network_id = int(network_id or self.network_id or 1)
 
         # Initialize the public module. Other modules are initialized on
         # demand, if the necessary configuration options were provided.
@@ -128,6 +132,7 @@ class Client(object):
                 self._api_keys = ApiKeys(
                     host=self.host,
                     eth_signer=self.eth_signer,
+                    network_id=self.network_id,
                     default_address=self.default_address,
                 )
             else:
@@ -149,6 +154,7 @@ class Client(object):
                 self._onboarding = Onboarding(
                     host=self.host,
                     eth_signer=self.eth_signer,
+                    network_id=self.network_id,
                     default_address=self.default_address,
                     stark_public_key=self.stark_public_key,
                     api_public_key=self.api_public_key,
@@ -171,6 +177,7 @@ class Client(object):
             if self.web3 and eth_private_key:
                 self._eth = Eth(
                     web3=self.web3,
+                    network_id=self.network_id,
                     eth_private_key=eth_private_key,
                     default_address=self.default_address,
                     stark_public_key=self.stark_public_key,

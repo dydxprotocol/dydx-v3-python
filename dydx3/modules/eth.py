@@ -24,18 +24,19 @@ class Eth(object):
     def __init__(
         self,
         web3,
+        network_id,
         eth_private_key,
         default_address,
         stark_public_key,
         send_options,
     ):
         self.web3 = web3
+        self.network_id = network_id
         self.eth_private_key = eth_private_key
         self.default_address = default_address
         self.stark_public_key = stark_public_key
         self.send_options = send_options
 
-        self.network_id = web3.net.version
         self.cached_contracts = {}
         self._next_nonce_for_address = {}
 

@@ -1,7 +1,7 @@
 from dydx3.helpers.request_helpers import generate_now_iso
 from dydx3.helpers.request_helpers import generate_query_path
-from dydx3.eth_signing import generate_api_key_action
-from dydx3.eth_signing import sign_off_chain_action
+from dydx3.helpers.request_helpers import json_stringify
+from dydx3.eth_signing import SignApiKeyAction
 from dydx3.helpers.requests import request
 
 
@@ -12,11 +12,13 @@ class ApiKeys(object):
         self,
         host,
         eth_signer,
+        network_id,
         default_address,
     ):
         self.host = host
-        self.eth_signer = eth_signer
         self.default_address = default_address
+
+        self.signer = SignApiKeyAction(eth_signer, network_id)
 
     # ============ Request Helpers ============
 
@@ -31,15 +33,12 @@ class ApiKeys(object):
 
         request_path = '/'.join(['/v3', endpoint])
         timestamp = generate_now_iso()
-        signature = sign_off_chain_action(
-            self.eth_signer,
+        signature = self.signer.sign(
             ethereum_address,
-            generate_api_key_action(
-                request_path,
-                method,
-                data,
-            ),
-            timestamp,
+            method=method.upper(),
+            request_path=request_path,
+            body=json_stringify(data) if data else '{}',
+            timestamp=timestamp,
         )
 
         return request(
