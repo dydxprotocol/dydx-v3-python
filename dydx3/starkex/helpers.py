@@ -21,6 +21,11 @@ DECIMAL_CTX_EXACT = decimal.Context(
 )
 
 
+def bytes_to_int(x):
+    """Convert a bytestring to an int."""
+    return int(x.hex(), 16)
+
+
 def int_to_hex_32(x):
     """Normalize to a 32-byte hex string without 0x prefix."""
     padded_hex = hex(x)[2:].rjust(64, '0')
