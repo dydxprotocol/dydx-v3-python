@@ -1,5 +1,8 @@
 """Constants related to creating hashes of Starkware objects."""
 
+ONE_HOUR_IN_SECONDS = 60 * 60
+ORDER_SIGNATURE_EXPIRATION_BUFFER_HOURS = 24 * 2  # Two days.
+
 CONDITIONAL_TRANSFER_PADDING_BITS = 81
 CONDITIONAL_TRANSFER_PREFIX = 5
 ORDER_PREFIX = 3
@@ -18,7 +21,7 @@ CONDITIONAL_TRANSFER_FIELD_BIT_LENGTHS = {
     "condition": 251,
     "quantums_amount": 64,
     "nonce": 32,
-    "expiration_epoch_seconds": 32,
+    "expiration_epoch_hours": 32,
 }
 
 ORDER_FIELD_BIT_LENGTHS = {
@@ -28,7 +31,7 @@ ORDER_FIELD_BIT_LENGTHS = {
     "quantums_amount": 64,
     "nonce": 32,
     "position_id": 64,
-    "expiration_epoch_seconds": 32,
+    "expiration_epoch_hours": 32,
 }
 
 WITHDRAWAL_FIELD_BIT_LENGTHS = {
@@ -36,7 +39,7 @@ WITHDRAWAL_FIELD_BIT_LENGTHS = {
     "position_id": 64,
     "nonce": 32,
     "quantums_amount": 64,
-    "expiration_epoch_seconds": 32,
+    "expiration_epoch_hours": 32,
 }
 
 ORACLE_PRICE_FIELD_BIT_LENGTHS = {

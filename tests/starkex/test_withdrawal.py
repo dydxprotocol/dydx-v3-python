@@ -8,8 +8,8 @@ MOCK_PRIVATE_KEY = (
     '58c7d5a90b1776bde86ebac077e053ed85b0f7164f53b080304a531947f46e3'
 )
 MOCK_SIGNATURE = (
-    '0214a0ab2f3c065c5848ad9dbac6cc98509b66e76a8f563d5c8ffda01b0fa2e0' +
-    '07242b1c65d039fe645d122ecea7c3e58c8fda5814e0c152dbdeef4af706ad06'
+    '05e48c33f8205a5359c95f1bd7385c1c1f587e338a514298c07634c0b6c952ba' +
+    '0687d6980502a5d7fa84ef6fdc00104db22c43c7fb83e88ca84f19faa9ee3de1'
 )
 
 # Mock withdrawal params.
@@ -36,3 +36,11 @@ class TestWithdrawal():
     def test_verify_signature(self):
         withdrawal = SignableWithdrawal(**WITHDRAWAL_PARAMS)
         assert withdrawal.verify_signature(MOCK_SIGNATURE, MOCK_PUBLIC_KEY)
+
+    def test_starkware_representation(self):
+        withdrawal = SignableWithdrawal(**WITHDRAWAL_PARAMS)
+        starkware_withdrawal = withdrawal.to_starkware()
+        assert starkware_withdrawal.quantums_amount == 49478023
+
+        # Order expiration should be rounded up and should have a buffer added.
+        assert starkware_withdrawal.expiration_epoch_hours == 444533
