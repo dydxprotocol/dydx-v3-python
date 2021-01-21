@@ -47,7 +47,7 @@ class SignableOrder(Signable):
         position_id,
         human_size,
         human_price,
-        human_limit_fee,  # TODO: Is this an amount or a percentage?
+        limit_fee,
         client_id,
         expiration_epoch_seconds,
     ):
@@ -56,10 +56,6 @@ class SignableOrder(Signable):
         quantums_amount_synthetic = to_quantums_exact(
             human_size,
             synthetic_asset,
-        )
-        quantums_amount_fee = to_quantums_exact(
-            human_limit_fee,
-            COLLATERAL_ASSET,
         )
 
         # Note: By creating the decimals outside the context and then
@@ -84,6 +80,19 @@ class SignableOrder(Signable):
                 COLLATERAL_ASSET,
             )
 
+        # The limitFee is a fraction, e.g. 0.01 is a 1 % fee.
+        # It is always paid in the collateral asset.
+        # Constrain the limit fee to six decimals of precision.
+        # The final fee amount must be rounded up.
+        limit_fee_rounded = DECIMAL_CONTEXT_ROUND_DOWN.quantize(
+            decimal.Decimal(limit_fee),
+            decimal.Decimal('0.000001'),
+        )
+        quantums_amount_fee_decimal = DECIMAL_CONTEXT_ROUND_UP.multiply(
+            limit_fee_rounded,
+            quantums_amount_collateral,
+        ).to_integral_value(context=DECIMAL_CONTEXT_ROUND_UP)
+
         message = StarkwareOrder(
             order_type='LIMIT_ORDER_WITH_FEES',
             asset_id_synthetic=ASSET_ID_MAP[synthetic_asset],
@@ -91,7 +100,7 @@ class SignableOrder(Signable):
             asset_id_fee=COLLATERAL_ASSET_ID,
             quantums_amount_synthetic=quantums_amount_synthetic,
             quantums_amount_collateral=quantums_amount_collateral,
-            quantums_amount_fee=quantums_amount_fee,
+            quantums_amount_fee=int(quantums_amount_fee_decimal),
             is_buying_synthetic=is_buying_synthetic,
             position_id=int(position_id),
             nonce=nonce_from_client_id(client_id),

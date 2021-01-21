@@ -442,7 +442,7 @@ class Private(object):
                 side=side,
                 human_size=size,
                 human_price=price,
-                human_limit_fee=limit_fee,
+                limit_fee=limit_fee,
                 expiration_epoch_seconds=iso_to_epoch_seconds(expiration),
             )
             order_signature = order_to_sign.sign(self.stark_private_key)
