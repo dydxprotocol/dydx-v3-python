@@ -17,6 +17,20 @@ class Signer(object):
         '''
         raise NotImplementedError()
 
+    def sign_tx(self, tx, opt_signer_address):
+        '''
+        Sign a transaction with an Ethereum key.
+
+        :param tx: required
+        :type tx: HexBytes
+
+        :param opt_signer_address: optional
+        :type opt_signer_address: str
+
+        :returns: str
+        '''
+        raise NotImplementedError()
+
 
 class SignWithWeb3(Signer):
 
@@ -30,6 +44,17 @@ class SignWithWeb3(Signer):
                 'Must set ethereum_address or web3.eth.defaultAccount',
             )
         return self.web3.eth.sign(signer_address, message_hash).hex()
+
+    def sign_transaction(self, tx, opt_signer_address):
+        signer_address = opt_signer_address or self.web3.eth.defaultAccount
+        if not signer_address:
+            raise ValueError(
+                'Must set ethereum_address or web3.eth.defaultAccount',
+            )
+        return self.web3.eth.account.sign_transaction(
+            tx,
+            signer_address,
+        )
 
 
 class SignWithKey(Signer):
@@ -51,3 +76,14 @@ class SignWithKey(Signer):
             eth_account.messages.encode_defunct(hexstr=message_hash.hex()),
             self._private_key,
         ).signature.hex()
+
+    def sign_transaction(self, tx, opt_signer_address):
+        if (
+            opt_signer_address is not None and
+            opt_signer_address != self.address
+        ):
+            raise ValueError(
+                'ethereum_address was set but does not match the Ethereum ' +
+                'key (eth_private_key / web3_account)',
+            )
+        return eth_account.sign_transaction(tx)
