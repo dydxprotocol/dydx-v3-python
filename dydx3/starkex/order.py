@@ -1,4 +1,5 @@
 import decimal
+import math
 
 from collections import namedtuple
 
@@ -7,9 +8,11 @@ from dydx3.constants import COLLATERAL_ASSET
 from dydx3.constants import COLLATERAL_ASSET_ID
 from dydx3.constants import ORDER_SIDE_BUY
 from dydx3.constants import SYNTHETIC_ASSET_MAP
+from dydx3.starkex.constants import ONE_HOUR_IN_SECONDS
 from dydx3.starkex.constants import ORDER_FIELD_BIT_LENGTHS
 from dydx3.starkex.constants import ORDER_PADDING_BITS
 from dydx3.starkex.constants import ORDER_PREFIX
+from dydx3.starkex.constants import ORDER_SIGNATURE_EXPIRATION_BUFFER_HOURS
 from dydx3.starkex.helpers import nonce_from_client_id
 from dydx3.starkex.helpers import to_quantums_exact
 from dydx3.starkex.helpers import to_quantums_round_down
@@ -33,7 +36,7 @@ StarkwareOrder = namedtuple(
         'is_buying_synthetic',
         'position_id',
         'nonce',
-        'expiration_epoch_seconds',
+        'expiration_epoch_hours',
     ],
 )
 
@@ -93,6 +96,14 @@ class SignableOrder(Signable):
             quantums_amount_collateral,
         ).to_integral_value(context=DECIMAL_CONTEXT_ROUND_UP)
 
+        # Orders may have a short time-to-live on the orderbook, but we need
+        # to ensure their signatures are valid by the time they reach the
+        # blockchain. Therefore, we enforce that the signed expiration includes
+        # a buffer relative to the expiration timestamp sent to the dYdX API.
+        expiration_epoch_hours = math.ceil(
+            float(expiration_epoch_seconds) / ONE_HOUR_IN_SECONDS,
+        ) + ORDER_SIGNATURE_EXPIRATION_BUFFER_HOURS
+
         message = StarkwareOrder(
             order_type='LIMIT_ORDER_WITH_FEES',
             asset_id_synthetic=ASSET_ID_MAP[synthetic_asset],
@@ -104,7 +115,7 @@ class SignableOrder(Signable):
             is_buying_synthetic=is_buying_synthetic,
             position_id=int(position_id),
             nonce=nonce_from_client_id(client_id),
-            expiration_epoch_seconds=expiration_epoch_seconds,
+            expiration_epoch_hours=expiration_epoch_hours,
         )
         super(SignableOrder, self).__init__(message)
 
@@ -139,8 +150,8 @@ class SignableOrder(Signable):
         for _ in range(3):
             part_2 <<= ORDER_FIELD_BIT_LENGTHS['position_id']
             part_2 += self._message.position_id
-        part_2 <<= ORDER_FIELD_BIT_LENGTHS['expiration_epoch_seconds']
-        part_2 += self._message.expiration_epoch_seconds
+        part_2 <<= ORDER_FIELD_BIT_LENGTHS['expiration_epoch_hours']
+        part_2 += self._message.expiration_epoch_hours
         part_2 <<= ORDER_PADDING_BITS
 
         assets_hash = pedersen_hash(

@@ -8,8 +8,8 @@ MOCK_PRIVATE_KEY = (
     '58c7d5a90b1776bde86ebac077e053ed85b0f7164f53b080304a531947f46e3'
 )
 MOCK_SIGNATURE = (
-    '014dedad7bd42da36e81ce627e55be508a4afe019700dd478ea8134b3549d327' +
-    '0571d1dcbab6f25f4d2f3af054f359773289266c69df91c9608882f0a9b201d8'
+    '067e90143a21d8a6aca85207de5e124e9644f7adc18deb42c5cf1240766e57bb' +
+    '04a39c4fdadf214d7282a59d37b21e0d3ea7fe1fc0d0ee25c22a3dd9d5cb8307'
 )
 
 # Mock conditional transfer params.
@@ -40,3 +40,11 @@ class TestConditionalTransfer():
     def test_verify_signature(self):
         transfer = SignableConditionalTransfer(**CONDITIONAL_TRANSFER_PARAMS)
         assert transfer.verify_signature(MOCK_SIGNATURE, MOCK_PUBLIC_KEY)
+
+    def test_starkware_representation(self):
+        transfer = SignableConditionalTransfer(**CONDITIONAL_TRANSFER_PARAMS)
+        starkware_transfer = transfer.to_starkware()
+        assert starkware_transfer.quantums_amount == 49478023
+
+        # Order expiration should be rounded up and should have a buffer added.
+        assert starkware_transfer.expiration_epoch_hours == 444533
