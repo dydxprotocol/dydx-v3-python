@@ -220,3 +220,14 @@ class Public(object):
                 'limit': limit,
             },
         )
+
+    def get_time(self):
+        '''
+        Get api server time as iso and as epoch in seconds with MS
+
+        :returns: ISO string and Epoch number in seconds with MS of server time
+
+        :raises: DydxAPIError
+        '''
+        uri = '/v3/time'
+        return self._get(uri)

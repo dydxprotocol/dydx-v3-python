@@ -52,28 +52,15 @@ class ApiKeys(object):
             data,
         )
 
-    def _get(
-        self,
-        endpoint,
-        opt_ethereum_address,
-    ):
-        return self._request(
-            'get',
-            endpoint,
-            opt_ethereum_address,
-        )
-
     def _post(
         self,
         endpoint,
         opt_ethereum_address,
-        data={},
     ):
         return self._request(
             'post',
             endpoint,
             opt_ethereum_address,
-            data,
         )
 
     def _delete(
@@ -91,35 +78,12 @@ class ApiKeys(object):
 
 # ============ Requests ============
 
-    def get_api_keys(
-        self,
-        ethereum_address=None,
-    ):
-        '''
-        Get API keys.
-
-        :param ethereum_address: optional
-        :type ethereum_address: str
-
-        :returns: Object containing an array of apiKeys
-
-        :raises: DydxAPIError
-        '''
-        return self._get(
-            'api-keys',
-            ethereum_address,
-        )
-
     def register_api_key(
         self,
-        api_public_key,
         ethereum_address=None,
     ):
         '''
         Register an API key.
-
-        :param api_public_key: required
-        :type api_public_key: str
 
         :param ethereum_address: optional
         :type ethereum_address: str
@@ -131,21 +95,18 @@ class ApiKeys(object):
         return self._post(
             'api-keys',
             ethereum_address,
-            {
-                'apiKey': api_public_key,
-            },
         )
 
     def delete_api_key(
         self,
-        api_public_key,
+        api_key,
         ethereum_address=None,
     ):
         '''
         Delete an API key.
 
-        :param api_public_key: required
-        :type api_public_key: str
+        :param api_key: required
+        :type api_key: str
 
         :param ethereum_address: optional
         :type ethereum_address: str
@@ -158,6 +119,6 @@ class ApiKeys(object):
             'api-keys',
             ethereum_address,
             {
-                'apiKey': api_public_key,
+                'apiKey': api_key,
             },
         )

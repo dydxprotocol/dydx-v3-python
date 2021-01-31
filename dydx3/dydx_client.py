@@ -16,8 +16,6 @@ class Client(object):
         self,
         host,
         api_timeout=3000,  # TODO: Actually use this.
-        api_private_key=None,
-        api_public_key=None,
         default_ethereum_address=None,
         eth_private_key=None,
         eth_send_options=None,
@@ -27,6 +25,7 @@ class Client(object):
         web3=None,
         web3_account=None,
         web3_provider=None,
+        api_key_credentials=None,
     ):
         # Remove trailing '/' if present, from host.
         if host.endswith('/'):
@@ -34,9 +33,9 @@ class Client(object):
 
         self.host = host
         self.api_timeout = api_timeout
-        self.api_private_key = api_private_key
         self.eth_send_options = eth_send_options or {}
         self.stark_private_key = stark_private_key
+        self.api_key_credentials = api_key_credentials
 
         self.web3 = None
         self.eth_signer = None
@@ -64,7 +63,7 @@ class Client(object):
         # demand, if the necessary configuration options were provided.
         self._public = Public(host)
         self._private = None
-        self._api_keys = None
+        self._api_key = None
         self._eth = None
         self._onboarding = None
 
@@ -80,17 +79,6 @@ class Client(object):
                 raise ValueError('STARK public/private key mismatch')
         else:
             self.stark_public_key = stark_public_key
-        if api_private_key is not None:
-            self.api_public_key = private_key_to_public_hex(
-                api_private_key,
-            )
-            if (
-                api_public_key is not None and
-                api_public_key != self.api_public_key
-            ):
-                raise ValueError('API public/private key mismatch')
-        else:
-            self.api_public_key = api_public_key
 
     @property
     def public(self):
@@ -106,18 +94,17 @@ class Client(object):
         require API-key auth.
         '''
         if not self._private:
-            if self.api_private_key:
+            if self.api_key_credentials:
                 self._private = Private(
                     host=self.host,
                     stark_private_key=self.stark_private_key,
-                    api_private_key=self.api_private_key,
-                    api_public_key=self.api_public_key,
                     default_address=self.default_address,
+                    api_key_credentials=self.api_key_credentials,
                 )
             else:
                 raise Exception(
                     'Private endpoints not supported ' +
-                    'since api_private_key was not specified',
+                    'since api_key_credentials were not specified',
                 )
         return self._private
 
@@ -127,9 +114,9 @@ class Client(object):
         Get the api_keys module, used for managing API keys. Requires
         Ethereum key auth.
         '''
-        if not self._api_keys:
+        if not self._api_key:
             if self.eth_signer:
-                self._api_keys = ApiKeys(
+                self._api_key = ApiKeys(
                     host=self.host,
                     eth_signer=self.eth_signer,
                     network_id=self.network_id,
@@ -141,7 +128,7 @@ class Client(object):
                     'signing method (web3, web3_account, web3_provider) was ' +
                     'provided',
                 )
-        return self._api_keys
+        return self._api_key
 
     @property
     def onboarding(self):
@@ -157,7 +144,6 @@ class Client(object):
                     network_id=self.network_id,
                     default_address=self.default_address,
                     stark_public_key=self.stark_public_key,
-                    api_public_key=self.api_public_key,
                 )
             else:
                 raise Exception(

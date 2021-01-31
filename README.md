@@ -76,11 +76,11 @@ web3_client = Client(
 )
 web3_client.onboarding.create_user(
     stark_public_key='...',
-    api_public_key='...',
+    api_key='...',
     ethereum_address='...',
 )
 web3_client.api_keys.register_api_key(
-    api_public_key='...',  # Register a second API key.
+    api_key='...',  # Register a second API key.
     ethereum_address='...',
 )
 
@@ -95,6 +95,6 @@ web3_client_with_keys = Client(
 )
 web3_client_with_keys.onboarding.create_user()
 web3_client_with_keys.api_keys.register_api_key(
-    api_public_key='...',  # Register a second API key.
+    api_key='...',  # Register a second API key.
 )
 ```

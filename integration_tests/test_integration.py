@@ -1,5 +1,4 @@
 '''Integration test.
-
 This test can be very slow due to on-chain calls.
 Run with `pytest -s` to enable print statements.
 '''
@@ -31,34 +30,31 @@ class TestIntegration():
         # Create an Ethereum account and STARK keys for the new user.
         web3_account = Web3(None).eth.account.create()
         ethereum_address = web3_account.address
-        api_private_key = generate_private_key_hex_unsafe()
         stark_private_key = generate_private_key_hex_unsafe()
 
         # Create client for the new user.
         client = Client(
             host=HOST,
             network_id=NETWORK_ID,
-            api_private_key=api_private_key,
             stark_private_key=stark_private_key,
             web3_account=web3_account,
         )
 
         # Onboard the user.
-        client.onboarding.create_user()
+        res = client.onboarding.create_user()
+
+        client.api_key_credentials = res['apiKey']
 
         # Register a new API key.
-        api_private_key_2 = generate_private_key_hex_unsafe()
-        api_public_key_2 = private_key_to_public_hex(api_private_key_2)
-        client.api_keys.register_api_key(
-            api_public_key=api_public_key_2,
-        )
+        client.api_keys.register_api_key()
 
         # Get the primary account.
         get_account_result = client.private.get_account(
             ethereum_address=ethereum_address,
         )
         account = get_account_result['account']
-        assert account['starkKey'] == client.stark_public_key
+        # 0x was filtered out and 0 was readded as padding
+        assert account['starkKey'].lstrip('0') == client.stark_public_key[2:]
 
         # Initiate a regular (slow) withdrawal.
         #
@@ -99,7 +95,6 @@ class TestIntegration():
         # Create an Ethereum account and STARK keys for the new user.
         web3_account = Web3(None).eth.account.create()
         ethereum_address = web3_account.address
-        api_private_key = generate_private_key_hex_unsafe()
         stark_private_key = generate_private_key_hex_unsafe()
 
         # Fund the new user with ETH and USDC.
@@ -120,14 +115,14 @@ class TestIntegration():
         client = Client(
             host=HOST,
             network_id=NETWORK_ID,
-            api_private_key=api_private_key,
             stark_private_key=stark_private_key,
             web3_account=web3_account,
             web3_provider=web3_provider,
         )
 
         # Onboard the user.
-        client.onboarding.create_user()
+        res = client.onboarding.create_user()
+        client.api_key_credentials = res.apiKey
 
         # Get the user.
         get_user_result = client.private.get_user()
@@ -289,31 +284,18 @@ class TestIntegration():
         )
 
         # Register a new API key.
-        api_private_key_2 = generate_private_key_hex_unsafe()
-        api_public_key_2 = private_key_to_public_hex(api_private_key_2)
-        client.api_keys.register_api_key(
-            ethereum_address=ethereum_address,
-            api_public_key=api_public_key_2,
-        )
-
-        # Get all API keys.
-        api_keys_result = client.api_keys.get_api_keys(
+        api_key = client.api_keys.register_api_key(
             ethereum_address=ethereum_address,
         )
-        api_keys_public_keys = [
-            a['apiKey'] for a in api_keys_result['apiKeys']
-        ]
-        assert client.api_public_key in api_keys_public_keys
-        assert api_public_key_2 in api_keys_public_keys
 
         # Delete an API key.
         client.api_keys.delete_api_key(
+            api_key=api_key.key,
             ethereum_address=ethereum_address,
-            api_public_key=api_public_key_2,
         )
 
         # Get all API keys after the deletion.
-        api_keys_result_after = client.api_keys.get_api_keys(
+        api_keys_result_after = client.private.get_api_keys(
             ethereum_address=ethereum_address,
         )
         assert len(api_keys_result_after['apiKeys']) == 1
