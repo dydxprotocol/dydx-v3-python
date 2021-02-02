@@ -28,12 +28,10 @@ class TestAuthLevels():
 
     def test_private_with_private_keys(self):
         # Generate STARK keys and Ethhereum account.
-        api_private_key = generate_private_key_hex_unsafe()
         stark_private_key = generate_private_key_hex_unsafe()
         eth_account = Web3(None).eth.account.create()
 
         # Get public keys.
-        api_public_key = private_key_to_public_hex(api_private_key)
         stark_public_key = private_key_to_public_hex(stark_private_key)
 
         # Onboard the user.
@@ -41,22 +39,20 @@ class TestAuthLevels():
             host=API_HOST,
             eth_private_key=eth_account.key,
         ).onboarding.create_user(
-            api_public_key=api_public_key,
             stark_public_key=stark_public_key,
         )
 
         # Create a second client WITHOUT eth_private_key.
         client = Client(
             host=API_HOST,
-            api_private_key=api_private_key,
             stark_private_key=stark_private_key,
         )
 
         # Create a test deposit.
-        client.private.create_test_deposit(
-            from_address=eth_account.address,
-            credit_amount='1',
-        )
+        # client.private.create_test_deposit(
+        #     from_address=eth_account.address,
+        #     credit_amount='1',
+        # )
 
         # Get the primary account.
         get_account_result = client.private.get_account(
@@ -75,12 +71,10 @@ class TestAuthLevels():
 
     def test_private_without_stark_private_key(self):
         # Generate STARK keys and Ethhereum account.
-        api_private_key = generate_private_key_hex_unsafe()
         stark_private_key = generate_private_key_hex_unsafe()
         eth_account = Web3(None).eth.account.create()
 
         # Get public keys.
-        api_public_key = private_key_to_public_hex(api_private_key)
         stark_public_key = private_key_to_public_hex(stark_private_key)
 
         # Onboard the user.
@@ -88,21 +82,19 @@ class TestAuthLevels():
             host=API_HOST,
             eth_private_key=eth_account.key,
         ).onboarding.create_user(
-            api_public_key=api_public_key,
             stark_public_key=stark_public_key,
         )
 
         # Create a second client WITHOUT eth_private_key or stark_private_key.
         client = Client(
             host=API_HOST,
-            api_private_key=api_private_key,
         )
 
         # Create a test deposit.
-        client.private.create_test_deposit(
-            from_address=eth_account.address,
-            credit_amount='200',
-        )
+        # client.private.create_test_deposit(
+        #     from_address=eth_account.address,
+        #     credit_amount='200',
+        # )
 
         # Get the primary account.
         get_account_result = client.private.get_account(
@@ -134,14 +126,12 @@ class TestAuthLevels():
 
     def test_onboard_with_private_keys(self):
         # Generate keys.
-        api_private_key = generate_private_key_hex_unsafe()
         stark_private_key = generate_private_key_hex_unsafe()
         eth_private_key = Web3(None).eth.account.create().key
 
         # Create client WITH private keys.
         client = Client(
             host=API_HOST,
-            api_private_key=api_private_key,
             stark_private_key=stark_private_key,
             eth_private_key=eth_private_key,
         )
@@ -152,17 +142,15 @@ class TestAuthLevels():
         # Register and then revoke a second API key.
         api_private_key_2 = generate_private_key_hex_unsafe()
         api_public_key_2 = private_key_to_public_hex(api_private_key_2)
-        client.api_keys.register_api_key(api_public_key_2)
-        client.api_keys.get_api_keys()
+        client.api_keys.create_api_key(api_public_key_2)
+        client.private.get_api_keys()
         client.api_keys.delete_api_key(api_public_key_2)
 
     def test_onboard_with_web3_provider(self):
         # Generate private keys.
-        api_private_key = generate_private_key_hex_unsafe()
         stark_private_key = generate_private_key_hex_unsafe()
 
         # Get public keys.
-        api_public_key = private_key_to_public_hex(api_private_key)
         stark_public_key = private_key_to_public_hex(stark_private_key)
 
         # Get account address from local Ethereum node.
@@ -179,7 +167,6 @@ class TestAuthLevels():
             client.onboarding.create_user(
                 ethereum_address=ethereum_address,
                 stark_public_key=stark_public_key,
-                api_public_key=api_public_key,
             )
 
         # If the Ethereum address was already onboarded, ignore the error.
@@ -187,27 +174,20 @@ class TestAuthLevels():
             pass
 
         # Register and then revoke a second API key.
-        api_private_key_2 = generate_private_key_hex_unsafe()
-        api_public_key_2 = private_key_to_public_hex(api_private_key_2)
-        client.api_keys.register_api_key(
-            api_public_key=api_public_key_2,
+        keys = client.api_keys.create_api_key(
             ethereum_address=ethereum_address,
         )
-        client.api_keys.get_api_keys(
-            ethereum_address=ethereum_address,
-        )
+        client.private.get_api_keys()
         client.api_keys.delete_api_key(
-            api_public_key=api_public_key_2,
-            ethereum_address=ethereum_address,
+          api_key=keys.key,
+          ethereum_address=ethereum_address,
         )
 
     def test_onboard_with_web3_default_account(self):
         # Generate private keys.
-        api_private_key = generate_private_key_hex_unsafe()
         stark_private_key = generate_private_key_hex_unsafe()
 
-        # Get public keys.
-        api_public_key = private_key_to_public_hex(api_private_key)
+        # Get public key.
         stark_public_key = private_key_to_public_hex(stark_private_key)
 
         # Connect to local Ethereum node.
@@ -224,7 +204,6 @@ class TestAuthLevels():
         try:
             client.onboarding.create_user(
                 stark_public_key=stark_public_key,
-                api_public_key=api_public_key,
             )
 
         # If the Ethereum address was already onboarded, ignore the error.
@@ -234,6 +213,6 @@ class TestAuthLevels():
         # Register and then revoke a second API key.
         api_private_key_2 = generate_private_key_hex_unsafe()
         api_public_key_2 = private_key_to_public_hex(api_private_key_2)
-        client.api_keys.register_api_key(api_public_key_2)
-        client.api_keys.get_api_keys()
+        client.api_keys.create_api_key(api_public_key_2)
+        client.private.get_api_keys()
         client.api_keys.delete_api_key(api_public_key_2)
