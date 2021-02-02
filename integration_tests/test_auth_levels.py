@@ -142,8 +142,8 @@ class TestAuthLevels():
         # Register and then revoke a second API key.
         api_private_key_2 = generate_private_key_hex_unsafe()
         api_public_key_2 = private_key_to_public_hex(api_private_key_2)
-        client.api_keys.register_api_key(api_public_key_2)
-        client.private.get_api_keys(ethereum_address=eth_address)
+        client.api_keys.create_api_key(api_public_key_2)
+        client.private.get_api_keys()
         client.api_keys.delete_api_key(api_public_key_2)
 
     def test_onboard_with_web3_provider(self):
@@ -174,12 +174,10 @@ class TestAuthLevels():
             pass
 
         # Register and then revoke a second API key.
-        keys = client.api_keys.register_api_key(
+        keys = client.api_keys.create_api_key(
             ethereum_address=ethereum_address,
         )
-        client.private.get_api_keys(
-            ethereum_address=ethereum_address,
-        )
+        client.private.get_api_keys()
         client.api_keys.delete_api_key(
           api_key=keys.key,
           ethereum_address=ethereum_address,
@@ -215,8 +213,6 @@ class TestAuthLevels():
         # Register and then revoke a second API key.
         api_private_key_2 = generate_private_key_hex_unsafe()
         api_public_key_2 = private_key_to_public_hex(api_private_key_2)
-        client.api_keys.register_api_key(api_public_key_2)
-        client.private.get_api_keys(
-          ethereum_address=ethereum_address,
-        )
+        client.api_keys.create_api_key(api_public_key_2)
+        client.private.get_api_keys()
         client.api_keys.delete_api_key(api_public_key_2)

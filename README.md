@@ -76,11 +76,9 @@ web3_client = Client(
 )
 web3_client.onboarding.create_user(
     stark_public_key='...',
-    api_key='...',
     ethereum_address='...',
 )
-web3_client.api_keys.register_api_key(
-    api_key='...',  # Register a second API key.
+web3_client.api_keys.create_api_key(
     ethereum_address='...',
 )
 
@@ -89,12 +87,10 @@ web3_client.api_keys.register_api_key(
 #
 web3_client_with_keys = Client(
     host='http://localhost:8080',
-    api_private_key='...',
     stark_private_key='...',
     eth_private_key='...',
 )
 web3_client_with_keys.onboarding.create_user()
-web3_client_with_keys.api_keys.register_api_key(
-    api_key='...',  # Register a second API key.
+web3_client_with_keys.api_keys.create_api_key(
 )
 ```

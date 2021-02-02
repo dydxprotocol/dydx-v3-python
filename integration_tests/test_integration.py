@@ -46,7 +46,7 @@ class TestIntegration():
         client.api_key_credentials = res['apiKey']
 
         # Register a new API key.
-        client.api_keys.register_api_key()
+        client.api_keys.create_api_key()
 
         # Get the primary account.
         get_account_result = client.private.get_account(
@@ -55,6 +55,8 @@ class TestIntegration():
         account = get_account_result['account']
         # 0x was filtered out and 0 was readded as padding
         assert account['starkKey'].lstrip('0') == client.stark_public_key[2:]
+
+        print(client.private.get_api_keys())
 
         # Initiate a regular (slow) withdrawal.
         #
@@ -284,9 +286,16 @@ class TestIntegration():
         )
 
         # Register a new API key.
-        api_key = client.api_keys.register_api_key(
+        api_key = client.api_keys.create_api_key(
             ethereum_address=ethereum_address,
         )
+
+        # Get all API keys.
+        api_keys_result = client.private.get_api_keys()
+        api_keys_public_keys = [
+            a['apiKey'] for a in api_keys_result['apiKeys']
+        ]
+        assert '0x' + account['starkKey'].lstrip('0') in api_keys_public_keys
 
         # Delete an API key.
         client.api_keys.delete_api_key(
@@ -295,9 +304,7 @@ class TestIntegration():
         )
 
         # Get all API keys after the deletion.
-        api_keys_result_after = client.private.get_api_keys(
-            ethereum_address=ethereum_address,
-        )
+        api_keys_result_after = client.private.get_api_keys()
         assert len(api_keys_result_after['apiKeys']) == 1
 
         # TODO: Uncomment when the fast withdrawal endpoint works.

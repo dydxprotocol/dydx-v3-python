@@ -89,13 +89,9 @@ class Private(object):
 
     def get_api_keys(
         self,
-        ethereum_address,
     ):
         '''
         Get API keys.
-
-        :param ethereum_address: required
-        :type ethereum_address: str
 
         :returns: Object containing an array of apiKeys
 
@@ -103,7 +99,7 @@ class Private(object):
         '''
         return self._get(
             'api-keys',
-            ethereum_address,
+            {},
         )
 
     def get_registration(self):
@@ -801,7 +797,7 @@ class Private(object):
 
         hashed = hmac.new(
             base64.urlsafe_b64decode(
-                (self.api_key_credentials['secret']).encode('utf-8')
+                (self.api_key_credentials['secret']).encode('utf-8'),
             ),
             msg=message_string.encode('utf-8'),
             digestmod=hashlib.sha256,

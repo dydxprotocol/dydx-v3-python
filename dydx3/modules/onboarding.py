@@ -57,9 +57,6 @@ class Onboarding(object):
         :param stark_public_key: optional
         :type stark_public_key: str
 
-        :param api_key: optional
-        :type api_key: str
-
         :param ethereum_address: optional
         :type ethereum_address: str
 

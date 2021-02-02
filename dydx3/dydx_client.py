@@ -63,7 +63,7 @@ class Client(object):
         # demand, if the necessary configuration options were provided.
         self._public = Public(host)
         self._private = None
-        self._api_key = None
+        self._api_keys = None
         self._eth = None
         self._onboarding = None
 
@@ -114,9 +114,9 @@ class Client(object):
         Get the api_keys module, used for managing API keys. Requires
         Ethereum key auth.
         '''
-        if not self._api_key:
+        if not self._api_keys:
             if self.eth_signer:
-                self._api_key = ApiKeys(
+                self._api_keys = ApiKeys(
                     host=self.host,
                     eth_signer=self.eth_signer,
                     network_id=self.network_id,
@@ -128,7 +128,7 @@ class Client(object):
                     'signing method (web3, web3_account, web3_provider) was ' +
                     'provided',
                 )
-        return self._api_key
+        return self._api_keys
 
     @property
     def onboarding(self):

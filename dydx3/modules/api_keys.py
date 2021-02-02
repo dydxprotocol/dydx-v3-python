@@ -78,7 +78,7 @@ class ApiKeys(object):
 
 # ============ Requests ============
 
-    def register_api_key(
+    def create_api_key(
         self,
         ethereum_address=None,
     ):
