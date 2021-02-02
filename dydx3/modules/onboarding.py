@@ -71,9 +71,13 @@ class Onboarding(object):
         :raises: DydxAPIError
         '''
         stark_key = stark_public_key or self.stark_public_key
-        stark_public_key_y_coordinate = stark_public_key_y_coordinate or self.stark_public_key_y_coordinate
+        stark_public_key_y_coordinate = (
+            stark_public_key_y_coordinate or self.stark_public_key_y_coordinate
+        )
         if stark_key is None or stark_public_key_y_coordinate is None:
-            raise ValueError('No STARK private or public key provided or Y coordinate')
+            raise ValueError(
+                'No STARK private or public key provided or Y coordinate'
+            )
         return self._post(
             'onboarding',
             {
