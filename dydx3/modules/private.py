@@ -157,12 +157,16 @@ class Private(object):
     def create_account(
         self,
         stark_public_key,
+        stark_public_key_y_coordinate,
     ):
         '''
         Make an account
 
         :param stark_public_key: required
         :type stark_public_key: str
+
+        :param stark_public_key_y_coordinate: required
+        :type stark_public_key_y_coordinate: str
 
         :returns: Account
 
@@ -172,6 +176,7 @@ class Private(object):
             'accounts',
             {
                 'starkKey': stark_public_key,
+                'starkkeyYCoordinate': stark_public_key_y_coordinate,
             }
         )
 

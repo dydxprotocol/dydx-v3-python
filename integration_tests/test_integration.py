@@ -41,7 +41,9 @@ class TestIntegration():
         )
 
         # Onboard the user.
-        res = client.onboarding.create_user()
+        res = client.onboarding.create_user(
+            stark_public_key_y_coordinate='1234a',
+        )
 
         client.api_key_credentials = res['apiKey']
 
@@ -168,6 +170,7 @@ class TestIntegration():
         stark_public_key_2 = private_key_to_public_hex(stark_private_key_2)
         client.private.create_account(
             stark_public_key=stark_public_key_2,
+            stark_public_key_y_coordinate=stark_public_key_2,
         )
 
         # Get the primary account.

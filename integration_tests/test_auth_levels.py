@@ -40,6 +40,7 @@ class TestAuthLevels():
             eth_private_key=eth_account.key,
         ).onboarding.create_user(
             stark_public_key=stark_public_key,
+            stark_public_key_y_coordinate=stark_public_key,
         )
 
         # Create a second client WITHOUT eth_private_key.

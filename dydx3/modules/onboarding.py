@@ -11,10 +11,12 @@ class Onboarding(object):
         network_id,
         default_address,
         stark_public_key=None,
+        stark_public_key_y_coordinate=None,
     ):
         self.host = host
         self.default_address = default_address
         self.stark_public_key = stark_public_key
+        self.stark_public_key_y_coordinate = stark_public_key_y_coordinate
 
         self.signer = SignOnboardingAction(eth_signer, network_id)
 
@@ -45,6 +47,7 @@ class Onboarding(object):
 
     def create_user(
         self,
+        stark_public_key_y_coordinate=None,
         stark_public_key=None,
         ethereum_address=None,
     ):
@@ -57,6 +60,9 @@ class Onboarding(object):
         :param stark_public_key: optional
         :type stark_public_key: str
 
+        :param stark_public_key_y_coordinate: optional
+        :type stark_public_key_y_coordinate: str
+
         :param ethereum_address: optional
         :type ethereum_address: str
 
@@ -65,12 +71,14 @@ class Onboarding(object):
         :raises: DydxAPIError
         '''
         stark_key = stark_public_key or self.stark_public_key
-        if stark_key is None:
-            raise ValueError('No STARK private or public key provided')
+        stark_public_key_y_coordinate = stark_public_key_y_coordinate or self.stark_public_key_y_coordinate
+        if stark_key is None or stark_public_key_y_coordinate is None:
+            raise ValueError('No STARK private or public key provided or Y coordinate')
         return self._post(
             'onboarding',
             {
                 'starkKey': stark_key,
+                'starkKeyYCoordinate': stark_public_key_y_coordinate,
             },
             ethereum_address,
         )

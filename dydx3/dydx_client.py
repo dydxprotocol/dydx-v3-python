@@ -22,6 +22,7 @@ class Client(object):
         network_id=None,
         stark_private_key=None,
         stark_public_key=None,
+        stark_public_key_y_coordinate=None,
         web3=None,
         web3_account=None,
         web3_provider=None,
@@ -36,6 +37,7 @@ class Client(object):
         self.eth_send_options = eth_send_options or {}
         self.stark_private_key = stark_private_key
         self.api_key_credentials = api_key_credentials
+        self.stark_public_key_y_coordinate = stark_public_key_y_coordinate
 
         self.web3 = None
         self.eth_signer = None
