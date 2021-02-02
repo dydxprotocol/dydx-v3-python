@@ -800,7 +800,9 @@ class Private(object):
         )
 
         hashed = hmac.new(
-            base64.urlsafe_b64decode((self.api_key_credentials['secret']).encode('utf-8')),
+            base64.urlsafe_b64decode(
+                (self.api_key_credentials['secret']).encode('utf-8')
+            ),
             msg=message_string.encode('utf-8'),
             digestmod=hashlib.sha256,
         )
