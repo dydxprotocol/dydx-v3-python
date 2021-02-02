@@ -124,7 +124,7 @@ class TestAuthLevels():
             signature=signature,
         )
 
-    def test_onboard_with_private_keys(self, eth_address):
+    def test_onboard_with_private_keys(self):
         # Generate keys.
         stark_private_key = generate_private_key_hex_unsafe()
         eth_private_key = Web3(None).eth.account.create().key
@@ -183,7 +183,7 @@ class TestAuthLevels():
           ethereum_address=ethereum_address,
         )
 
-    def test_onboard_with_web3_default_account(self, ethereum_address):
+    def test_onboard_with_web3_default_account(self):
         # Generate private keys.
         stark_private_key = generate_private_key_hex_unsafe()
 
