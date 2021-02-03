@@ -55,8 +55,6 @@ class TestIntegration():
         account = get_account_result['account']
         assert int(account['starkKey'], 16) == int(client.stark_public_key, 16)
 
-        print(client.private.get_api_keys())
-
         # Initiate a regular (slow) withdrawal.
         #
         # Expect signature validation to pass, although the collateralization
@@ -189,7 +187,11 @@ class TestIntegration():
         assert int(client.stark_public_key, 16) in [
             int(k, 16) for k in get_all_accounts_public_keys
         ]
-        # assert stark_public_key_2 in get_all_accounts_public_keys
+
+        # TODO: Fix.
+        # assert int(stark_public_key_2, 16) in [
+        #     int(k, 16) for k in get_all_accounts_public_keys
+        # ]
 
         # Get positions.
         get_positions_result = client.private.get_positions(market='BTC-USD')
@@ -274,17 +276,17 @@ class TestIntegration():
             expiration=one_minute_from_now_iso,
         )
 
-        # # Get deposits.
-        # deposits_result = client.private.get_transfers(
-        #     transfer_type=constants.ACCOUNT_ACTION_DEPOSIT,
-        # )
-        # assert len(deposits_result['transfers']) == 1
+        # Get deposits.
+        deposits_result = client.private.get_transfers(
+            transfer_type=constants.ACCOUNT_ACTION_DEPOSIT,
+        )
+        assert len(deposits_result['transfers']) == 1
 
-        # # Get withdrawals.
-        # withdrawals_result = client.private.get_transfers(
-        #     transfer_type=constants.ACCOUNT_ACTION_WITHDRAWAL,
-        # )
-        # assert len(withdrawals_result['transfers']) == 1
+        # Get withdrawals.
+        withdrawals_result = client.private.get_transfers(
+            transfer_type=constants.ACCOUNT_ACTION_WITHDRAWAL,
+        )
+        assert len(withdrawals_result['transfers']) == 1
 
         # Get funding payments.
         client.private.get_funding_payments(
