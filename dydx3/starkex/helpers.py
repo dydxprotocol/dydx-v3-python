@@ -6,6 +6,9 @@ from web3 import Web3
 from dydx3.constants import ASSET_RESOLUTION
 from dydx3.starkex.constants import ORDER_FIELD_BIT_LENGTHS
 from dydx3.starkex.starkex_resources.signature import get_random_private_key
+from dydx3.starkex.starkex_resources.signature import (
+    private_key_to_ec_point_on_stark_curve,
+)
 from dydx3.starkex.starkex_resources.signature import private_to_stark_key
 
 NONCE_UPPER_BOUND_EXCLUSIVE = 1 << ORDER_FIELD_BIT_LENGTHS['nonce']
@@ -120,3 +123,10 @@ def private_key_to_public_hex(private_key_hex):
     """Given private key as hex string, return the public key as hex string."""
     private_key_int = int(private_key_hex, 16)
     return hex(private_to_stark_key(private_key_int))
+
+
+def private_key_to_public_key_pair_hex(private_key_hex):
+    """Given private key as hex string, return the public x, y pair as hex."""
+    private_key_int = int(private_key_hex, 16)
+    x, y = private_key_to_ec_point_on_stark_curve(private_key_int)
+    return [hex(x), hex(y)]

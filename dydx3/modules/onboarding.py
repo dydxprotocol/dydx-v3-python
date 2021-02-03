@@ -47,8 +47,8 @@ class Onboarding(object):
 
     def create_user(
         self,
-        stark_public_key_y_coordinate=None,
         stark_public_key=None,
+        stark_public_key_y_coordinate=None,
         ethereum_address=None,
     ):
         '''
@@ -71,18 +71,22 @@ class Onboarding(object):
         :raises: DydxAPIError
         '''
         stark_key = stark_public_key or self.stark_public_key
-        stark_public_key_y_coordinate = (
+        stark_key_y = (
             stark_public_key_y_coordinate or self.stark_public_key_y_coordinate
         )
-        if stark_key is None or stark_public_key_y_coordinate is None:
+        if stark_key is None:
             raise ValueError(
-                'No STARK private or public key provided or Y coordinate'
+                'STARK private key or public key is required'
+            )
+        if stark_key is None:
+            raise ValueError(
+                'STARK private key or public key y-coordinate is required'
             )
         return self._post(
             'onboarding',
             {
                 'starkKey': stark_key,
-                'starkKeyYCoordinate': stark_public_key_y_coordinate,
+                'starkKeyYCoordinate': stark_key_y,
             },
             ethereum_address,
         )
