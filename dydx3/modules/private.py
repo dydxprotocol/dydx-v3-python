@@ -176,7 +176,7 @@ class Private(object):
             'accounts',
             {
                 'starkKey': stark_public_key,
-                'starkkeyYCoordinate': stark_public_key_y_coordinate,
+                'starkKeyYCoordinate': stark_public_key_y_coordinate,
             }
         )
 
