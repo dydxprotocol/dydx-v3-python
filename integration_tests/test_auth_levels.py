@@ -10,19 +10,22 @@ from dydx3 import constants
 from dydx3 import epoch_seconds_to_iso
 from dydx3 import generate_private_key_hex_unsafe
 from dydx3 import iso_to_epoch_seconds
-from dydx3.starkex.helpers import private_key_to_public_key_pair_hex
+from dydx3 import private_key_to_public_key_pair_hex
 from dydx3.helpers.request_helpers import random_client_id
 
 from tests.constants import DEFAULT_HOST
+from tests.constants import DEFAULT_NETWORK_ID
 
-API_HOST = os.environ.get('V3_API_HOST', DEFAULT_HOST)
+HOST = os.environ.get('V3_API_HOST', DEFAULT_HOST)
+NETWORK_ID = os.environ.get('NETWORK_ID', DEFAULT_NETWORK_ID)
 
 
 class TestAuthLevels():
 
     def test_public(self):
         client = Client(
-            host=API_HOST,
+            host=HOST,
+            network_id=NETWORK_ID,
         )
         client.public.get_markets()
 
@@ -37,8 +40,9 @@ class TestAuthLevels():
         )
 
         # Onboard the user.
-        Client(
-            host=API_HOST,
+        res = Client(
+            host=HOST,
+            network_id=NETWORK_ID,
             eth_private_key=eth_account.key,
         ).onboarding.create_user(
             stark_public_key=stark_public_key,
@@ -47,15 +51,11 @@ class TestAuthLevels():
 
         # Create a second client WITHOUT eth_private_key.
         client = Client(
-            host=API_HOST,
+            host=HOST,
+            network_id=NETWORK_ID,
             stark_private_key=stark_private_key,
         )
-
-        # Create a test deposit.
-        # client.private.create_test_deposit(
-        #     from_address=eth_account.address,
-        #     credit_amount='1',
-        # )
+        client.api_key_credentials = res['apiKey']
 
         # Get the primary account.
         get_account_result = client.private.get_account(
@@ -63,14 +63,24 @@ class TestAuthLevels():
         )
         account = get_account_result['account']
 
-        # Initiate a withdrawal.
-        client.private.create_withdrawal(
-            position_id=account['positionId'],
-            amount='1',
-            asset=constants.ASSET_USDC,
-            to_address=eth_account.address,
-            expiration=epoch_seconds_to_iso(time.time() + 60),
+        # Initiate a regular (slow) withdrawal.
+        #
+        # Expect signature validation to pass, although the collateralization
+        # check will fail.
+        expected_error = (
+            'Withdrawal would put account under collateralization minumum'
         )
+        try:
+            client.private.create_withdrawal(
+                position_id=account['positionId'],
+                amount='1',
+                asset=constants.ASSET_USDC,
+                to_address=eth_account.address,
+                expiration=epoch_seconds_to_iso(time.time() + 60),
+            )
+        except DydxApiError as e:
+            if expected_error not in str(e):
+                raise
 
     def test_private_without_stark_private_key(self):
         # Generate STARK keys and Ethhereum account.
@@ -83,8 +93,9 @@ class TestAuthLevels():
         )
 
         # Onboard the user.
-        Client(
-            host=API_HOST,
+        res = Client(
+            host=HOST,
+            network_id=NETWORK_ID,
             eth_private_key=eth_account.key,
         ).onboarding.create_user(
             stark_public_key=stark_public_key,
@@ -93,14 +104,10 @@ class TestAuthLevels():
 
         # Create a second client WITHOUT eth_private_key or stark_private_key.
         client = Client(
-            host=API_HOST,
+            host=HOST,
+            network_id=NETWORK_ID,
         )
-
-        # Create a test deposit.
-        # client.private.create_test_deposit(
-        #     from_address=eth_account.address,
-        #     credit_amount='200',
-        # )
+        client.api_key_credentials = res['apiKey']
 
         # Get the primary account.
         get_account_result = client.private.get_account(
@@ -119,16 +126,26 @@ class TestAuthLevels():
         )
         signature = signable_withdrawal.sign(stark_private_key)
 
-        # Initiate a withdrawal.
-        client.private.create_withdrawal(
-            position_id=account['positionId'],
-            amount='1',
-            asset=constants.ASSET_USDC,
-            to_address=eth_account.address,
-            expiration=expiration,
-            client_id=client_id,
-            signature=signature,
+        # Initiate a regular (slow) withdrawal.
+        #
+        # Expect signature validation to pass, although the collateralization
+        # check will fail.
+        expected_error = (
+            'Withdrawal would put account under collateralization minumum'
         )
+        try:
+            client.private.create_withdrawal(
+                position_id=account['positionId'],
+                amount='1',
+                asset=constants.ASSET_USDC,
+                to_address=eth_account.address,
+                expiration=expiration,
+                client_id=client_id,
+                signature=signature,
+            )
+        except DydxApiError as e:
+            if expected_error not in str(e):
+                raise
 
     def test_onboard_with_private_keys(self):
         # Generate keys.
@@ -137,13 +154,15 @@ class TestAuthLevels():
 
         # Create client WITH private keys.
         client = Client(
-            host=API_HOST,
+            host=HOST,
+            network_id=NETWORK_ID,
             stark_private_key=stark_private_key,
             eth_private_key=eth_private_key,
         )
 
         # Onboard the user.
-        client.onboarding.create_user()
+        res = client.onboarding.create_user()
+        client.api_key_credentials = res['apiKey']
 
         # Register and then revoke a second API key.
         client.api_keys.create_api_key()
@@ -166,7 +185,8 @@ class TestAuthLevels():
 
         # Create client WITHOUT any private keys.
         client = Client(
-            host=API_HOST,
+            host=HOST,
+            network_id=NETWORK_ID,
             web3_provider=Web3.HTTPProvider('http://localhost:8545'),
         )
 
@@ -183,13 +203,14 @@ class TestAuthLevels():
             pass
 
         # Register and then revoke a second API key.
-        keys = client.api_keys.create_api_key(
+        res = client.api_keys.create_api_key(
             ethereum_address=ethereum_address,
         )
+        client.api_key_credentials = res['apiKey']
         client.private.get_api_keys()
         client.api_keys.delete_api_key(
-          api_key=keys.key,
-          ethereum_address=ethereum_address,
+            api_key=client.api_key_credentials['key'],
+            ethereum_address=ethereum_address,
         )
 
     def test_onboard_with_web3_default_account(self):
@@ -207,7 +228,8 @@ class TestAuthLevels():
 
         # Create client WITHOUT any private keys.
         client = Client(
-            host=API_HOST,
+            host=HOST,
+            network_id=NETWORK_ID,
             web3=web3,
         )
 
@@ -223,8 +245,9 @@ class TestAuthLevels():
             pass
 
         # Register and then revoke a second API key.
-        client.api_keys.create_api_key()
+        res = client.api_keys.create_api_key()
+        client.api_key_credentials = res['apiKey']
         client.private.get_api_keys()
-
-        # TODO
-        # client.api_keys.delete_api_key(api_public_key_2)
+        client.api_keys.delete_api_key(
+            api_key=client.api_key_credentials['key'],
+        )
