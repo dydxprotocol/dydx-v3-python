@@ -7,7 +7,7 @@ from dydx3.modules.eth import Eth
 from dydx3.modules.private import Private
 from dydx3.modules.public import Public
 from dydx3.modules.onboarding import Onboarding
-from dydx3.starkex.helpers import private_key_to_public_hex
+from dydx3.starkex.helpers import private_key_to_public_key_pair_hex
 
 
 class Client(object):
@@ -22,6 +22,7 @@ class Client(object):
         network_id=None,
         stark_private_key=None,
         stark_public_key=None,
+        stark_public_key_y_coordinate=None,
         web3=None,
         web3_account=None,
         web3_provider=None,
@@ -36,6 +37,7 @@ class Client(object):
         self.eth_send_options = eth_send_options or {}
         self.stark_private_key = stark_private_key
         self.api_key_credentials = api_key_credentials
+        self.stark_public_key_y_coordinate = stark_public_key_y_coordinate
 
         self.web3 = None
         self.eth_signer = None
@@ -69,16 +71,23 @@ class Client(object):
 
         # Derive the public keys.
         if stark_private_key is not None:
-            self.stark_public_key = private_key_to_public_hex(
-                stark_private_key,
+            self.stark_public_key, self.stark_public_key_y_coordinate = (
+                private_key_to_public_key_pair_hex(stark_private_key)
             )
             if (
                 stark_public_key is not None and
                 stark_public_key != self.stark_public_key
             ):
                 raise ValueError('STARK public/private key mismatch')
+            if (
+                stark_public_key_y_coordinate is not None and
+                stark_public_key_y_coordinate !=
+                    self.stark_public_key_y_coordinate
+            ):
+                raise ValueError('STARK public/private key mismatch (y)')
         else:
             self.stark_public_key = stark_public_key
+            self.stark_public_key_y_coordinate = stark_public_key_y_coordinate
 
     @property
     def public(self):
@@ -144,6 +153,9 @@ class Client(object):
                     network_id=self.network_id,
                     default_address=self.default_address,
                     stark_public_key=self.stark_public_key,
+                    stark_public_key_y_coordinate=(
+                        self.stark_public_key_y_coordinate
+                    ),
                 )
             else:
                 raise Exception(
