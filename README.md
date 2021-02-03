@@ -74,10 +74,11 @@ web3_client = Client(
     host='http://localhost:8080',
     web3_provider=Web3.HTTPProvider('http://localhost:8545'),
 )
-web3_client.onboarding.create_user(
+response = web3_client.onboarding.create_user(
     stark_public_key='...',
     ethereum_address='...',
 )
+client.api_key_credentials = response['apiKey']
 web3_client.api_keys.create_api_key(
     ethereum_address='...',
 )
@@ -90,7 +91,8 @@ web3_client_with_keys = Client(
     stark_private_key='...',
     eth_private_key='...',
 )
-web3_client_with_keys.onboarding.create_user()
+response = web3_client_with_keys.onboarding.create_user()
+client.api_key_credentials = response['apiKey']
 web3_client_with_keys.api_keys.create_api_key(
 )
 ```
