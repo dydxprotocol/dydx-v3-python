@@ -166,11 +166,10 @@ class TestIntegration():
             private_key_to_public_key_pair_hex(stark_private_key_2)
         )
 
-        # TODO: Fix.
-        # client.private.create_account(
-        #     stark_public_key=stark_public_key_2,
-        #     stark_public_key_y_coordinate=stark_public_key_y_coordinate_2,
-        # )
+        client.private.create_account(
+            stark_public_key=stark_public_key_2,
+            stark_public_key_y_coordinate=stark_public_key_y_coordinate_2,
+        )
 
         # Get the primary account.
         get_account_result = client.private.get_account(
@@ -300,7 +299,7 @@ class TestIntegration():
         # Get all API keys.
         get_api_keys_result = client.private.get_api_keys()
         api_keys_public_keys = [
-            a['apiKey'] for a in get_api_keys_result['apiKeys']
+            a['key'] for a in get_api_keys_result['apiKeys']
         ]
         assert api_key_credentials['key'] in api_keys_public_keys
 
