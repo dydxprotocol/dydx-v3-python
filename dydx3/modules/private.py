@@ -2,7 +2,6 @@ import hmac
 import hashlib
 import base64
 
-
 from dydx3 import constants
 from dydx3.helpers.db import get_account_id
 from dydx3.helpers.request_helpers import generate_now_iso
