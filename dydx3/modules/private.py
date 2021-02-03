@@ -1,3 +1,7 @@
+import hmac
+import hashlib
+import base64
+
 from dydx3 import constants
 from dydx3.helpers.db import get_account_id
 from dydx3.helpers.request_helpers import generate_now_iso
@@ -7,7 +11,6 @@ from dydx3.helpers.request_helpers import iso_to_epoch_seconds
 from dydx3.helpers.request_helpers import json_stringify
 from dydx3.helpers.request_helpers import remove_nones
 from dydx3.helpers.requests import request
-from dydx3.starkex.api_request import SignableApiRequest
 from dydx3.starkex.order import SignableOrder
 from dydx3.starkex.withdrawal import SignableWithdrawal
 
@@ -18,15 +21,13 @@ class Private(object):
         self,
         host,
         stark_private_key,
-        api_private_key,
-        api_public_key,
         default_address,
+        api_key_credentials,
     ):
         self.host = host
         self.stark_private_key = stark_private_key
-        self.api_private_key = api_private_key
-        self.api_public_key = api_public_key
         self.default_address = default_address
+        self.api_key_credentials = api_key_credentials
 
     # ============ Request Helpers ============
 
@@ -46,8 +47,9 @@ class Private(object):
         )
         headers = {
             'DYDX-SIGNATURE': signature,
-            'DYDX-API-KEY': self.api_public_key,
+            'DYDX-API-KEY': self.api_key_credentials['key'],
             'DYDX-TIMESTAMP': now_iso_string,
+            'DYDX-PASSPHRASE': self.api_key_credentials['passphrase'],
         }
         return request(
             self.host + request_path,
@@ -83,6 +85,21 @@ class Private(object):
         )
 
     # ============ Requests ============
+
+    def get_api_keys(
+        self,
+    ):
+        '''
+        Get API keys.
+
+        :returns: Object containing an array of apiKeys
+
+        :raises: DydxAPIError
+        '''
+        return self._get(
+            'api-keys',
+            {},
+        )
 
     def get_registration(self):
         '''
@@ -139,12 +156,16 @@ class Private(object):
     def create_account(
         self,
         stark_public_key,
+        stark_public_key_y_coordinate,
     ):
         '''
         Make an account
 
         :param stark_public_key: required
         :type stark_public_key: str
+
+        :param stark_public_key_y_coordinate: required
+        :type stark_public_key_y_coordinate: str
 
         :returns: Account
 
@@ -154,6 +175,7 @@ class Private(object):
             'accounts',
             {
                 'starkKey': stark_public_key,
+                'starkKeyYCoordinate': stark_public_key_y_coordinate,
             }
         )
 
@@ -770,9 +792,18 @@ class Private(object):
         iso_timestamp,
         data,
     ):
-        return SignableApiRequest(
-            iso_timestamp=iso_timestamp,
-            method=method,
-            request_path=request_path,
-            body=json_stringify(data) if data else '',
-        ).sign(self.api_private_key)
+        message_string = (
+            iso_timestamp +
+            method +
+            request_path +
+            (json_stringify(data) if data else '')
+        )
+
+        hashed = hmac.new(
+            base64.urlsafe_b64decode(
+                (self.api_key_credentials['secret']).encode('utf-8'),
+            ),
+            msg=message_string.encode('utf-8'),
+            digestmod=hashlib.sha256,
+        )
+        return base64.urlsafe_b64encode(hashed.digest()).decode()

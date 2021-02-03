@@ -2,6 +2,7 @@ from dydx3.starkex.helpers import generate_private_key_hex_unsafe
 from dydx3.starkex.helpers import nonce_from_client_id
 from dydx3.starkex.helpers import private_key_from_bytes
 from dydx3.starkex.helpers import private_key_to_public_hex
+from dydx3.starkex.helpers import private_key_to_public_key_pair_hex
 
 
 class TestHelpers():
@@ -45,4 +46,15 @@ class TestHelpers():
             '0x2242959533856f2a03f3c7d9431e28ef4fe5cb2a15038c37f1d76d35dc508b',
         ) == (
             '0x69a33d37101d7089b606f92e4b41553c237a474ad9d6f62eeb6708415f98f4d'
+        )
+
+    def test_private_key_to_public_key_pair_hex(self):
+        x, y = private_key_to_public_key_pair_hex(
+            '0x2242959533856f2a03f3c7d9431e28ef4fe5cb2a15038c37f1d76d35dc508b',
+        )
+        assert x == (
+            '0x69a33d37101d7089b606f92e4b41553c237a474ad9d6f62eeb6708415f98f4d'
+        )
+        assert y == (
+            '0x717e78b98a53888aa7685b91137fa01b9336ce7d25f874dbfb8d752c6ac610d'
         )
