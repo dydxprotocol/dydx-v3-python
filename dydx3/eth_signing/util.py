@@ -104,10 +104,4 @@ def addresses_are_equal(
 
 
 def hash_string(input):
-    hash = Web3.solidityKeccak(['string'], [input])
-    if not hash:
-        raise Exception(
-            'ecrecover failed due to invalid signature length: ' + input
-        )
-
-    return hash
+    return Web3.solidityKeccak(['string'], [input])
