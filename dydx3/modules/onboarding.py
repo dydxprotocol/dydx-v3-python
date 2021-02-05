@@ -3,7 +3,6 @@ from web3 import Web3
 from dydx3.constants import OFF_CHAIN_ONBOARDING_ACTION
 from dydx3.constants import OFF_CHAIN_KEY_DERIVATION_ACTION
 from dydx3.eth_signing import SignOnboardingAction
-from dydx3.eth_signing.util import hash_string
 from dydx3.helpers.requests import request
 
 
