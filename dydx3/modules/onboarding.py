@@ -1,4 +1,9 @@
+from web3 import Web3
+
+from dydx3.constants import OFF_CHAIN_ONBOARDING_ACTION
+from dydx3.constants import OFF_CHAIN_KEY_DERIVATION_ACTION
 from dydx3.eth_signing import SignOnboardingAction
+from dydx3.eth_signing.util import hash_string
 from dydx3.helpers.requests import request
 
 
@@ -30,7 +35,10 @@ class Onboarding(object):
     ):
         ethereum_address = opt_ethereum_address or self.default_address
 
-        signature = self.signer.sign(ethereum_address)
+        signature = self.signer.sign(
+            ethereum_address,
+            action=OFF_CHAIN_ONBOARDING_ACTION,
+        )
 
         request_path = '/'.join(['/v3', endpoint])
         return request(
@@ -90,3 +98,28 @@ class Onboarding(object):
             },
             ethereum_address,
         )
+
+    # ============ Key Derivation ============
+
+    def derive_stark_key(
+        self,
+        ethereum_address,
+    ):
+        '''
+        Derive a STARK key pair deterministically from an Ethereum key.
+
+        This is the function used by the dYdX frontend to derive a user's
+        STARK key pair in a way that is recoverable. Programmatic traders may
+        optionally derive their STARK key pair in the same way.
+
+        :param ethereum_address: optional
+        :type ethereum_address: str
+        '''
+        signature = self.signer.sign(
+            ethereum_address or self.default_address,
+            action=OFF_CHAIN_KEY_DERIVATION_ACTION,
+        )
+        signature_int = int(signature, 16)
+        hashed_signature = Web3.solidityKeccak(['uint256'], [signature_int])
+        private_key_int = int(hashed_signature.hex(), 16) >> 5
+        return hex(private_key_int)

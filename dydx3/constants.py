@@ -111,3 +111,7 @@ TOKEN_CONTRACTS = {
         ASSET_USDC: '0x8707A5bf4C2842d46B31A405Ba41b858C0F876c4',
     },
 }
+
+# ------------ Off-Chain Ethereum-Signed Actions ------------
+OFF_CHAIN_ONBOARDING_ACTION = 'dYdX Onboarding'
+OFF_CHAIN_KEY_DERIVATION_ACTION = 'dYdX STARK Key'

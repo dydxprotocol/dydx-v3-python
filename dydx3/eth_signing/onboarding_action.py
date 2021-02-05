@@ -8,12 +8,14 @@ EIP712_OFF_CHAIN_ACTION_STRUCT_STRING = (
     'string action' +
     ')'
 )
-ONBOARDING_STRING = 'dYdX Onboarding'
 
 
 class SignOnboardingAction(SignOffChainAction):
 
-    def get_hash(self):
+    def get_hash(
+        self,
+        action,
+    ):
         data = [
             [
                 'bytes32',
@@ -21,7 +23,7 @@ class SignOnboardingAction(SignOffChainAction):
             ],
             [
                 util.hash_string(EIP712_OFF_CHAIN_ACTION_STRUCT_STRING),
-                util.hash_string(ONBOARDING_STRING),
+                util.hash_string(action),
             ],
         ]
         struct_hash = Web3.solidityKeccak(*data)

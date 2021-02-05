@@ -2,6 +2,7 @@ import os
 
 from web3 import Web3
 
+from dydx3.constants import OFF_CHAIN_ONBOARDING_ACTION
 from dydx3.eth_signing import SignWithWeb3
 from dydx3.eth_signing import SignWithKey
 from dydx3.eth_signing import SignOnboardingAction
@@ -19,8 +20,15 @@ class TestSignOffChainAction():
         signer_address = web3.eth.accounts[0]
 
         action_signer = SignOnboardingAction(signer, NETWORK_ID)
-        signature = action_signer.sign(signer_address)
-        assert action_signer.verify(signature, signer_address)
+        signature = action_signer.sign(
+            signer_address,
+            action=OFF_CHAIN_ONBOARDING_ACTION,
+        )
+        assert action_signer.verify(
+            signature,
+            signer_address,
+            action=OFF_CHAIN_ONBOARDING_ACTION,
+        )
 
     def test_sign_via_account_no_expiration(self):
         web3 = Web3(None)
@@ -29,13 +37,27 @@ class TestSignOffChainAction():
         signer_address = web3_account.address
 
         action_signer = SignOnboardingAction(signer, NETWORK_ID)
-        signature = action_signer.sign(signer_address)
-        assert action_signer.verify(signature, signer_address)
+        signature = action_signer.sign(
+            signer_address,
+            action=OFF_CHAIN_ONBOARDING_ACTION,
+        )
+        assert action_signer.verify(
+            signature,
+            signer_address,
+            action=OFF_CHAIN_ONBOARDING_ACTION,
+        )
 
     def test_sign_via_private_key_no_expiration(self):
         signer = SignWithKey(MOCK_KEY)
         signer_address = signer.address
 
         action_signer = SignOnboardingAction(signer, NETWORK_ID)
-        signature = action_signer.sign(signer_address)
-        assert action_signer.verify(signature, signer_address)
+        signature = action_signer.sign(
+            signer_address,
+            action=OFF_CHAIN_ONBOARDING_ACTION,
+        )
+        assert action_signer.verify(
+            signature,
+            signer_address,
+            action=OFF_CHAIN_ONBOARDING_ACTION,
+        )
