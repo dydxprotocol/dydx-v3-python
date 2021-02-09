@@ -11,8 +11,8 @@ MOCK_PRIVATE_KEY = (
     '58c7d5a90b1776bde86ebac077e053ed85b0f7164f53b080304a531947f46e3'
 )
 MOCK_SIGNATURE = (
-    '0398287472161cba0e6386ff0b2f25f39ba37c646b7bbadace80eee6b8e7157d' +
-    '01ba924272e1e42b3211b96bbbe012e7e8101e1b3e5b83ea90d161ad11fcced4'
+    '015d2f1c7f68f2dc7c8f2557e0cd9cf6f9cf62c53f2747acc4cce3b6ef241765' +
+    '0472fa737331754017aad07e08d6bb094cba54780ea86bbccfc4d130ec04fcba'
 )
 
 # Test data where the public key y-coordinate is even.
@@ -20,8 +20,8 @@ MOCK_PUBLIC_KEY_EVEN_Y = (
     '5c749cd4c44bdc730bc90af9bfbdede9deb2c1c96c05806ce1bc1cb4fed64f7'
 )
 MOCK_SIGNATURE_EVEN_Y = (
-    '05cf391a69386f53693344bada2e0d245879f3c6a98971498b2862ff2f359c49' +
-    '0737deea7e201eaa86c8d6eeb2c1ca3ce89ac248b3fe1a6182301aa72d6e8e4f'
+    '01a1e043c20da0563538445ae790918b8f478279cb4c2c3e9b201172c0b7967e' +
+    '007ce48d9ef25643f0f78c8a60e201b2c6bf67732e4c68a4e5add78f647c6941'
 )
 
 # Mock order params.
@@ -68,7 +68,7 @@ class TestOrder():
         assert starkware_order.quantums_amount_fee == 6343784019
 
         # Order expiration should be rounded up and should have a buffer added.
-        assert starkware_order.expiration_epoch_hours == 444581
+        assert starkware_order.expiration_epoch_hours == 444701
 
     def test_convert_order_fee_edge_case(self):
         order = SignableOrder(
