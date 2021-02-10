@@ -63,7 +63,7 @@ class TestOrder():
     def test_starkware_representation(self):
         order = SignableOrder(**ORDER_PARAMS)
         starkware_order = order.to_starkware()
-        assert starkware_order.quantums_amount_synthetic == 14500050000
+        assert starkware_order.quantums_amount_synthetic == 145000500000
         assert starkware_order.quantums_amount_collateral == 50750272151
         assert starkware_order.quantums_amount_fee == 6343784019
 
