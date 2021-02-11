@@ -11,8 +11,8 @@ MOCK_PRIVATE_KEY = (
     '58c7d5a90b1776bde86ebac077e053ed85b0f7164f53b080304a531947f46e3'
 )
 MOCK_SIGNATURE = (
-    '015d2f1c7f68f2dc7c8f2557e0cd9cf6f9cf62c53f2747acc4cce3b6ef241765' +
-    '0472fa737331754017aad07e08d6bb094cba54780ea86bbccfc4d130ec04fcba'
+    '00cecbe513ecdbf782cd02b2a5efb03e58d5f63d15f2b840e9bc0029af04e8dd' +
+    '0090b822b16f50b2120e4ea9852b340f7936ff6069d02acca02f2ed03029ace5'
 )
 
 # Test data where the public key y-coordinate is even.
@@ -20,8 +20,8 @@ MOCK_PUBLIC_KEY_EVEN_Y = (
     '5c749cd4c44bdc730bc90af9bfbdede9deb2c1c96c05806ce1bc1cb4fed64f7'
 )
 MOCK_SIGNATURE_EVEN_Y = (
-    '01a1e043c20da0563538445ae790918b8f478279cb4c2c3e9b201172c0b7967e' +
-    '007ce48d9ef25643f0f78c8a60e201b2c6bf67732e4c68a4e5add78f647c6941'
+    '00fc0756522d78bef51f70e3981dc4d1e82273f59cdac6bc31c5776baabae6ec' +
+    '0158963bfd45d88a99fb2d6d72c9bbcf90b24c3c0ef2394ad8d05f9d3983443a'
 )
 
 # Mock order params.
