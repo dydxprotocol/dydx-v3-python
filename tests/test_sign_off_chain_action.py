@@ -9,7 +9,7 @@ from dydx3.eth_signing import SignOnboardingAction
 from tests.constants import DEFAULT_NETWORK_ID
 
 MOCK_KEY = '0x0f29b00db328c986c87a9e05c776bcdcccec82a50d3b707bf00aeef3f195054e'
-NETWORK_ID = os.environ.get('NETWORK_ID', DEFAULT_NETWORK_ID)
+NETWORK_ID = int(os.environ.get('NETWORK_ID', DEFAULT_NETWORK_ID))
 
 
 class TestSignOffChainAction():

@@ -62,13 +62,38 @@ class TestIntegration():
         expected_error = (
             'Withdrawal would put account under collateralization minumum'
         )
-        one_minute_from_now_iso = epoch_seconds_to_iso(time.time() + 60)
+        # Expire in seven days and one minute.
+        expiration_iso = epoch_seconds_to_iso(
+            time.time() +
+            (((7 * 24 * 60) + 1) * 60)
+        )
         try:
             client.private.create_withdrawal(
                 position_id=account['positionId'],
                 amount='1',
                 asset=constants.ASSET_USDC,
                 to_address=ethereum_address,
+                expiration=expiration_iso,
+            )
+        except DydxApiError as e:
+            if expected_error not in str(e):
+                raise
+
+        # Post an order.
+        #
+        # Expect signature validation to pass, although the collateralization
+        # check will fail.
+        one_minute_from_now_iso = epoch_seconds_to_iso(time.time() + 60)
+        try:
+            create_order_result = client.private.create_order(
+                position_id=account['positionId'],
+                market=constants.MARKET_BTC_USD,
+                side=constants.ORDER_SIDE_BUY,
+                order_type=constants.ORDER_TYPE_LIMIT,
+                post_only=False,
+                size='10',
+                price='1000',
+                limit_fee='0.1',
                 expiration=one_minute_from_now_iso,
             )
         except DydxApiError as e:
