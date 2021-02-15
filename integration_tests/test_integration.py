@@ -85,7 +85,7 @@ class TestIntegration():
         # check will fail.
         one_minute_from_now_iso = epoch_seconds_to_iso(time.time() + 60)
         try:
-            create_order_result = client.private.create_order(
+            client.private.create_order(
                 position_id=account['positionId'],
                 market=constants.MARKET_BTC_USD,
                 side=constants.ORDER_SIDE_BUY,
