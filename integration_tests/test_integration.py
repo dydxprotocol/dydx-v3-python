@@ -18,11 +18,17 @@ from dydx3 import private_key_to_public_key_pair_hex
 
 from tests.constants import DEFAULT_HOST
 from tests.constants import DEFAULT_NETWORK_ID
+from tests.constants import SEVEN_DAYS_S
 
 from integration_tests.util import wait_for_condition
 
 HOST = os.environ.get('V3_API_HOST', DEFAULT_HOST)
 NETWORK_ID = os.environ.get('NETWORK_ID', DEFAULT_NETWORK_ID)
+LP_POSITION_ID = os.environ.get('LP_POSITION_ID', '2')
+LP_PUBLIC_KEY = os.environ.get(
+    'LP_PUBLIC_KEY',
+    '04a9ecd28a67407c3cff8937f329ca24fd631b1d9ca2b9f2df47c7ebf72bf0b0',
+)
 
 
 class TestIntegration():
@@ -62,18 +68,14 @@ class TestIntegration():
         expected_error = (
             'Withdrawal would put account under collateralization minumum'
         )
-        # Expire in seven days and one minute.
-        expiration_iso = epoch_seconds_to_iso(
-            time.time() +
-            (((7 * 24 * 60) + 1) * 60)
-        )
+        expiration_epoch_seconds = time.time() + SEVEN_DAYS_S + 60
         try:
             client.private.create_withdrawal(
                 position_id=account['positionId'],
                 amount='1',
                 asset=constants.ASSET_USDC,
                 to_address=ethereum_address,
-                expiration=expiration_iso,
+                expiration_epoch_seconds=expiration_epoch_seconds,
             )
         except DydxApiError as e:
             if expected_error not in str(e):
@@ -150,6 +152,10 @@ class TestIntegration():
         api_key_credentials = res['apiKey']
         client.api_key_credentials = api_key_credentials
 
+        print('eth_private_key', eth_private_key)
+        print('stark_private_key', stark_private_key)
+        print('client.api_key_credentials', client.api_key_credentials)
+
         # Get the user.
         get_user_result = client.private.get_user()
         assert get_user_result['user'] == {
@@ -158,8 +164,8 @@ class TestIntegration():
             'email': None,
             'username': None,
             'userData': {},
-            'makerFeeRate': '0.05',
-            'takerFeeRate': '0.04',
+            'makerFeeRate': '0.0005',
+            'takerFeeRate': '0.0015',
             'makerVolume30D': '0',
             'takerVolume30D': '0',
             'fees30D': '0',
@@ -232,7 +238,7 @@ class TestIntegration():
         # Send an on-chain deposit.
         deposit_tx_hash = client.eth.deposit_to_exchange(
             account['positionId'],
-            2,
+            3,
         )
         print('Waiting for deposit...')
         client.eth.wait_for_tx(deposit_tx_hash)
@@ -291,13 +297,13 @@ class TestIntegration():
         )
 
         # Initiate a regular (slow) withdrawal.
-        one_minute_from_now_iso = epoch_seconds_to_iso(time.time() + 60)
+        expiration_epoch_seconds = time.time() + SEVEN_DAYS_S + 60
         client.private.create_withdrawal(
             position_id=account['positionId'],
             amount='1',
             asset=constants.ASSET_USDC,
             to_address=ethereum_address,
-            expiration=one_minute_from_now_iso,
+            expiration_epoch_seconds=expiration_epoch_seconds,
         )
 
         # Get deposits.
@@ -341,24 +347,15 @@ class TestIntegration():
         # TODO: Uncomment when the fast withdrawal endpoint works.
         #
         # # Initiate a fast withdrawal of USDC.
-        # one_minute_from_now_iso = epoch_seconds_to_iso(time.time() + 60)
-        # client.private.create_fast_withdrawal(
-        #     credit_asset='USDC',
-        #     credit_amount='100',
-        #     debit_amount='100',
-        #     to_address=ethereum_address,
-        #     lp_position_id='foo', # TODO
-        #     expiration=one_minute_from_now_iso,
-        #     signature='mock-signature',
-        # )
-
-        # # Initiate a fast withdrawal, converting USDC -> USDT.
-        # client.private.create_fast_withdrawal(
-        #     credit_asset='USDT',
-        #     credit_amount='85',
-        #     debit_amount='100',
-        #     to_address=ethereum_address,
-        #     lp_position_id='foo', # TODO
-        #     expiration=one_minute_from_now_iso,
-        #     signature='mock-signature',
-        # )
+        expiration_epoch_seconds = time.time() + SEVEN_DAYS_S + 60
+        client.private.create_fast_withdrawal(
+            position_id=account['positionId'],
+            credit_asset='USDC',
+            credit_amount='1',
+            debit_amount='2',
+            to_address=ethereum_address,
+            lp_position_id=LP_POSITION_ID,
+            lp_stark_public_key=LP_PUBLIC_KEY,
+            client_id='mock-client-id',
+            expiration_epoch_seconds=expiration_epoch_seconds,
+        )

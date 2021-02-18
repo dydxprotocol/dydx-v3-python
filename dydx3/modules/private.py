@@ -483,6 +483,7 @@ class Private(object):
                     'initialized with stark_private_key'
                 )
             order_to_sign = SignableOrder(
+                network_id=self.network_id,
                 position_id=position_id,
                 client_id=client_id,
                 market=market,
@@ -703,6 +704,7 @@ class Private(object):
                     'initialized with stark_private_key'
                 )
             withdrawal_to_sign = SignableWithdrawal(
+                network_id=self.network_id,
                 position_id=position_id,
                 client_id=client_id,
                 human_amount=amount,
@@ -807,6 +809,7 @@ class Private(object):
                 salt=nonce_from_client_id(client_id),
             )
             transfer_to_sign = SignableConditionalTransfer(
+                network_id=self.network_id,
                 sender_position_id=position_id,
                 receiver_position_id=lp_position_id,
                 receiver_public_key=lp_stark_public_key,

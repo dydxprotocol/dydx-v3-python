@@ -2,7 +2,7 @@ from collections import namedtuple
 import math
 
 from dydx3.constants import COLLATERAL_ASSET
-from dydx3.constants import COLLATERAL_ASSET_ID
+from dydx3.constants import COLLATERAL_ASSET_ID_BY_NETWORK_ID
 from dydx3.starkex.constants import CONDITIONAL_TRANSFER_FEE_ASSET_ID
 from dydx3.starkex.constants import CONDITIONAL_TRANSFER_FIELD_BIT_LENGTHS
 from dydx3.starkex.constants import CONDITIONAL_TRANSFER_MAX_AMOUNT_FEE
@@ -33,6 +33,7 @@ class SignableConditionalTransfer(Signable):
 
     def __init__(
         self,
+        network_id,
         sender_position_id,
         receiver_position_id,
         receiver_public_key,
@@ -60,7 +61,10 @@ class SignableConditionalTransfer(Signable):
             nonce=nonce_from_client_id(client_id),
             expiration_epoch_hours=expiration_epoch_hours,
         )
-        super(SignableConditionalTransfer, self).__init__(message)
+        super(SignableConditionalTransfer, self).__init__(
+            network_id,
+            message,
+        )
 
     def to_starkware(self):
         return self._message
@@ -73,7 +77,7 @@ class SignableConditionalTransfer(Signable):
         # The transfer asset and fee asset are always the collateral asset.
         # Fees are not supported for conditional transfers.
         asset_ids = pedersen_hash(
-            COLLATERAL_ASSET_ID,
+            COLLATERAL_ASSET_ID_BY_NETWORK_ID[self.network_id],
             CONDITIONAL_TRANSFER_FEE_ASSET_ID,
         )
 

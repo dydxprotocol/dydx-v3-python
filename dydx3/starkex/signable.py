@@ -1,3 +1,4 @@
+from dydx3.constants import COLLATERAL_ASSET_ID_BY_NETWORK_ID
 from dydx3.starkex.helpers import deserialize_signature
 from dydx3.starkex.helpers import serialize_signature
 from dydx3.starkex.starkex_resources.signature import sign
@@ -7,9 +8,17 @@ from dydx3.starkex.starkex_resources.signature import verify
 class Signable(object):
     """Base class for an object signable with a STARK key."""
 
-    def __init__(self, message):
+    def __init__(self, network_id, message):
+        self.network_id = network_id
         self._message = message
         self._hash = None
+
+        # Sanity check.
+        if not COLLATERAL_ASSET_ID_BY_NETWORK_ID[self.network_id]:
+            raise ValueError(
+                'Unknown network ID or unknown collateral asset for network: '
+                '{}'.format(network_id),
+            )
 
     @property
     def hash(self):

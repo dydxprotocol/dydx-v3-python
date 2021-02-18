@@ -4,7 +4,7 @@ from web3 import Web3
 
 from dydx3.constants import ASSET_RESOLUTION
 from dydx3.constants import COLLATERAL_ASSET
-from dydx3.constants import COLLATERAL_ASSET_ID
+from dydx3.constants import COLLATERAL_ASSET_ID_BY_NETWORK_ID
 from dydx3.constants import DEFAULT_GAS_AMOUNT
 from dydx3.constants import DEFAULT_GAS_MULTIPLIER
 from dydx3.constants import DEFAULT_GAS_PRICE
@@ -292,7 +292,7 @@ class Eth(object):
         return self.send_eth_transaction(
             method=contract.functions.deposit(
                 int(stark_public_key, 16),
-                COLLATERAL_ASSET_ID,
+                COLLATERAL_ASSET_ID_BY_NETWORK_ID[self.network_id],
                 int(position_id),
                 int(float(human_amount) * COLLATERAL_ASSET_RESOLUTION),
             ),

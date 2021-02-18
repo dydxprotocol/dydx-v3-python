@@ -26,6 +26,7 @@ MOCK_SIGNATURE_EVEN_Y = (
 
 # Mock order params.
 ORDER_PARAMS = {
+    "network_id": 3,
     "market": MARKET_ETH_USD,
     "side": ORDER_SIDE_BUY,
     "position_id": 12345,
