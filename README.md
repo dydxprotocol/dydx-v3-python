@@ -78,7 +78,6 @@ response = web3_client.onboarding.create_user(
     stark_public_key='...',
     ethereum_address='...',
 )
-client.api_key_credentials = response['apiKey']
 web3_client.api_keys.create_api_key(
     ethereum_address='...',
 )
@@ -92,7 +91,6 @@ web3_client_with_keys = Client(
     eth_private_key='...',
 )
 response = web3_client_with_keys.onboarding.create_user()
-client.api_key_credentials = response['apiKey']
 web3_client_with_keys.api_keys.create_api_key(
 )
 ```

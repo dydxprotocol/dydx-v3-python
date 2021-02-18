@@ -49,7 +49,6 @@ class TestIntegration():
 
         # Onboard the user.
         res = client.onboarding.create_user()
-        client.api_key_credentials = res['apiKey']
 
         # Register a new API key.
         client.api_keys.create_api_key()
@@ -150,7 +149,6 @@ class TestIntegration():
         # Onboard the user.
         res = client.onboarding.create_user()
         api_key_credentials = res['apiKey']
-        client.api_key_credentials = api_key_credentials
 
         print('eth_private_key', eth_private_key)
         print('stark_private_key', stark_private_key)

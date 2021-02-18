@@ -54,7 +54,6 @@ class TestAuthLevels():
             network_id=NETWORK_ID,
             stark_private_key=stark_private_key,
         )
-        client.api_key_credentials = res['apiKey']
 
         # Get the primary account.
         get_account_result = client.private.get_account(
@@ -107,7 +106,6 @@ class TestAuthLevels():
             host=HOST,
             network_id=NETWORK_ID,
         )
-        client.api_key_credentials = res['apiKey']
 
         # Get the primary account.
         get_account_result = client.private.get_account(
@@ -163,7 +161,6 @@ class TestAuthLevels():
 
         # Onboard the user.
         res = client.onboarding.create_user()
-        client.api_key_credentials = res['apiKey']
 
         # Register and then revoke a second API key.
         client.api_keys.create_api_key()
@@ -207,7 +204,6 @@ class TestAuthLevels():
         res = client.api_keys.create_api_key(
             ethereum_address=ethereum_address,
         )
-        client.api_key_credentials = res['apiKey']
         client.private.get_api_keys()
         client.api_keys.delete_api_key(
             api_key=client.api_key_credentials['key'],
@@ -247,7 +243,6 @@ class TestAuthLevels():
 
         # Register and then revoke a second API key.
         res = client.api_keys.create_api_key()
-        client.api_key_credentials = res['apiKey']
         client.private.get_api_keys()
         client.api_keys.delete_api_key(
             api_key=client.api_key_credentials['key'],
