@@ -89,6 +89,21 @@ class Client(object):
             self.stark_public_key = stark_public_key
             self.stark_public_key_y_coordinate = stark_public_key_y_coordinate
 
+        # Generate default API key credentials if needed and possible.
+        if self.eth_signer and not self.api_key_credentials:
+            # This may involve a web3 call, so recover on failure.
+            try:
+                self.api_key_credentials = (
+                    self.onboarding.recover_default_api_key_credentials(
+                        ethereum_address=self.eth_signer.address,
+                    )
+                )
+            except Exception as e:
+                print(
+                    'Warning: Failed to derive default API key credentials:',
+                    e,
+                )
+
     @property
     def public(self):
         '''
