@@ -7,18 +7,16 @@ from dydx3 import Client
 from dydx3 import DydxApiError
 from dydx3 import SignableWithdrawal
 from dydx3 import constants
-from dydx3 import epoch_seconds_to_iso
 from dydx3 import generate_private_key_hex_unsafe
-from dydx3 import iso_to_epoch_seconds
 from dydx3 import private_key_to_public_key_pair_hex
 from dydx3.helpers.request_helpers import random_client_id
 
 from tests.constants import DEFAULT_HOST
 from tests.constants import DEFAULT_NETWORK_ID
+from tests.constants import SEVEN_DAYS_S
 
 HOST = os.environ.get('V3_API_HOST', DEFAULT_HOST)
 NETWORK_ID = int(os.environ.get('NETWORK_ID', DEFAULT_NETWORK_ID))
-SEVEN_DAYS_S = 7 * 24 * 60 * 60
 
 
 class TestAuthLevels():
