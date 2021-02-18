@@ -4,6 +4,7 @@ import hashlib
 from web3 import Web3
 
 from dydx3.constants import ASSET_RESOLUTION
+from dydx3.eth_signing.util import strip_hex_prefix
 from dydx3.starkex.constants import ORDER_FIELD_BIT_LENGTHS
 from dydx3.starkex.starkex_resources.signature import get_random_private_key
 from dydx3.starkex.starkex_resources.signature import (
@@ -11,6 +12,7 @@ from dydx3.starkex.starkex_resources.signature import (
 )
 from dydx3.starkex.starkex_resources.signature import private_to_stark_key
 
+BIT_MASK_250 = (2 ** 250) - 1
 NONCE_UPPER_BOUND_EXCLUSIVE = 1 << ORDER_FIELD_BIT_LENGTHS['nonce']
 DECIMAL_CTX_ROUND_DOWN = decimal.Context(rounding=decimal.ROUND_DOWN)
 DECIMAL_CTX_ROUND_UP = decimal.Context(rounding=decimal.ROUND_UP)
@@ -98,6 +100,46 @@ def nonce_from_client_id(client_id):
     message = hashlib.sha256()
     message.update(client_id.encode())  # Encode as UTF-8.
     return int(message.digest().hex(), 16) % NONCE_UPPER_BOUND_EXCLUSIVE
+
+
+def get_transfer_erc20_fact(
+    recipient,
+    token_decimals,
+    human_amount,
+    token_address,
+    salt,
+):
+    token_amount = float(human_amount) * (10 ** token_decimals)
+    if not token_amount.is_integer():
+        raise ValueError(
+            'Amount {} has more precision than token decimals {}'.format(
+                human_amount,
+                token_decimals,
+            )
+        )
+    hex_bytes = Web3.solidityKeccak(
+        [
+            'address',
+            'uint256',
+            'address',
+            'uint256',
+        ],
+        [
+            recipient,
+            int(token_amount),
+            token_address,
+            salt,
+        ],
+    )
+    return bytes(hex_bytes)
+
+
+def fact_to_condition(fact_registry_address, fact):
+    """Generate the condition, signed as part of a conditional transfer."""
+    if not isinstance(fact, bytes):
+        raise ValueError('fact must be a byte-string')
+    data = bytes.fromhex(strip_hex_prefix(fact_registry_address)) + fact
+    return int(Web3.keccak(data).hex(), 16) & BIT_MASK_250
 
 
 def message_to_hash(message_string):

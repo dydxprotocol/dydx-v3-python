@@ -8,8 +8,8 @@ MOCK_PRIVATE_KEY = (
     '58c7d5a90b1776bde86ebac077e053ed85b0f7164f53b080304a531947f46e3'
 )
 MOCK_SIGNATURE = (
-    '067e90143a21d8a6aca85207de5e124e9644f7adc18deb42c5cf1240766e57bb' +
-    '04a39c4fdadf214d7282a59d37b21e0d3ea7fe1fc0d0ee25c22a3dd9d5cb8307'
+    '04814c5d3501863134108802cab5d12df4b959654332103b837252549d24e9a6' +
+    '06bc01225e9f1690b08b63de2a3b179fb2927d4564b3440bbb0da4c37caf597e'
 )
 
 # Mock conditional transfer params.
@@ -19,7 +19,10 @@ CONDITIONAL_TRANSFER_PARAMS = {
     'receiver_public_key': (
         '05135ef87716b0faecec3ba672d145a6daad0aa46437c365d490022115aba674'
     ),
-    'condition': b'mock-condition',
+    'fact_registry_address': '0x12aa12aa12aa12aa12aa12aa12aa12aa12aa12aa',
+    'fact': bytes.fromhex(
+        '12ff12ff12ff12ff12ff12ff12ff12ff12ff12ff12ff12ff12ff12ff12ff12ff'
+    ),
     'human_amount': '49.478023',
     'expiration_epoch_seconds': iso_to_epoch_seconds(
         '2020-09-17T04:15:55.028Z',

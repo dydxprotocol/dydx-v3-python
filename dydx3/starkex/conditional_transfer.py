@@ -3,13 +3,13 @@ import math
 
 from dydx3.constants import COLLATERAL_ASSET
 from dydx3.constants import COLLATERAL_ASSET_ID
-from dydx3.starkex.constants import CONDITIONAL_TRANSFER_FEE_POSITION_ID
+from dydx3.starkex.constants import CONDITIONAL_TRANSFER_FEE_ASSET_ID
 from dydx3.starkex.constants import CONDITIONAL_TRANSFER_FIELD_BIT_LENGTHS
 from dydx3.starkex.constants import CONDITIONAL_TRANSFER_MAX_AMOUNT_FEE
 from dydx3.starkex.constants import CONDITIONAL_TRANSFER_PADDING_BITS
 from dydx3.starkex.constants import CONDITIONAL_TRANSFER_PREFIX
 from dydx3.starkex.constants import ONE_HOUR_IN_SECONDS
-from dydx3.starkex.helpers import bytes_to_int
+from dydx3.starkex.helpers import fact_to_condition
 from dydx3.starkex.helpers import nonce_from_client_id
 from dydx3.starkex.helpers import to_quantums_exact
 from dydx3.starkex.signable import Signable
@@ -36,7 +36,8 @@ class SignableConditionalTransfer(Signable):
         sender_position_id,
         receiver_position_id,
         receiver_public_key,
-        condition,
+        fact_registry_address,
+        fact,
         human_amount,
         client_id,
         expiration_epoch_seconds,
@@ -54,7 +55,7 @@ class SignableConditionalTransfer(Signable):
             sender_position_id=int(sender_position_id),
             receiver_position_id=int(receiver_position_id),
             receiver_public_key=receiver_public_key,
-            condition=bytes_to_int(condition),
+            condition=fact_to_condition(fact_registry_address, fact),
             quantums_amount=quantums_amount,
             nonce=nonce_from_client_id(client_id),
             expiration_epoch_hours=expiration_epoch_hours,
@@ -71,7 +72,10 @@ class SignableConditionalTransfer(Signable):
 
         # The transfer asset and fee asset are always the collateral asset.
         # Fees are not supported for conditional transfers.
-        asset_ids = pedersen_hash(COLLATERAL_ASSET_ID, COLLATERAL_ASSET_ID)
+        asset_ids = pedersen_hash(
+            COLLATERAL_ASSET_ID,
+            CONDITIONAL_TRANSFER_FEE_ASSET_ID,
+        )
 
         part_1 = pedersen_hash(
             pedersen_hash(
@@ -85,7 +89,7 @@ class SignableConditionalTransfer(Signable):
         part_2 <<= CONDITIONAL_TRANSFER_FIELD_BIT_LENGTHS['position_id']
         part_2 += self._message.receiver_position_id
         part_2 <<= CONDITIONAL_TRANSFER_FIELD_BIT_LENGTHS['position_id']
-        part_2 += CONDITIONAL_TRANSFER_FEE_POSITION_ID
+        part_2 += self._message.sender_position_id
         part_2 <<= CONDITIONAL_TRANSFER_FIELD_BIT_LENGTHS['nonce']
         part_2 += self._message.nonce
 

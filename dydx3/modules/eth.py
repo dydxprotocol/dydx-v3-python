@@ -92,7 +92,7 @@ class Eth(object):
         token_address,
     ):
         if token_address is None:
-            token_address = TOKEN_CONTRACTS.get(self.network_id, {}).get(asset)
+            token_address = TOKEN_CONTRACTS.get(asset, {}).get(self.network_id)
         if token_address is None:
             raise ValueError(
                 'Token address unknown for asset {} on network {}'.format(

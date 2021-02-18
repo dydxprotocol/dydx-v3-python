@@ -2,8 +2,13 @@ import hmac
 import hashlib
 import base64
 
-from dydx3 import constants
+from dydx3.constants import COLLATERAL_ASSET
+from dydx3.constants import COLLATERAL_TOKEN_DECIMALS
+from dydx3.constants import FACT_REGISTRY_CONTRACT
+from dydx3.constants import TIME_IN_FORCE_GTT
+from dydx3.constants import TOKEN_CONTRACTS
 from dydx3.helpers.db import get_account_id
+from dydx3.helpers.request_helpers import epoch_seconds_to_iso
 from dydx3.helpers.request_helpers import generate_now_iso
 from dydx3.helpers.request_helpers import generate_query_path
 from dydx3.helpers.request_helpers import random_client_id
@@ -11,8 +16,11 @@ from dydx3.helpers.request_helpers import iso_to_epoch_seconds
 from dydx3.helpers.request_helpers import json_stringify
 from dydx3.helpers.request_helpers import remove_nones
 from dydx3.helpers.requests import request
+from dydx3.starkex.helpers import get_transfer_erc20_fact
+from dydx3.starkex.helpers import nonce_from_client_id
 from dydx3.starkex.order import SignableOrder
 from dydx3.starkex.withdrawal import SignableWithdrawal
+from dydx3.starkex.conditional_transfer import SignableConditionalTransfer
 
 
 class Private(object):
@@ -20,11 +28,13 @@ class Private(object):
     def __init__(
         self,
         host,
+        network_id,
         stark_private_key,
         default_address,
         api_key_credentials,
     ):
         self.host = host
+        self.network_id = network_id
         self.stark_private_key = stark_private_key
         self.default_address = default_address
         self.api_key_credentials = api_key_credentials
@@ -372,12 +382,13 @@ class Private(object):
         size,
         price,
         limit_fee,
-        expiration,
         time_in_force=None,
         cancel_id=None,
         trigger_price=None,
         trailing_percent=None,
         client_id=None,
+        expiration=None,
+        expiration_epoch_seconds=None,
         signature=None,
     ):
         '''
@@ -419,9 +430,6 @@ class Private(object):
         :param limit_fee: required
         :type limit_fee: str
 
-        :param expiration: required
-        :type expiration: ISO str
-
         :param time_in_force: optional
         :type time_in_force: str in list [
             "GTT",
@@ -441,6 +449,12 @@ class Private(object):
         :param client_id: optional
         :type client_id: str
 
+        :param expiration: optional
+        :type expiration: ISO str
+
+        :param expiration_epoch_seconds: optional
+        :type expiration_epoch_seconds: int
+
         :param signature: optional
         type signature: str
 
@@ -449,6 +463,17 @@ class Private(object):
         :raises: DydxAPIError
         '''
         client_id = client_id or random_client_id()
+        if bool(expiration) == bool(expiration_epoch_seconds):
+            raise ValueError(
+                'Exactly one of expiration and expiration_epoch_seconds must '
+                'be specified',
+            )
+        expiration = expiration or epoch_seconds_to_iso(
+            expiration_epoch_seconds,
+        )
+        expiration_epoch_seconds = (
+            expiration_epoch_seconds or iso_to_epoch_seconds(expiration)
+        )
 
         order_signature = signature
         if not order_signature:
@@ -465,7 +490,7 @@ class Private(object):
                 human_size=size,
                 human_price=price,
                 limit_fee=limit_fee,
-                expiration_epoch_seconds=iso_to_epoch_seconds(expiration),
+                expiration_epoch_seconds=expiration_epoch_seconds,
             )
             order_signature = order_to_sign.sign(self.stark_private_key)
 
@@ -473,7 +498,7 @@ class Private(object):
             'market': market,
             'side': side,
             'type': order_type,
-            'timeInForce': time_in_force or constants.TIME_IN_FORCE_GTT,
+            'timeInForce': time_in_force or TIME_IN_FORCE_GTT,
             'size': size,
             'price': price,
             'limitFee': limit_fee,
@@ -615,8 +640,9 @@ class Private(object):
         amount,
         asset,
         to_address,
-        expiration,
         client_id=None,
+        expiration=None,
+        expiration_epoch_seconds=None,
         signature=None,
     ):
         '''
@@ -641,11 +667,14 @@ class Private(object):
         :param to_address: required
         :type to_address: str
 
-        :param expiration: required
-        :type expiration: ISO string
-
         :param client_id: optional
         :type client_id: str
+
+        :param expiration: optional
+        :type expiration: ISO str
+
+        :param expiration_epoch_seconds: optional
+        :type expiration_epoch_seconds: int
 
         :param signature: optional
         :type signature: str
@@ -655,9 +684,19 @@ class Private(object):
         :raises: DydxAPIError
         '''
         client_id = client_id or random_client_id()
+        if bool(expiration) == bool(expiration_epoch_seconds):
+            raise ValueError(
+                'Exactly one of expiration and expiration_epoch_seconds must '
+                'be specified',
+            )
+        expiration = expiration or epoch_seconds_to_iso(
+            expiration_epoch_seconds,
+        )
+        expiration_epoch_seconds = (
+            expiration_epoch_seconds or iso_to_epoch_seconds(expiration)
+        )
 
-        withdrawal_signature = signature
-        if not withdrawal_signature:
+        if not signature:
             if not self.stark_private_key:
                 raise Exception(
                     'No signature provided and client was not' +
@@ -667,36 +706,34 @@ class Private(object):
                 position_id=position_id,
                 client_id=client_id,
                 human_amount=amount,
-                expiration_epoch_seconds=iso_to_epoch_seconds(expiration),
+                expiration_epoch_seconds=expiration_epoch_seconds,
             )
-            withdrawal_signature = withdrawal_to_sign.sign(
-                self.stark_private_key,
-            )
-        withdrawal = {
+            signature = withdrawal_to_sign.sign(self.stark_private_key)
+
+        params = {
             'amount': amount,
             'asset': asset,
             # TODO: Signature verification should work regardless of case.
             'toAddress': to_address.lower(),
-            'clientId': client_id,
-            'signature': withdrawal_signature,
             'expiration': expiration,
+            'clientId': client_id,
+            'signature': signature,
         }
-
-        return self._post(
-            'withdrawals',
-            withdrawal,
-        )
+        return self._post('withdrawals', params)
 
     def create_fast_withdrawal(
         self,
+        position_id,
         credit_asset,
         credit_amount,
         debit_amount,
         to_address,
         lp_position_id,
-        expiration,
-        signature,
+        lp_stark_public_key,
         client_id=None,
+        expiration=None,
+        expiration_epoch_seconds=None,
+        signature=None,
     ):
         '''
         Post a fast withdrawal
@@ -707,46 +744,92 @@ class Private(object):
             "USDT",
         ]
 
+        :param position_id: required
+        :type position_id: str or int
+
         :param credit_amount: required
-        :type credit_amount: str
+        :type credit_amount: str or int
 
         :param debit_amount: required
-        :type debit_amount: str
+        :type debit_amount: str or int
 
         :param to_address: required
         :type to_address: str
 
         :param lp_position_id: required
-        :type lp_position_id: str
+        :type lp_position_id: str or int
 
-        :param expiration: required
-        :type expiration: ISO str
-
-        :param signature: required
-        :type signature: str
+        :param lp_stark_public_key: required
+        :type lp_stark_public_key: str
 
         :param client_id: optional
         :type client_id: str
+
+        :param expiration: optional
+        :type expiration: ISO str
+
+        :param expiration_epoch_seconds: optional
+        :type expiration_epoch_seconds: int
+
+        :param signature: optional
+        :type signature: str
 
         :returns: Transfer
 
         :raises: DydxAPIError
         '''
         client_id = client_id or random_client_id()
-        return self._post(
-            'fast-withdrawals',
-            {
-                'creditAsset': credit_asset,
-                'creditAmount': credit_amount,
-                'debitAmount': debit_amount,
-                # TODO: Signature verification should work regardless of case.
-                'toAddress': to_address.lower(),
-                'lpPositionId': lp_position_id,
-                'clientId': client_id,
-                'expiration': expiration,
-                'signature': signature,
-            },
+        if bool(expiration) == bool(expiration_epoch_seconds):
+            raise ValueError(
+                'Exactly one of expiration and expiration_epoch_seconds must '
+                'be specified',
+            )
+        expiration = expiration or epoch_seconds_to_iso(
+            expiration_epoch_seconds,
         )
+        expiration_epoch_seconds = (
+            expiration_epoch_seconds or iso_to_epoch_seconds(expiration)
+        )
+
+        if not signature:
+            if not self.stark_private_key:
+                raise Exception(
+                    'No signature provided and client was not' +
+                    'initialized with stark_private_key'
+                )
+            fact = get_transfer_erc20_fact(
+                recipient=to_address,
+                token_decimals=COLLATERAL_TOKEN_DECIMALS,
+                human_amount=credit_amount,
+                token_address=(
+                    TOKEN_CONTRACTS[COLLATERAL_ASSET][self.network_id]
+                ),
+                salt=nonce_from_client_id(client_id),
+            )
+            transfer_to_sign = SignableConditionalTransfer(
+                sender_position_id=position_id,
+                receiver_position_id=lp_position_id,
+                receiver_public_key=lp_stark_public_key,
+                fact_registry_address=FACT_REGISTRY_CONTRACT[self.network_id],
+                fact=fact,
+                human_amount=debit_amount,
+                client_id=client_id,
+                expiration_epoch_seconds=expiration_epoch_seconds,
+            )
+            signature = transfer_to_sign.sign(self.stark_private_key)
+
+        params = {
+            'creditAsset': credit_asset,
+            'creditAmount': credit_amount,
+            'debitAmount': debit_amount,
+            # TODO: Signature verification should work regardless of case.
+            'toAddress': to_address.lower(),
+            'lpPositionId': lp_position_id,
+            'expiration': expiration,
+            'clientId': client_id,
+            'signature': signature,
+        }
+        return self._post('fast-withdrawals', params)
 
     def get_funding_payments(
         self,

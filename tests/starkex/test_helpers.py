@@ -1,4 +1,6 @@
+from dydx3.starkex.helpers import fact_to_condition
 from dydx3.starkex.helpers import generate_private_key_hex_unsafe
+from dydx3.starkex.helpers import get_transfer_erc20_fact
 from dydx3.starkex.helpers import nonce_from_client_id
 from dydx3.starkex.helpers import private_key_from_bytes
 from dydx3.starkex.helpers import private_key_to_public_hex
@@ -17,6 +19,29 @@ class TestHelpers():
         assert nonce_from_client_id(
             'A really long client ID used to identify an order or withdrawal!',
         ) == 230317226
+
+    def test_get_transfer_erc20_fact(self):
+        assert get_transfer_erc20_fact(
+            recipient='0x1234567890123456789012345678901234567890',
+            token_decimals=3,
+            human_amount=123.456,
+            token_address='0xaAaAaAaaAaAaAaaAaAAAAAAAAaaaAaAaAaaAaaAa',
+            salt=int('0x1234567890abcdef', 16),
+        ).hex() == (
+            '34052387b5efb6132a42b244cff52a85a507ab319c414564d7a89207d4473672'
+        )
+
+    def test_fact_to_condition(self):
+        fact = bytes.fromhex(
+            'cf9492ae0554c642b57f5d9cabee36fb512dd6b6629bdc51e60efb3118b8c2d8'
+        )
+        condition = fact_to_condition(
+            '0xe4a295420b58a4a7aa5c98920d6e8a0ef875b17a',
+            fact,
+        )
+        assert hex(condition) == (
+            '0x4d794792504b063843afdf759534f5ed510a3ca52e7baba2e999e02349dd24'
+        )
 
     def test_generate_private_key_hex_unsafe(self):
         assert (

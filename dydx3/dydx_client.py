@@ -106,6 +106,7 @@ class Client(object):
             if self.api_key_credentials:
                 self._private = Private(
                     host=self.host,
+                    network_id=self.network_id,
                     stark_private_key=self.stark_private_key,
                     default_address=self.default_address,
                     api_key_credentials=self.api_key_credentials,
