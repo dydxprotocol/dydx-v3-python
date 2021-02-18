@@ -2,7 +2,7 @@ from collections import namedtuple
 import math
 
 from dydx3.constants import COLLATERAL_ASSET
-from dydx3.constants import COLLATERAL_ASSET_ID
+from dydx3.constants import COLLATERAL_ASSET_ID_BY_NETWORK_ID
 from dydx3.starkex.constants import ONE_HOUR_IN_SECONDS
 from dydx3.starkex.constants import WITHDRAWAL_FIELD_BIT_LENGTHS
 from dydx3.starkex.constants import WITHDRAWAL_PADDING_BITS
@@ -27,6 +27,7 @@ class SignableWithdrawal(Signable):
 
     def __init__(
         self,
+        network_id,
         position_id,
         human_amount,
         client_id,
@@ -42,7 +43,7 @@ class SignableWithdrawal(Signable):
             nonce=nonce_from_client_id(client_id),
             expiration_epoch_hours=expiration_epoch_hours,
         )
-        super(SignableWithdrawal, self).__init__(message)
+        super(SignableWithdrawal, self).__init__(network_id, message)
 
     def to_starkware(self):
         return self._message
@@ -63,4 +64,7 @@ class SignableWithdrawal(Signable):
         packed += self._message.expiration_epoch_hours
         packed <<= WITHDRAWAL_PADDING_BITS
 
-        return pedersen_hash(COLLATERAL_ASSET_ID, packed)
+        return pedersen_hash(
+            COLLATERAL_ASSET_ID_BY_NETWORK_ID[self.network_id],
+            packed,
+        )

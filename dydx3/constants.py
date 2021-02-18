@@ -66,7 +66,17 @@ SYNTHETIC_ASSET_MAP = {
 }
 
 # ------------ Asset IDs ------------
-ASSET_ID_MAP = {
+COLLATERAL_ASSET_ID_BY_NETWORK_ID = {
+    1: int(
+        '0x02893294412a4c8f915f75892b395ebbf6859ec246ec365c3b1f56f47c3a0a5d',
+        16,
+    ),
+    3: int(
+        '0x02c04d8b650f44092278a7cb1e1028c82025dff622db96c934b611b84cc8de5a',
+        16,
+    ),
+}
+SYNTHETIC_ASSET_ID_MAP = {
     ASSET_USDC: int(
         '0x02c04d8b650f44092278a7cb1e1028c82025dff622db96c934b611b84cc8de5a',
         16,
@@ -75,7 +85,7 @@ ASSET_ID_MAP = {
     ASSET_ETH: int('0x4554482d3900000000000000000000', 16),
     ASSET_LINK: int('0x4c494e4b2d37000000000000000000', 16),
 }
-COLLATERAL_ASSET_ID = ASSET_ID_MAP[COLLATERAL_ASSET]
+
 
 # ------------ Asset Resolution (Quantum Size) ------------
 #

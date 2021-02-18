@@ -3,10 +3,10 @@ import math
 
 from collections import namedtuple
 
-from dydx3.constants import ASSET_ID_MAP
 from dydx3.constants import COLLATERAL_ASSET
-from dydx3.constants import COLLATERAL_ASSET_ID
+from dydx3.constants import COLLATERAL_ASSET_ID_BY_NETWORK_ID
 from dydx3.constants import ORDER_SIDE_BUY
+from dydx3.constants import SYNTHETIC_ASSET_ID_MAP
 from dydx3.constants import SYNTHETIC_ASSET_MAP
 from dydx3.starkex.constants import ONE_HOUR_IN_SECONDS
 from dydx3.starkex.constants import ORDER_FIELD_BIT_LENGTHS
@@ -45,6 +45,7 @@ class SignableOrder(Signable):
 
     def __init__(
         self,
+        network_id,
         market,
         side,
         position_id,
@@ -54,8 +55,10 @@ class SignableOrder(Signable):
         client_id,
         expiration_epoch_seconds,
     ):
-        is_buying_synthetic = side == ORDER_SIDE_BUY
         synthetic_asset = SYNTHETIC_ASSET_MAP[market]
+        synthetic_asset_id = SYNTHETIC_ASSET_ID_MAP[synthetic_asset]
+        collateral_asset_id = COLLATERAL_ASSET_ID_BY_NETWORK_ID[network_id]
+        is_buying_synthetic = side == ORDER_SIDE_BUY
         quantums_amount_synthetic = to_quantums_exact(
             human_size,
             synthetic_asset,
@@ -106,9 +109,9 @@ class SignableOrder(Signable):
 
         message = StarkwareOrder(
             order_type='LIMIT_ORDER_WITH_FEES',
-            asset_id_synthetic=ASSET_ID_MAP[synthetic_asset],
-            asset_id_collateral=COLLATERAL_ASSET_ID,
-            asset_id_fee=COLLATERAL_ASSET_ID,
+            asset_id_synthetic=synthetic_asset_id,
+            asset_id_collateral=collateral_asset_id,
+            asset_id_fee=collateral_asset_id,
             quantums_amount_synthetic=quantums_amount_synthetic,
             quantums_amount_collateral=quantums_amount_collateral,
             quantums_amount_fee=int(quantums_amount_fee_decimal),
@@ -117,7 +120,7 @@ class SignableOrder(Signable):
             nonce=nonce_from_client_id(client_id),
             expiration_epoch_hours=expiration_epoch_hours,
         )
-        super(SignableOrder, self).__init__(message)
+        super(SignableOrder, self).__init__(network_id, message)
 
     def to_starkware(self):
         return self._message

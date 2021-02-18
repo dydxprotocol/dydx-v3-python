@@ -17,7 +17,8 @@ from tests.constants import DEFAULT_HOST
 from tests.constants import DEFAULT_NETWORK_ID
 
 HOST = os.environ.get('V3_API_HOST', DEFAULT_HOST)
-NETWORK_ID = os.environ.get('NETWORK_ID', DEFAULT_NETWORK_ID)
+NETWORK_ID = int(os.environ.get('NETWORK_ID', DEFAULT_NETWORK_ID))
+SEVEN_DAYS_S = 7 * 24 * 60 * 60
 
 
 class TestAuthLevels():
@@ -70,13 +71,14 @@ class TestAuthLevels():
         expected_error = (
             'Withdrawal would put account under collateralization minumum'
         )
+        expiration_epoch_seconds = time.time() + SEVEN_DAYS_S + 60
         try:
             client.private.create_withdrawal(
                 position_id=account['positionId'],
                 amount='1',
                 asset=constants.ASSET_USDC,
                 to_address=eth_account.address,
-                expiration=epoch_seconds_to_iso(time.time() + 60),
+                expiration_epoch_seconds=expiration_epoch_seconds,
             )
         except DydxApiError as e:
             if expected_error not in str(e):
@@ -117,12 +119,13 @@ class TestAuthLevels():
 
         # Sign a withdrawal.
         client_id = random_client_id()
-        expiration = epoch_seconds_to_iso(time.time() + 60)
+        expiration_epoch_seconds = time.time() + SEVEN_DAYS_S + 60
         signable_withdrawal = SignableWithdrawal(
+            network_id=NETWORK_ID,
             position_id=account['positionId'],
             client_id=client_id,
             human_amount='1',
-            expiration_epoch_seconds=iso_to_epoch_seconds(expiration),
+            expiration_epoch_seconds=expiration_epoch_seconds,
         )
         signature = signable_withdrawal.sign(stark_private_key)
 
@@ -139,8 +142,8 @@ class TestAuthLevels():
                 amount='1',
                 asset=constants.ASSET_USDC,
                 to_address=eth_account.address,
-                expiration=expiration,
                 client_id=client_id,
+                expiration_epoch_seconds=expiration_epoch_seconds,
                 signature=signature,
             )
         except DydxApiError as e:

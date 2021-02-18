@@ -14,6 +14,7 @@ MOCK_SIGNATURE = (
 
 # Mock conditional transfer params.
 CONDITIONAL_TRANSFER_PARAMS = {
+    "network_id": 3,
     'sender_position_id': 12345,
     'receiver_position_id': 67890,
     'receiver_public_key': (

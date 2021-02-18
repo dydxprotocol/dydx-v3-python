@@ -14,6 +14,7 @@ MOCK_SIGNATURE = (
 
 # Mock withdrawal params.
 WITHDRAWAL_PARAMS = {
+    "network_id": 3,
     "position_id": 12345,
     "human_amount": '49.478023',
     "client_id": (
