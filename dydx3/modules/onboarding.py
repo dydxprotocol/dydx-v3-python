@@ -1,8 +1,11 @@
+import base64
+
 from web3 import Web3
 
 from dydx3.constants import OFF_CHAIN_ONBOARDING_ACTION
 from dydx3.constants import OFF_CHAIN_KEY_DERIVATION_ACTION
 from dydx3.eth_signing import SignOnboardingAction
+from dydx3.eth_signing.util import strip_hex_prefix
 from dydx3.helpers.requests import request
 
 
@@ -102,7 +105,7 @@ class Onboarding(object):
 
     def derive_stark_key(
         self,
-        ethereum_address,
+        ethereum_address=None,
     ):
         '''
         Derive a STARK key pair deterministically from an Ethereum key.
@@ -122,3 +125,42 @@ class Onboarding(object):
         hashed_signature = Web3.solidityKeccak(['uint256'], [signature_int])
         private_key_int = int(hashed_signature.hex(), 16) >> 5
         return hex(private_key_int)
+
+    def recover_default_api_key_credentials(
+        self,
+        ethereum_address=None,
+    ):
+        '''
+        Derive API credentials deterministically from an Ethereum key.
+
+        This can be used to recover the default API key credentials, which are
+        the same set of credentials used in the dYdX frontend.
+        '''
+        signature = self.signer.sign(
+            ethereum_address or self.default_address,
+            action=OFF_CHAIN_ONBOARDING_ACTION,
+        )
+        r_hex = signature[2:66]
+        r_int = int(r_hex, 16)
+        hashed_r_bytes = bytes(Web3.solidityKeccak(['uint256'], [r_int]))
+        secret_bytes = hashed_r_bytes[:30]
+        s_hex = signature[66:130]
+        s_int = int(s_hex, 16)
+        hashed_s_bytes = bytes(Web3.solidityKeccak(['uint256'], [s_int]))
+        key_bytes = hashed_s_bytes[:16]
+        passphrase_bytes = hashed_s_bytes[16:31]
+
+        key_hex = key_bytes.hex()
+        key_uuid = '-'.join([
+            key_hex[:8],
+            key_hex[8:12],
+            key_hex[12:16],
+            key_hex[16:20],
+            key_hex[20:],
+        ])
+
+        return {
+            'secret': base64.urlsafe_b64encode(secret_bytes).decode(),
+            'key': key_uuid,
+            'passphrase': base64.urlsafe_b64encode(passphrase_bytes).decode(),
+        }
