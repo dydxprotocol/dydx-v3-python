@@ -48,7 +48,7 @@ class TestIntegration():
         )
 
         # Onboard the user.
-        res = client.onboarding.create_user()
+        client.onboarding.create_user()
 
         # Register a new API key.
         client.api_keys.create_api_key()

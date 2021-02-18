@@ -39,7 +39,7 @@ class TestAuthLevels():
         )
 
         # Onboard the user.
-        res = Client(
+        Client(
             host=HOST,
             network_id=NETWORK_ID,
             eth_private_key=eth_account.key,
@@ -92,7 +92,7 @@ class TestAuthLevels():
         )
 
         # Onboard the user.
-        res = Client(
+        Client(
             host=HOST,
             network_id=NETWORK_ID,
             eth_private_key=eth_account.key,
@@ -160,7 +160,7 @@ class TestAuthLevels():
         )
 
         # Onboard the user.
-        res = client.onboarding.create_user()
+        client.onboarding.create_user()
 
         # Register and then revoke a second API key.
         client.api_keys.create_api_key()
@@ -201,7 +201,7 @@ class TestAuthLevels():
             pass
 
         # Register and then revoke a second API key.
-        res = client.api_keys.create_api_key(
+        client.api_keys.create_api_key(
             ethereum_address=ethereum_address,
         )
         client.private.get_api_keys()
@@ -242,7 +242,7 @@ class TestAuthLevels():
             pass
 
         # Register and then revoke a second API key.
-        res = client.api_keys.create_api_key()
+        client.api_keys.create_api_key()
         client.private.get_api_keys()
         client.api_keys.delete_api_key(
             api_key=client.api_key_credentials['key'],
