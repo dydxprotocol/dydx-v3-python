@@ -27,7 +27,11 @@ pip install dydx-v3-python
 
 ## Getting Started
 
-The `Client` object can be created with different levels of authentication depending on which features are needed. For more example requests, see [test_integration.py](./integration_tests/test_integration.py).
+The `Client` object can be created with different levels of authentication depending on which features are needed. For more complete examples, see [test_integration.py](./integration_tests/test_integration.py).
+
+### Public endpoints
+
+No authentication information is required to access public endpoints.
 
 ```python
 from dydx3 import Client
@@ -40,33 +44,55 @@ public_client = Client(
     host='http://localhost:8080',
 )
 public_client.public.get_markets()
+```
 
+### Private endpoints
+
+One of the following is required:
+* `api_key_credentials`
+* `eth_private_key`
+* `web3`
+* `web3_account`
+* `web3_provider`
+
+```python
 #
-# Access private API endpoints, without providing a STARK key.
+# Access private API endpoints, without providing a STARK private key.
 #
 private_client = Client(
     host='http://localhost:8080',
-    api_private_key='...',
+    api_key_credentials={ 'key': '...', ... },
 )
 private_client.private.get_orders()
 private_client.private.create_order(
-    signature='...',  # No STARK key, so signature is required.
+    # No STARK key, so signatures are required for orders and withdrawals.
+    signature='...',
     # ...
 )
 
 #
-# Access private API endpoints, with a STARK key.
+# Access private API endpoints, with a STARK private key.
 #
 private_client_with_key = Client(
     host='http://localhost:8080',
-    api_private_key='...',
+    api_key_credentials={ 'key': '...', ... },
     stark_private_key='...',
 )
 private_client.private.create_order(
-    # Order will be signed using the provided STARK key.
+    # Order will be signed using the provided STARK private key.
     # ...
 )
+```
 
+### Onboarding and API key management endpoints
+
+One of the following is required:
+* `eth_private_key`
+* `web3`
+* `web3_account`
+* `web3_provider`
+
+```python
 #
 # Onboard a new user or manage API keys, without providing private keys.
 #
@@ -74,7 +100,7 @@ web3_client = Client(
     host='http://localhost:8080',
     web3_provider=Web3.HTTPProvider('http://localhost:8545'),
 )
-response = web3_client.onboarding.create_user(
+web3_client.onboarding.create_user(
     stark_public_key='...',
     ethereum_address='...',
 )
@@ -90,7 +116,6 @@ web3_client_with_keys = Client(
     stark_private_key='...',
     eth_private_key='...',
 )
-response = web3_client_with_keys.onboarding.create_user()
-web3_client_with_keys.api_keys.create_api_key(
-)
+web3_client_with_keys.onboarding.create_user()
+web3_client_with_keys.api_keys.create_api_key()
 ```
