@@ -1,11 +1,25 @@
 import eth_account
 
+from dydx3.constants import SIGNATURE_TYPE_NO_PREPEND
+from dydx3.eth_signing import util
+
 
 class Signer(object):
 
-    def sign(self, message_hash, opt_signer_address):
+    def sign(
+        self,
+        eip712_message,
+        message_hash,
+        opt_signer_address,
+    ):
         '''
-        Sign a message hash with an Ethereum key.
+        Sign an EIP-712 message.
+
+        Returns a “typed signature” whose last byte indicates whether the hash
+        was prepended before being signed.
+
+        :param eip712_message: required
+        :type eip712_message: dict
 
         :param message_hash: required
         :type message_hash: HexBytes
@@ -23,25 +37,26 @@ class SignWithWeb3(Signer):
     def __init__(self, web3):
         self.web3 = web3
 
-    def get_signer_address(self, opt_signer_address):
+    def sign(
+        self,
+        eip712_message,
+        message_hash,  # Ignored.
+        opt_signer_address,
+    ):
         signer_address = opt_signer_address or self.web3.eth.defaultAccount
         if not signer_address:
             raise ValueError(
                 'Must set ethereum_address or web3.eth.defaultAccount',
             )
-        return signer_address
-
-    def sign(self, message_hash, opt_signer_address):
-        return self.web3.eth.sign(
-            self.get_signer_address(opt_signer_address),
-            message_hash,
-        ).hex()
-
-    def sign_typed_data(self, eip_712_message, opt_signer_address):
-        return self.web3.eth.signTypedData(
-            self.get_signer_address(opt_signer_address),
-            eip_712_message,
-        ).hex()
+        raw_signature = self.web3.eth.signTypedData(
+            signer_address,
+            eip712_message,
+        )
+        typed_signature = util.create_typed_signature(
+            raw_signature.hex(),
+            SIGNATURE_TYPE_NO_PREPEND,
+        )
+        return typed_signature
 
 
 class SignWithKey(Signer):
@@ -50,23 +65,29 @@ class SignWithKey(Signer):
         self.address = eth_account.Account.from_key(private_key).address
         self._private_key = private_key
 
-    def sign(self, message_hash, opt_signer_address):
+    def sign(
+        self,
+        eip712_message,  # Ignored.
+        message_hash,
+        opt_signer_address,
+    ):
         if (
             opt_signer_address is not None and
             opt_signer_address != self.address
         ):
             raise ValueError(
-                'ethereum_address was set but does not match the Ethereum ' +
-                'key (eth_private_key / web3_account)',
+                'signer_address is {} but Ethereum key (eth_private_key / '
+                'web3_account) corresponds to address {}'.format(
+                    opt_signer_address,
+                    self.address,
+                ),
             )
-        return eth_account.Account.sign_message(
-            eth_account.messages.encode_defunct(hexstr=message_hash.hex()),
+        signed_message = eth_account.Account._sign_hash(
+            message_hash.hex(),
             self._private_key,
-        ).signature.hex()
-
-    def sign_typed_data(self, eip_712_message, opt_signer_address):
-        # TODO
-        raise NotImplementedError(
-            'Signing EIP 712 onboarding messages currently requires a web3 '
-            'provider. This will be fixed soon in an upcoming release.'
         )
+        typed_signature = util.create_typed_signature(
+            signed_message.signature.hex(),
+            SIGNATURE_TYPE_NO_PREPEND,
+        )
+        return typed_signature
