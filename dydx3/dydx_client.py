@@ -1,5 +1,6 @@
 from web3 import Web3
 
+from dydx3.constants import NETWORK_ID_MAINNET
 from dydx3.eth_signing import SignWithWeb3
 from dydx3.eth_signing import SignWithKey
 from dydx3.modules.api_keys import ApiKeys
@@ -59,7 +60,9 @@ class Client(object):
             self.default_address = self.eth_signer.address
 
         self.default_address = default_ethereum_address or self.default_address
-        self.network_id = int(network_id or self.network_id or 1)
+        self.network_id = int(
+            network_id or self.network_id or NETWORK_ID_MAINNET
+        )
 
         # Initialize the public module. Other modules are initialized on
         # demand, if the necessary configuration options were provided.
