@@ -1,6 +1,5 @@
 from web3 import Web3
 
-from dydx3.constants import SIGNATURE_TYPE_DECIMAL
 from dydx3.eth_signing import util
 
 DOMAIN = 'dYdX'
@@ -41,7 +40,6 @@ class SignOffChainAction(object):
             message_hash,
             signer_address,
         )
-        print('SIG>>>', typed_signature)
         return typed_signature
 
     def verify(

@@ -1,7 +1,6 @@
 from web3 import Web3
 
 from dydx3.constants import NETWORK_ID_MAINNET
-from dydx3.constants import SIGNATURE_TYPE_NO_PREPEND
 from dydx3.eth_signing import util
 from dydx3.eth_signing.sign_off_chain_action import SignOffChainAction
 
