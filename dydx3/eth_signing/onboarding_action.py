@@ -19,6 +19,7 @@ EIP712_ONBOARDING_ACTION_STRUCT_STRING_TESTNET = (
 
 ONLY_SIGN_ON_DOMAIN_MAINNET = 'https://trade.dydx.exchange'
 
+
 class SignOnboardingAction(SignOffChainAction):
 
     def get_hash(
