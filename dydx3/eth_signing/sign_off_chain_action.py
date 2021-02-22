@@ -30,10 +30,11 @@ class SignOffChainAction(object):
     ):
         message_hash = self.get_hash(**message)
         raw_signature = self.signer.sign(message_hash, signer_address)
-        return util.create_typed_signature(
+        signature = util.create_typed_signature(
             raw_signature,
             SIGNATURE_TYPE_DECIMAL,
         )
+        return signature
 
     def verify(
         self,

@@ -23,13 +23,25 @@ class SignWithWeb3(Signer):
     def __init__(self, web3):
         self.web3 = web3
 
-    def sign(self, message_hash, opt_signer_address):
+    def get_signer_address(self, opt_signer_address):
         signer_address = opt_signer_address or self.web3.eth.defaultAccount
         if not signer_address:
             raise ValueError(
                 'Must set ethereum_address or web3.eth.defaultAccount',
             )
-        return self.web3.eth.sign(signer_address, message_hash).hex()
+        return signer_address
+
+    def sign(self, message_hash, opt_signer_address):
+        return self.web3.eth.sign(
+            self.get_signer_address(opt_signer_address),
+            message_hash,
+        ).hex()
+
+    def sign_typed_data(self, eip_712_message, opt_signer_address):
+        return self.web3.eth.signTypedData(
+            self.get_signer_address(opt_signer_address),
+            eip_712_message,
+        ).hex()
 
 
 class SignWithKey(Signer):
@@ -51,3 +63,10 @@ class SignWithKey(Signer):
             eth_account.messages.encode_defunct(hexstr=message_hash.hex()),
             self._private_key,
         ).signature.hex()
+
+    def sign_typed_data(self, eip_712_message, opt_signer_address):
+        # TODO
+        raise NotImplementedError(
+            'Signing EIP 712 onboarding messages currently requires a web3 '
+            'provider. This will be fixed soon in an upcoming release.'
+        )
