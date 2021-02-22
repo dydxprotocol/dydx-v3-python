@@ -81,3 +81,52 @@ class TestOnboarding():
             )
         )
         assert api_key_credentials == EXPECTED_API_KEY_CREDENTIALS_ROPSTEN
+
+    def test_derive_stark_key_on_mainnet_from_priv(self):
+        client = Client(
+            host=DEFAULT_HOST,
+            network_id=NETWORK_ID_MAINNET,
+            eth_private_key=GANACHE_PRIVATE_KEY,
+            api_key_credentials={'key': 'value'},
+        )
+        signer_address = client.default_address
+        stark_private_key = client.onboarding.derive_stark_key(signer_address)
+        assert stark_private_key == EXPECTED_STARK_PRIVATE_KEY_MAINNET
+
+    def test_recover_default_api_key_credentials_on_mainnet_from_priv(self):
+        client = Client(
+            host=DEFAULT_HOST,
+            network_id=NETWORK_ID_MAINNET,
+            eth_private_key=GANACHE_PRIVATE_KEY,
+        )
+        signer_address = client.default_address
+        api_key_credentials = (
+            client.onboarding.recover_default_api_key_credentials(
+                signer_address,
+            )
+        )
+        assert api_key_credentials == EXPECTED_API_KEY_CREDENTIALS_MAINNET
+
+    def test_derive_stark_key_on_ropsten_from_priv(self):
+        client = Client(
+            host=DEFAULT_HOST,
+            network_id=NETWORK_ID_ROPSTEN,
+            eth_private_key=GANACHE_PRIVATE_KEY,
+        )
+        signer_address = client.default_address
+        stark_private_key = client.onboarding.derive_stark_key(signer_address)
+        assert stark_private_key == EXPECTED_STARK_PRIVATE_KEY_ROPSTEN
+
+    def test_recover_default_api_key_credentials_on_ropsten_from_priv(self):
+        client = Client(
+            host=DEFAULT_HOST,
+            network_id=NETWORK_ID_ROPSTEN,
+            eth_private_key=GANACHE_PRIVATE_KEY,
+        )
+        signer_address = client.default_address
+        api_key_credentials = (
+            client.onboarding.recover_default_api_key_credentials(
+                signer_address,
+            )
+        )
+        assert api_key_credentials == EXPECTED_API_KEY_CREDENTIALS_ROPSTEN

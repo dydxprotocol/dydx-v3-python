@@ -93,12 +93,16 @@ class Client(object):
             self.stark_public_key_y_coordinate = stark_public_key_y_coordinate
 
         # Generate default API key credentials if needed and possible.
-        if self.eth_signer and not self.api_key_credentials:
+        if (
+            self.eth_signer and
+            self.default_address and
+            not self.api_key_credentials
+        ):
             # This may involve a web3 call, so recover on failure.
             try:
                 self.api_key_credentials = (
                     self.onboarding.recover_default_api_key_credentials(
-                        ethereum_address=self.eth_signer.address,
+                        ethereum_address=self.default_address,
                     )
                 )
             except Exception as e:
