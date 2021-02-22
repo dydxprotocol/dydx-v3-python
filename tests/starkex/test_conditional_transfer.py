@@ -1,3 +1,4 @@
+from dydx3.constants import NETWORK_ID_ROPSTEN
 from dydx3.helpers.request_helpers import iso_to_epoch_seconds
 from dydx3.starkex.conditional_transfer import SignableConditionalTransfer
 
@@ -14,7 +15,7 @@ MOCK_SIGNATURE = (
 
 # Mock conditional transfer params.
 CONDITIONAL_TRANSFER_PARAMS = {
-    "network_id": 3,
+    "network_id": NETWORK_ID_ROPSTEN,
     'sender_position_id': 12345,
     'receiver_position_id': 67890,
     'receiver_public_key': (

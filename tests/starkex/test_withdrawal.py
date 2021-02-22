@@ -1,3 +1,4 @@
+from dydx3.constants import NETWORK_ID_ROPSTEN
 from dydx3.helpers.request_helpers import iso_to_epoch_seconds
 from dydx3.starkex.withdrawal import SignableWithdrawal
 
@@ -14,7 +15,7 @@ MOCK_SIGNATURE = (
 
 # Mock withdrawal params.
 WITHDRAWAL_PARAMS = {
-    "network_id": 3,
+    "network_id": NETWORK_ID_ROPSTEN,
     "position_id": 12345,
     "human_amount": '49.478023',
     "client_id": (
