@@ -1,7 +1,7 @@
+from datetime import datetime
 import json
 import random
-import math
-from datetime import datetime
+
 import dateutil.parser as dp
 
 
@@ -35,7 +35,7 @@ def generate_now_iso():
 
 
 def iso_to_epoch_seconds(iso):
-    return math.floor(dp.parse(iso).timestamp())
+    return dp.parse(iso).timestamp()
 
 
 def epoch_seconds_to_iso(epoch):
