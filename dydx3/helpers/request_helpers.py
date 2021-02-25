@@ -1,6 +1,5 @@
 from datetime import datetime
 import json
-import math
 import random
 
 import dateutil.parser as dp
