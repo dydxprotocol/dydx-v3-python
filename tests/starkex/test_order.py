@@ -81,3 +81,15 @@ class TestOrder():
         )
         starkware_order = order.to_starkware()
         assert starkware_order.quantums_amount_fee == 50751
+
+    def test_order_expiration_boundary_case(self):
+        order = SignableOrder(
+            **dict(
+                ORDER_PARAMS,
+                expiration_epoch_seconds=iso_to_epoch_seconds(
+                    # Less than one second after the start of the hour.
+                    '2021-02-24T16:00:00.407Z',
+                ),
+            ),
+        )
+        assert order.to_starkware().expiration_epoch_hours == 448553
