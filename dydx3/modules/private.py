@@ -367,7 +367,7 @@ class Private(object):
 
         :raises: DydxAPIError
         '''
-        self._get(
+        return self._get(
             '/'.join(['orders/client', client_id]),
             {},
         )
