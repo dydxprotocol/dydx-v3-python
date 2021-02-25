@@ -115,7 +115,7 @@ class ApiKeys(object):
 
         :raises: DydxAPIError
         '''
-        self._delete(
+        return self._delete(
             'api-keys',
             ethereum_address,
             {
