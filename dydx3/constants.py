@@ -1,3 +1,9 @@
+# ------------ API URLs ------------
+API_HOST_MAINNET = 'https://api.dydx.exchange'
+API_HOST_ROPSTEN = 'https://api.stage.dydx.exchange'
+WS_HOST_MAINNET = 'wss://api.dydx.exchange/v3/ws'
+WS_HOST_ROPSTEN = 'wss://api.stage.dydx.exchange/v3/ws'
+
 # ------------ Ethereum Network IDs ------------
 NETWORK_ID_MAINNET = 1
 NETWORK_ID_ROPSTEN = 3
