@@ -27,7 +27,7 @@ pip install dydx-v3-python
 
 ## Getting Started
 
-The `Client` object can be created with different levels of authentication depending on which features are needed. For more complete examples, see [test_integration.py](./integration_tests/test_integration.py).
+The `Client` object can be created with different levels of authentication depending on which features are needed. For more complete examples, see the [examples](./examples/) directory, as well as [the integration tests](./integration_tests/).
 
 ### Public endpoints
 
