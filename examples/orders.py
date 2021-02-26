@@ -6,7 +6,6 @@ Usage: python -m examples.orders
 import time
 
 from dydx3 import Client
-from dydx3 import private_key_to_public_key_pair_hex
 from dydx3.constants import API_HOST_ROPSTEN
 from dydx3.constants import MARKET_BTC_USD
 from dydx3.constants import NETWORK_ID_ROPSTEN
