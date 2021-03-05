@@ -527,7 +527,7 @@ class Private(object):
         :param order_id: required
         :type order_id: str
 
-        :returns: None
+        :returns: Order
 
         :raises: DydxAPIError
         '''
@@ -550,7 +550,7 @@ class Private(object):
             "LINK-USD",
         ]
 
-        :returns: None
+        :returns: Array of orders
 
         :raises: DydxAPIError
         '''
