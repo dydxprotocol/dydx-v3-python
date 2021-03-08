@@ -9,6 +9,9 @@ from dydx3.modules.private import Private
 from dydx3.modules.public import Public
 from dydx3.modules.onboarding import Onboarding
 from dydx3.starkex.helpers import private_key_to_public_key_pair_hex
+from dydx3.starkex.starkex_resources.signature import (
+    get_cpp_lib,
+)
 
 
 class Client(object):
@@ -28,6 +31,7 @@ class Client(object):
         web3_account=None,
         web3_provider=None,
         api_key_credentials=None,
+        crypto_c_exports_path=None,
     ):
         # Remove trailing '/' if present, from host.
         if host.endswith('/'):
@@ -44,6 +48,9 @@ class Client(object):
         self.eth_signer = None
         self.default_address = None
         self.network_id = None
+
+        if crypto_c_exports_path is not None:
+            get_cpp_lib(crypto_c_exports_path)
 
         if web3 is not None or web3_provider is not None:
             if isinstance(web3_provider, str):

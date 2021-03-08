@@ -1,6 +1,9 @@
 from dydx3.constants import NETWORK_ID_ROPSTEN
 from dydx3.helpers.request_helpers import iso_to_epoch_seconds
 from dydx3.starkex.conditional_transfer import SignableConditionalTransfer
+from dydx3.starkex.starkex_resources.signature import (
+    get_cpp_lib,
+)
 
 MOCK_PUBLIC_KEY = (
     '3b865a18323b8d147a12c556bfb1d502516c325b1477a23ba6c77af31f020fd'
@@ -34,6 +37,7 @@ CONDITIONAL_TRANSFER_PARAMS = {
     ),
 }
 
+get_cpp_lib('libcrypto_c_exports.so')
 
 class TestConditionalTransfer():
 
