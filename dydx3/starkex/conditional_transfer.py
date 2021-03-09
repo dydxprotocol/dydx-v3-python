@@ -13,7 +13,7 @@ from dydx3.starkex.helpers import fact_to_condition
 from dydx3.starkex.helpers import nonce_from_client_id
 from dydx3.starkex.helpers import to_quantums_exact
 from dydx3.starkex.signable import Signable
-from dydx3.starkex.starkex_resources.signature import pedersen_hash
+from dydx3.starkex.starkex_resources.proxy import get_hash
 
 StarkwareConditionalTransfer = namedtuple(
     'StarkwareConditionalTransfer',
@@ -76,13 +76,13 @@ class SignableConditionalTransfer(Signable):
 
         # The transfer asset and fee asset are always the collateral asset.
         # Fees are not supported for conditional transfers.
-        asset_ids = pedersen_hash(
+        asset_ids = get_hash(
             COLLATERAL_ASSET_ID_BY_NETWORK_ID[self.network_id],
             CONDITIONAL_TRANSFER_FEE_ASSET_ID,
         )
 
-        part_1 = pedersen_hash(
-            pedersen_hash(
+        part_1 = get_hash(
+            get_hash(
                 asset_ids,
                 self._message.receiver_public_key,
             ),
@@ -108,8 +108,8 @@ class SignableConditionalTransfer(Signable):
         part_3 += self._message.expiration_epoch_hours
         part_3 <<= CONDITIONAL_TRANSFER_PADDING_BITS
 
-        return pedersen_hash(
-            pedersen_hash(
+        return get_hash(
+            get_hash(
                 part_1,
                 part_2,
             ),

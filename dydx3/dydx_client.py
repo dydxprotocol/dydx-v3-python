@@ -9,7 +9,7 @@ from dydx3.modules.private import Private
 from dydx3.modules.public import Public
 from dydx3.modules.onboarding import Onboarding
 from dydx3.starkex.helpers import private_key_to_public_key_pair_hex
-from dydx3.starkex.starkex_resources.signature import (
+from dydx3.starkex.starkex_resources.cpp_signature import (
     get_cpp_lib,
 )
 

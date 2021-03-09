@@ -20,8 +20,6 @@ import math
 import os
 import random
 from typing import Optional, Tuple, Union
-import ctypes
-import secrets
 
 from ecdsa.rfc6979 import generate_k
 
@@ -55,22 +53,6 @@ assert SHIFT_POINT == [0x49ee3eba8c1600700ee1b87eb599f16716b0b1022947733551fde40
                        0x3ca0cfe4b3bc6ddf346d49d06ea0ed34e621062c0e056c1d0405d266e10268a]
 assert EC_GEN == [0x1ef15c18599971b7beced415a40f0c7deacfd9b0d1819e03d723d8bc943cfca,
                   0x5668060aa49730b7be4801df46ec62de53ecd11abe43a32873000c36e8dc1f]
-
-CPP_LIB_PATH = None
-OUT_BUFFER_SIZE = 251
-
-def get_cpp_lib(crypto_c_exports_path):
-    global CPP_LIB_PATH
-    CPP_LIB_PATH = ctypes.cdll.LoadLibrary(os.path.abspath(crypto_c_exports_path))
-    # Configure argument and return types.
-    CPP_LIB_PATH.Hash.argtypes = [
-        ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p]
-    CPP_LIB_PATH.Verify.argtypes = [
-        ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p]
-    CPP_LIB_PATH.Verify.restype = bool
-    CPP_LIB_PATH.Sign.argtypes = [
-        ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p]
-
 
 #########
 # ECDSA #
@@ -134,10 +116,7 @@ def generate_k_rfc6979(msg_hash: int, priv_key: int, seed: Optional[int] = None)
                       extra_entropy=extra_entropy)
 
 
-def sign(msg_hash: int, priv_key: int, seed: Optional[int] = None) -> ECSignature:
-    if CPP_LIB_PATH is not None:
-        return cpp_sign(msg_hash=msg_hash, priv_key=priv_key, seed=seed)
-
+def py_sign(msg_hash: int, priv_key: int, seed: Optional[int] = None) -> ECSignature:
     # Note: msg_hash must be smaller than 2**N_ELEMENT_BITS_ECDSA.
     # Message whose hash is >= 2**N_ELEMENT_BITS_ECDSA cannot be signed.
     # This happens with a very small probability.
@@ -193,12 +172,7 @@ def mimic_ec_mult_air(m: int, point: ECPoint, shift_point: ECPoint) -> ECPoint:
     return partial_sum
 
 
-def verify(msg_hash: int, r: int, s: int, public_key: Union[int, ECPoint]) -> bool:
-    if CPP_LIB_PATH is not None:
-        w = inv_mod_curve_size(s)
-        inverse_is_valid = cpp_verify(msg_hash=msg_hash, r=r, s=w, stark_key=public_key)
-        return inverse_is_valid or cpp_verify(msg_hash=msg_hash, r=r, s=s, stark_key=public_key)
-
+def py_verify(msg_hash: int, r: int, s: int, public_key: Union[int, ECPoint]) -> bool:
     # Compute w = s^-1 (mod EC_ORDER).
     assert 1 <= s < EC_ORDER, 's = %s' % s
     w = inv_mod_curve_size(s)
@@ -220,10 +194,10 @@ def verify(msg_hash: int, r: int, s: int, public_key: Union[int, ECPoint]) -> bo
         assert pow(y, 2, FIELD_PRIME) == (
             pow(public_key, 3, FIELD_PRIME) + ALPHA * public_key + BETA) % FIELD_PRIME
 
-        inverse_is_valid = verify(msg_hash, r, w, (public_key, y)) or \
-            verify(msg_hash, r, w, (public_key, (-y) % FIELD_PRIME))
-        return inverse_is_valid or verify(msg_hash, r, s, (public_key, y)) or \
-            verify(msg_hash, r, s, (public_key, (-y) % FIELD_PRIME))
+        inverse_is_valid = py_verify(msg_hash, r, w, (public_key, y)) or \
+            py_verify(msg_hash, r, w, (public_key, (-y) % FIELD_PRIME))
+        return inverse_is_valid or py_verify(msg_hash, r, s, (public_key, y)) or \
+            py_verify(msg_hash, r, s, (public_key, (-y) % FIELD_PRIME))
     else:
         # The public key is provided as a point.
         # Verify it is on the curve.
@@ -254,10 +228,7 @@ def verify(msg_hash: int, r: int, s: int, public_key: Union[int, ECPoint]) -> bo
 # Pedersen hash #
 #################
 
-def pedersen_hash(*elements: int) -> int:
-    if CPP_LIB_PATH is not None:
-        return cpp_hash(elements[0], elements[1])
-
+def py_pedersen_hash(*elements: int) -> int:
     return pedersen_hash_as_point(*elements)[0]
 
 
@@ -278,45 +249,3 @@ def pedersen_hash_as_point(*elements: int) -> ECPoint:
             x >>= 1
         assert x == 0
     return point
-
-#################
-# CPP WRAPPERS #
-#################
-
-def cpp_hash(left, right) -> int:
-    res = ctypes.create_string_buffer(OUT_BUFFER_SIZE)
-    if CPP_LIB_PATH.Hash(
-            left.to_bytes(32, 'little', signed=False),
-            right.to_bytes(32, 'little', signed=False),
-            res) != 0:
-        raise ValueError(res.raw.rstrip(b'\00'))
-    return int.from_bytes(res.raw[:32], 'little', signed=False)
-
-
-def cpp_sign(msg_hash, priv_key, seed: Optional[int] = 32) -> ECSignature:
-    """
-    Note that the random function is not safe.
-    Note that the same seed will give different signature comparing to sign function in
-    signature.py.
-    """
-    res = ctypes.create_string_buffer(OUT_BUFFER_SIZE)
-    random_object = secrets.token_bytes(seed)
-    if CPP_LIB_PATH.Sign(
-            priv_key.to_bytes(32, 'little', signed=False),
-            msg_hash.to_bytes(32, 'little', signed=False),
-            random_object, res) != 0:
-        raise ValueError(res.raw.rstrip(b'\00'))
-    s = int.from_bytes(res.raw[32:64], 'little', signed=False)
-    return (int.from_bytes(res.raw[:32], 'little', signed=False), s)
-
-
-def cpp_verify(msg_hash, r, s, stark_key) -> bool:
-    assert 1 <= stark_key < 2**N_ELEMENT_BITS_ECDSA, 'stark_key = %s' % stark_key
-    assert 1 <= msg_hash < 2**N_ELEMENT_BITS_ECDSA, 'msg_hash = %s' % msg_hash
-    assert 1 <= r < 2**N_ELEMENT_BITS_ECDSA, 'r = %s' % r
-    assert 1 <= s < EC_ORDER, 's = %s' % s
-    return CPP_LIB_PATH.Verify(
-        stark_key.to_bytes(32, 'little', signed=False),
-        msg_hash.to_bytes(32, 'little', signed=False),
-        r.to_bytes(32, 'little', signed=False),
-        s.to_bytes(32, 'little', signed=False))

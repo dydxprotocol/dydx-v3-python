@@ -10,7 +10,7 @@ from dydx3.starkex.constants import WITHDRAWAL_PREFIX
 from dydx3.starkex.helpers import nonce_from_client_id
 from dydx3.starkex.helpers import to_quantums_exact
 from dydx3.starkex.signable import Signable
-from dydx3.starkex.starkex_resources.signature import pedersen_hash
+from dydx3.starkex.starkex_resources.proxy import get_hash
 
 StarkwareWithdrawal = namedtuple(
     'StarkwareWithdrawal',
@@ -64,7 +64,7 @@ class SignableWithdrawal(Signable):
         packed += self._message.expiration_epoch_hours
         packed <<= WITHDRAWAL_PADDING_BITS
 
-        return pedersen_hash(
+        return get_hash(
             COLLATERAL_ASSET_ID_BY_NETWORK_ID[self.network_id],
             packed,
         )

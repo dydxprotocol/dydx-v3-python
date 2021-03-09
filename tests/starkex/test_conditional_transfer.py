@@ -1,7 +1,7 @@
 from dydx3.constants import NETWORK_ID_ROPSTEN
 from dydx3.helpers.request_helpers import iso_to_epoch_seconds
 from dydx3.starkex.conditional_transfer import SignableConditionalTransfer
-from dydx3.starkex.starkex_resources.signature import (
+from dydx3.starkex.starkex_resources.cpp_signature import (
     get_cpp_lib,
 )
 
