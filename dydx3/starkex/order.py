@@ -18,7 +18,7 @@ from dydx3.starkex.helpers import to_quantums_exact
 from dydx3.starkex.helpers import to_quantums_round_down
 from dydx3.starkex.helpers import to_quantums_round_up
 from dydx3.starkex.signable import Signable
-from dydx3.starkex.starkex_resources.signature import pedersen_hash
+from dydx3.starkex.starkex_resources.proxy import get_hash
 
 DECIMAL_CONTEXT_ROUND_DOWN = decimal.Context(rounding=decimal.ROUND_DOWN)
 DECIMAL_CONTEXT_ROUND_UP = decimal.Context(rounding=decimal.ROUND_UP)
@@ -157,15 +157,15 @@ class SignableOrder(Signable):
         part_2 += self._message.expiration_epoch_hours
         part_2 <<= ORDER_PADDING_BITS
 
-        assets_hash = pedersen_hash(
-            pedersen_hash(
+        assets_hash = get_hash(
+            get_hash(
                 asset_id_sell,
                 asset_id_buy,
             ),
             self._message.asset_id_fee,
         )
-        return pedersen_hash(
-            pedersen_hash(
+        return get_hash(
+            get_hash(
                 assets_hash,
                 part_1,
             ),

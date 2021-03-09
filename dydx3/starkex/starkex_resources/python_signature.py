@@ -117,7 +117,14 @@ def generate_k_rfc6979(msg_hash: int, priv_key: int, seed: Optional[int] = None)
                       extra_entropy=extra_entropy)
 
 
-def sign(msg_hash: int, priv_key: int, seed: Optional[int] = None) -> ECSignature:
+ # Starkware crypto functions implemented in Python.
+ #
+ # Copied from:
+ # https://github.com/starkware-libs/starkex-resources/blob/0f08e6c55ad88c93499f71f2af4a2e7ae0185cdf/crypto/starkware/crypto/signature/signature.py
+ #
+ # Changes made by dYdX to function name only.
+
+def py_sign(msg_hash: int, priv_key: int, seed: Optional[int] = None) -> ECSignature:
     # Note: msg_hash must be smaller than 2**N_ELEMENT_BITS_ECDSA.
     # Message whose hash is >= 2**N_ELEMENT_BITS_ECDSA cannot be signed.
     # This happens with a very small probability.
@@ -173,7 +180,14 @@ def mimic_ec_mult_air(m: int, point: ECPoint, shift_point: ECPoint) -> ECPoint:
     return partial_sum
 
 
-def verify(msg_hash: int, r: int, s: int, public_key: Union[int, ECPoint]) -> bool:
+ # Starkware crypto functions implemented in Python.
+ #
+ # Copied from:
+ # https://github.com/starkware-libs/starkex-resources/blob/0f08e6c55ad88c93499f71f2af4a2e7ae0185cdf/crypto/starkware/crypto/signature/signature.py
+ #
+ # Changes made by dYdX to function name only.
+
+def py_verify(msg_hash: int, r: int, s: int, public_key: Union[int, ECPoint]) -> bool:
     # Compute w = s^-1 (mod EC_ORDER).
     assert 1 <= s < EC_ORDER, 's = %s' % s
     w = inv_mod_curve_size(s)
@@ -194,8 +208,8 @@ def verify(msg_hash: int, r: int, s: int, public_key: Union[int, ECPoint]) -> bo
             return False
         assert pow(y, 2, FIELD_PRIME) == (
             pow(public_key, 3, FIELD_PRIME) + ALPHA * public_key + BETA) % FIELD_PRIME
-        return verify(msg_hash, r, s, (public_key, y)) or \
-            verify(msg_hash, r, s, (public_key, (-y) % FIELD_PRIME))
+        return py_verify(msg_hash, r, s, (public_key, y)) or \
+            py_verify(msg_hash, r, s, (public_key, (-y) % FIELD_PRIME))
     else:
         # The public key is provided as a point.
         # Verify it is on the curve.
@@ -226,7 +240,14 @@ def verify(msg_hash: int, r: int, s: int, public_key: Union[int, ECPoint]) -> bo
 # Pedersen hash #
 #################
 
-def pedersen_hash(*elements: int) -> int:
+ # Starkware crypto functions implemented in Python.
+ #
+ # Copied from:
+ # https://github.com/starkware-libs/starkex-resources/blob/0f08e6c55ad88c93499f71f2af4a2e7ae0185cdf/crypto/starkware/crypto/signature/signature.py
+ #
+ # Changes made by dYdX to function name only.
+
+def py_pedersen_hash(*elements: int) -> int:
     return pedersen_hash_as_point(*elements)[0]
 
 
