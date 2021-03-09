@@ -117,6 +117,13 @@ def generate_k_rfc6979(msg_hash: int, priv_key: int, seed: Optional[int] = None)
                       extra_entropy=extra_entropy)
 
 
+ # Starkware crypto functions implemented in Python.
+ #
+ # Copied from:
+ # https://github.com/starkware-libs/starkex-resources/blob/0f08e6c55ad88c93499f71f2af4a2e7ae0185cdf/crypto/starkware/crypto/signature/signature.py
+ #
+ # Changes made by dYdX to function name only.
+
 def py_sign(msg_hash: int, priv_key: int, seed: Optional[int] = None) -> ECSignature:
     # Note: msg_hash must be smaller than 2**N_ELEMENT_BITS_ECDSA.
     # Message whose hash is >= 2**N_ELEMENT_BITS_ECDSA cannot be signed.
@@ -173,6 +180,13 @@ def mimic_ec_mult_air(m: int, point: ECPoint, shift_point: ECPoint) -> ECPoint:
     return partial_sum
 
 
+ # Starkware crypto functions implemented in Python.
+ #
+ # Copied from:
+ # https://github.com/starkware-libs/starkex-resources/blob/0f08e6c55ad88c93499f71f2af4a2e7ae0185cdf/crypto/starkware/crypto/signature/signature.py
+ #
+ # Changes made by dYdX to function name only.
+
 def py_verify(msg_hash: int, r: int, s: int, public_key: Union[int, ECPoint]) -> bool:
     # Compute w = s^-1 (mod EC_ORDER).
     assert 1 <= s < EC_ORDER, 's = %s' % s
@@ -225,6 +239,13 @@ def py_verify(msg_hash: int, r: int, s: int, public_key: Union[int, ECPoint]) ->
 #################
 # Pedersen hash #
 #################
+
+ # Starkware crypto functions implemented in Python.
+ #
+ # Copied from:
+ # https://github.com/starkware-libs/starkex-resources/blob/0f08e6c55ad88c93499f71f2af4a2e7ae0185cdf/crypto/starkware/crypto/signature/signature.py
+ #
+ # Changes made by dYdX to function name only.
 
 def py_pedersen_hash(*elements: int) -> int:
     return pedersen_hash_as_point(*elements)[0]
