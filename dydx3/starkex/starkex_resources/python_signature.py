@@ -54,6 +54,7 @@ assert SHIFT_POINT == [0x49ee3eba8c1600700ee1b87eb599f16716b0b1022947733551fde40
 assert EC_GEN == [0x1ef15c18599971b7beced415a40f0c7deacfd9b0d1819e03d723d8bc943cfca,
                   0x5668060aa49730b7be4801df46ec62de53ecd11abe43a32873000c36e8dc1f]
 
+
 #########
 # ECDSA #
 #########
@@ -193,10 +194,7 @@ def py_verify(msg_hash: int, r: int, s: int, public_key: Union[int, ECPoint]) ->
             return False
         assert pow(y, 2, FIELD_PRIME) == (
             pow(public_key, 3, FIELD_PRIME) + ALPHA * public_key + BETA) % FIELD_PRIME
-
-        inverse_is_valid = py_verify(msg_hash, r, w, (public_key, y)) or \
-            py_verify(msg_hash, r, w, (public_key, (-y) % FIELD_PRIME))
-        return inverse_is_valid or py_verify(msg_hash, r, s, (public_key, y)) or \
+        return py_verify(msg_hash, r, s, (public_key, y)) or \
             py_verify(msg_hash, r, s, (public_key, (-y) % FIELD_PRIME))
     else:
         # The public key is provided as a point.

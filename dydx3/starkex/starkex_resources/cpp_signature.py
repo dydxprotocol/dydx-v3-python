@@ -4,6 +4,9 @@ import os
 from typing import Optional, Tuple
 import json
 import math
+from dydx3.starkex.starkex_resources.python_signature import (
+    inv_mod_curve_size,
+)
 
 PEDERSEN_HASH_POINT_FILENAME = os.path.join(
     os.path.dirname(__file__), 'pedersen_params.json')
@@ -69,17 +72,19 @@ def cpp_sign(msg_hash, priv_key, seed: Optional[int] = 32) -> ECSignature:
             msg_hash.to_bytes(32, 'little', signed=False),
             random_bytes, res) != 0:
         raise ValueError(res.raw.rstrip(b'\00'))
-    s = int.from_bytes(res.raw[32:64], 'little', signed=False)
+    w = int.from_bytes(res.raw[32:64], 'little', signed=False)
+    s = inv_mod_curve_size(w)
     return (int.from_bytes(res.raw[:32], 'little', signed=False), s)
 
 
 def cpp_verify(msg_hash, r, s, stark_key) -> bool:
+    w =inv_mod_curve_size(s)
     assert 1 <= stark_key < 2**N_ELEMENT_BITS_ECDSA, 'stark_key = %s' % stark_key
     assert 1 <= msg_hash < 2**N_ELEMENT_BITS_ECDSA, 'msg_hash = %s' % msg_hash
     assert 1 <= r < 2**N_ELEMENT_BITS_ECDSA, 'r = %s' % r
-    assert 1 <= s < EC_ORDER, 's = %s' % s
+    assert 1 <= w < EC_ORDER, 'w = %s' % w
     return CPP_LIB_PATH.Verify(
         stark_key.to_bytes(32, 'little', signed=False),
         msg_hash.to_bytes(32, 'little', signed=False),
         r.to_bytes(32, 'little', signed=False),
-        s.to_bytes(32, 'little', signed=False))
+        w.to_bytes(32, 'little', signed=False))
