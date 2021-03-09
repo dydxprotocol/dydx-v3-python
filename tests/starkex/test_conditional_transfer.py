@@ -39,6 +39,7 @@ CONDITIONAL_TRANSFER_PARAMS = {
 
 get_cpp_lib('libcrypto_c_exports.so')
 
+
 class TestConditionalTransfer():
 
     def test_sign_conditional_transfer(self):
