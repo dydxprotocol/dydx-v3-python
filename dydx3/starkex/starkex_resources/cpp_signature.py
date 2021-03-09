@@ -61,8 +61,8 @@ def cpp_hash(left, right) -> int:
 
 def cpp_sign(msg_hash, priv_key, seed: Optional[int] = 32) -> ECSignature:
     """
-    Note that the random function is not safe.
-    Note that the same seed will give different signature comparing to sign function in
+    Note that this uses the secrets module to generate cryptographically strong random numbers.
+    Note that the same seed will give a different signature compared with the sign function in
     signature.py.
     """
     res = ctypes.create_string_buffer(OUT_BUFFER_SIZE)

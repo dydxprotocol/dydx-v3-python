@@ -20,6 +20,6 @@ def verify(msg_hash: int, r: int, s: int, public_key: Union[int, ECPoint]) -> bo
 
 def get_hash(*elements: int) -> int:
   if check_cpp_lib_path():
-    return cpp_hash(elements[0], elements[1])
+    return cpp_hash(*elements)
 
   return py_pedersen_hash(*elements)
