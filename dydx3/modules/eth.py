@@ -84,6 +84,7 @@ class Eth(object):
                     self.network_id,
                 )
             )
+        contract_address = Web3.toChecksumAddress(contract_address)
         return self.get_contract(contract_address, STARKWARE_PERPETUALS_ABI)
 
     def get_token_contract(
@@ -100,6 +101,7 @@ class Eth(object):
                     self.network_id,
                 )
             )
+        token_address = Web3.toChecksumAddress(token_address)
         return self.get_contract(token_address, ERC20_ABI)
 
     def send_eth_transaction(
