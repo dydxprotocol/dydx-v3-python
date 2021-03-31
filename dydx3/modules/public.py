@@ -60,6 +60,7 @@ class Public(object):
             "BTC-USD",
             "ETH-USD",
             "LINK-USD",
+            ...
         ]
 
         :returns: Market array
@@ -78,6 +79,7 @@ class Public(object):
             "BTC-USD",
             "ETH-USD",
             "LINK-USD",
+            ...
         ]
 
         :returns: Object containing bid array and ask array of open orders
@@ -97,6 +99,7 @@ class Public(object):
             "BTC-USD",
             "ETH-USD",
             "LINK-USD",
+            ...
         ]
 
         :param days: optional
@@ -123,6 +126,7 @@ class Public(object):
             "BTC-USD",
             "ETH-USD",
             "LINK-USD",
+            ...
         ]
 
         :param starting_before_or_at: optional
@@ -147,6 +151,7 @@ class Public(object):
             "BTC-USD",
             "ETH-USD",
             "LINK-USD",
+            ...
         ]
 
         :param effective_before_or_at: optional
@@ -189,6 +194,7 @@ class Public(object):
             "BTC-USD",
             "ETH-USD",
             "LINK-USD",
+            ...
         ]
 
         :param resolution: optional
