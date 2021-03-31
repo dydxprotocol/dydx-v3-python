@@ -876,6 +876,37 @@ class Private(object):
             },
         )
 
+    def get_historical_pnl(
+        self,
+        account,
+        created_before_or_at=None,
+        created_on_or_after=None,
+    ):
+        '''
+        Get historical pnl ticks
+
+        :param account: required
+        :type account: str
+
+        :param created_before_or_at: optional
+        :type created_before_or_at: ISO str
+
+        :param created_on_or_after: optional
+        :type created_on_or_after: ISO str
+
+        :returns: Array of historical pnl ticks
+
+        :raises: DydxAPIError
+        '''
+        return self._get(
+            'historical-pnl',
+            {
+                'account': account,
+                'createdBeforeOrAt': created_before_or_at,
+                'createdOnOrAfter': created_on_or_after,
+            },
+        )
+
     # ============ Signing ============
 
     def sign(
