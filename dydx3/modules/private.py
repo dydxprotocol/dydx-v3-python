@@ -241,6 +241,7 @@ class Private(object):
             "BTC-USD",
             "ETH-USD",
             "LINK-USD",
+            ...
         ]
 
         :param status: optional
@@ -287,6 +288,7 @@ class Private(object):
             "BTC-USD",
             "ETH-USD",
             "LINK-USD",
+            ...
         ]
 
         :param status: optional
@@ -402,6 +404,7 @@ class Private(object):
             "BTC-USD",
             "ETH-USD",
             "LINK-USD",
+            ...
         ]
 
         :param side: required
@@ -548,6 +551,7 @@ class Private(object):
             "BTC-USD",
             "ETH-USD",
             "LINK-USD",
+            ...
         ]
 
         :returns: Array of orders
@@ -575,6 +579,7 @@ class Private(object):
             "BTC-USD",
             "ETH-USD",
             "LINK-USD",
+            ...
         ]
 
         :param order_id: optional
@@ -663,6 +668,7 @@ class Private(object):
             "USDC",
             "USDT",
             "USD",
+            ...
         ]
 
         :param to_address: required
@@ -848,6 +854,7 @@ class Private(object):
             "BTC-USD",
             "ETH-USD",
             "LINK-USD",
+            ...
         ]
 
         :param limit: optional
