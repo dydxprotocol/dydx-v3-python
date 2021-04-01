@@ -671,9 +671,6 @@ class Private(object):
             ...
         ]
 
-        :param to_address: required
-        :type to_address: str
-
         :param client_id: optional
         :type client_id: str
 
@@ -721,8 +718,6 @@ class Private(object):
         params = {
             'amount': amount,
             'asset': asset,
-            # TODO: Signature verification should work regardless of case.
-            'toAddress': to_address.lower(),
             'expiration': expiration,
             'clientId': client_id,
             'signature': signature,
