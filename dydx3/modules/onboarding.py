@@ -59,6 +59,7 @@ class Onboarding(object):
         stark_public_key=None,
         stark_public_key_y_coordinate=None,
         ethereum_address=None,
+        referred_by_affiliate_link=None
     ):
         '''
         Onboard a user with an Ethereum address and STARK key.
@@ -74,6 +75,9 @@ class Onboarding(object):
 
         :param ethereum_address: optional
         :type ethereum_address: str
+
+        :param referred_by_affiliate_link: optional
+        :type referred_by_affiliate_link: str
 
         :returns: { apiKey, user, account }
 
@@ -96,6 +100,7 @@ class Onboarding(object):
             {
                 'starkKey': stark_key,
                 'starkKeyYCoordinate': stark_key_y,
+                'referredByAffiliateLink': referred_by_affiliate_link,
             },
             ethereum_address,
         )
