@@ -137,7 +137,7 @@ ASSET_RESOLUTION = {
     ASSET_SUSHI: '1e7',
     ASSET_SOL: '1e7',
     ASSET_YFI: '1e10',
-    ASSET_ONEINCH: '1e6',
+    ASSET_ONEINCH: '1e7',
 }
 
 # ------------ Ethereum Transactions ------------
