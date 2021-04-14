@@ -25,7 +25,7 @@ def json_stringify(data):
 def random_client_id():
     # TODO: Backend should treat client ID as a string, not a number.
     # NOTE: For now, need to make sure to remove leading zeros.
-    return str(int(str(random.random())[2:]))
+    return str(int(float(str(random.random())[2:])))
 
 
 def generate_now_iso():
