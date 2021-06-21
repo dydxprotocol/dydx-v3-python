@@ -330,10 +330,11 @@ class Eth(object):
             raise ValueError('human_amount is required')
 
         return self.send_eth_transaction(
-            options={
-                'to': to_address,
-                'value': Web3.toWei(human_amount, 'ether'),
-            }
+            options=dict(
+                send_options,
+                to=to_address,
+                value=Web3.toWei(human_amount, 'ether'),
+            ),
         )
 
     def transfer_token(
