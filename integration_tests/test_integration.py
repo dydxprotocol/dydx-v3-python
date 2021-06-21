@@ -342,9 +342,7 @@ class TestIntegration():
         get_api_keys_result_after = client.private.get_api_keys()
         assert len(get_api_keys_result_after['apiKeys']) == 1
 
-        # TODO: Uncomment when the fast withdrawal endpoint works.
-        #
-        # # Initiate a fast withdrawal of USDC.
+        # Initiate a fast withdrawal of USDC.
         expiration_epoch_seconds = time.time() + SEVEN_DAYS_S + 60
         client.private.create_fast_withdrawal(
             position_id=account['positionId'],
