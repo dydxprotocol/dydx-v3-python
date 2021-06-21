@@ -55,8 +55,7 @@ class TestPublic():
         json = public.get_candles(MARKET_BTC_USD)
         assert json != {}
 
-    # TODO
-    # def test_get_fast_withdrawal(self):
-    #     public = Client(API_HOST).public
-    #     json = public.get_fast_withdrawal()
-    #     assert json != {}
+    def test_get_fast_withdrawal(self):
+        public = Client(API_HOST).public
+        json = public.get_fast_withdrawal()
+        assert json != {}
