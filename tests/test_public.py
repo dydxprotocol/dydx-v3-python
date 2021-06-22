@@ -59,3 +59,8 @@ class TestPublic():
         public = Client(API_HOST).public
         json = public.get_fast_withdrawal()
         assert json != {}
+
+    def test_get_global_configuration(self):
+        public = Client(API_HOST).public
+        json = public.get_global_configuration()
+        assert json != {}
