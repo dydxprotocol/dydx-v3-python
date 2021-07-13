@@ -237,3 +237,14 @@ class Public(object):
         '''
         uri = '/v3/time'
         return self._get(uri)
+
+    def get_global_configuration(self):
+        '''
+        Get any global configuration variables for the exchange as a whole.
+
+        :returns: Configuration information for the entire exchange
+
+        :raise: DydxAPIError
+        '''
+        uri = '/v3/config'
+        return self._get(uri)

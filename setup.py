@@ -10,7 +10,7 @@ REQUIREMENTS = [
     'mpmath==1.0.0',
     'pytest>=4.4.0,<5.0.0',
     'requests-mock==1.6.0',
-    'requests==2.22.0',
+    'requests>2.0.0',
     'setuptools==50.3.2',
     'sympy==1.6',
     'tox==3.13.2',
@@ -18,8 +18,8 @@ REQUIREMENTS = [
 ]
 
 setup(
-    name='dydx-v3-python',
-    version='1.0.10',
+    name='dydx-v3-python-pundix',
+    version='1.0.13',
     packages=find_packages(),
     package_data={
         'dydx3': [
