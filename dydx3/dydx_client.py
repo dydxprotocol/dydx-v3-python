@@ -201,15 +201,14 @@ class Client(object):
         Get the eth module, used for interacting with Ethereum smart contracts.
         '''
         if not self._eth:
-            eth_private_key = getattr(self.eth_signer, '_private_key', None)
-            if self.web3 and eth_private_key:
+            if self.web3 and self.eth_signer:
                 self._eth = Eth(
                     web3=self.web3,
                     network_id=self.network_id,
-                    eth_private_key=eth_private_key,
                     default_address=self.default_address,
                     stark_public_key=self.stark_public_key,
                     send_options=self.eth_send_options,
+                    eth_signer=self.eth_signer,
                 )
             else:
                 raise Exception(

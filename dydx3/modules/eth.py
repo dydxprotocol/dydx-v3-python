@@ -25,17 +25,17 @@ class Eth(object):
         self,
         web3,
         network_id,
-        eth_private_key,
         default_address,
         stark_public_key,
         send_options,
+        eth_signer,
     ):
         self.web3 = web3
         self.network_id = network_id
-        self.eth_private_key = eth_private_key
         self.default_address = default_address
         self.stark_public_key = stark_public_key
         self.send_options = send_options
+        self.eth_signer = eth_signer
 
         self.cached_contracts = {}
         self._next_nonce_for_address = {}
@@ -186,10 +186,7 @@ class Eth(object):
             tx = options
         else:
             tx = method.buildTransaction(options)
-        return self.web3.eth.account.sign_transaction(
-            tx,
-            self.eth_private_key,
-        )
+        return self.eth_signer.sign_transaction(tx)
 
     def wait_for_tx(
         self,
