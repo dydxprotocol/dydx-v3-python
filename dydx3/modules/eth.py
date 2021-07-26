@@ -301,6 +301,73 @@ class Eth(object):
             options=send_options,
         )
 
+    def withdraw(
+        self,
+        stark_public_key=None,
+        send_options=None,
+    ):
+        '''
+        Withdraw from exchange.
+
+        :param stark_public_key: optional
+        :type stark_public_key: string
+
+        :param send_options: optional
+        :type send_options: dict
+
+        :returns: transactionHash
+
+        :raises: ValueError
+        '''
+        stark_public_key = stark_public_key or self.stark_public_key
+        if stark_public_key is None:
+            raise ValueError('No stark_public_key was provided')
+
+        contract = self.get_exchange_contract()
+        return self.send_eth_transaction(
+            method=contract.functions.withdraw(
+                int(stark_public_key, 16),
+                COLLATERAL_ASSET_ID_BY_NETWORK_ID[self.network_id],
+            ),
+            options=send_options,
+        )
+
+    def withdraw_to(
+        self,
+        recipient,
+        stark_public_key=None,
+        send_options=None,
+    ):
+        '''
+        Withdraw from exchange to address.
+
+        :param recipient: required
+        :type recipient: string
+
+        :param stark_public_key: optional
+        :type stark_public_key: string
+
+        :param send_options: optional
+        :type send_options: dict
+
+        :returns: transactionHash
+
+        :raises: ValueError
+        '''
+        stark_public_key = stark_public_key or self.stark_public_key
+        if stark_public_key is None:
+            raise ValueError('No stark_public_key was provided')
+
+        contract = self.get_exchange_contract()
+        return self.send_eth_transaction(
+            method=contract.functions.withdrawTo(
+                int(stark_public_key, 16),
+                COLLATERAL_ASSET_ID_BY_NETWORK_ID[self.network_id],
+                recipient,
+            ),
+            options=send_options,
+        )
+
     def transfer_eth(
         self,
         to_address=None,  # Require keyword args to avoid confusing the amount.

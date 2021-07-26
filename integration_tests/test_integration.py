@@ -355,3 +355,26 @@ class TestIntegration():
             client_id='mock-client-id',
             expiration_epoch_seconds=expiration_epoch_seconds,
         )
+
+        # Send an on-chain withdraw.
+        withdraw_tx_hash = client.eth.withdraw(
+            account['positionId'],
+        )
+        print('Waiting for withdraw...')
+        client.eth.wait_for_tx(withdraw_tx_hash)
+        print('...done.')
+
+        # Wait for the withdraw to be processed.
+        print('Waiting for withdraw to be processed on dYdX...')
+        wait_for_condition(
+            lambda: len(client.private.get_transfers()['transfers']) > 0,
+            True,
+            60,
+        )
+        print('...transfer was recorded, waiting for confirmation...')
+        wait_for_condition(
+            lambda: client.private.get_account()['account']['quoteBalance'],
+            '2',
+            180,
+        )
+        print('...done.')
