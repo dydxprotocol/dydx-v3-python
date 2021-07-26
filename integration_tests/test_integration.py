@@ -357,15 +357,36 @@ class TestIntegration():
         )
 
         # Send an on-chain withdraw.
-        withdraw_tx_hash = client.eth.withdraw(
-            account['positionId'],
-        )
+        withdraw_tx_hash = client.eth.withdraw()
         print('Waiting for withdraw...')
         client.eth.wait_for_tx(withdraw_tx_hash)
         print('...done.')
 
         # Wait for the withdraw to be processed.
         print('Waiting for withdraw to be processed on dYdX...')
+        wait_for_condition(
+            lambda: len(client.private.get_transfers()['transfers']) > 0,
+            True,
+            60,
+        )
+        print('...transfer was recorded, waiting for confirmation...')
+        wait_for_condition(
+            lambda: client.private.get_account()['account']['quoteBalance'],
+            '2',
+            180,
+        )
+        print('...done.')
+
+        # Send an on-chain withdraw_to.
+        withdraw_to_tx_hash = client.eth.withdraw_to(
+            recipient=ethereum_address,
+        )
+        print('Waiting for withdraw_to...')
+        client.eth.wait_for_tx(withdraw_to_tx_hash)
+        print('...done.')
+
+        # Wait for the withdraw_to to be processed.
+        print('Waiting for withdraw_to to be processed on dYdX...')
         wait_for_condition(
             lambda: len(client.private.get_transfers()['transfers']) > 0,
             True,
