@@ -20,8 +20,9 @@ class Public(object):
 
     def _put(self, endpoint, data):
         return request(
+            self.host + '/v3/' + endpoint,
             'put',
-            endpoint,
+            {},
             data,
         )
 
