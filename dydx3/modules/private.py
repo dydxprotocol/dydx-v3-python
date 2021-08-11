@@ -897,6 +897,21 @@ class Private(object):
             },
         )
 
+    def send_verification_email(
+        self,
+    ):
+        '''
+        Send verification email
+
+        :returns: Empty object
+
+        :raises: DydxAPIError
+        '''
+        return self._put(
+            'emails/send-verification-email',
+            {},
+        )
+
     # ============ Signing ============
 
     def sign(

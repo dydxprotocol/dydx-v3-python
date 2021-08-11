@@ -59,3 +59,12 @@ class TestPublic():
         public = Client(API_HOST).public
         json = public.get_fast_withdrawal()
         assert json != {}
+
+    def test_verify_email(self):
+        try:
+            public = Client(API_HOST).public
+            public.verify_email('token')
+        except Exception as e:
+            # No userId gotten with token: token so no verification
+            # has occurred
+            assert e.status_code == 400

@@ -18,6 +18,14 @@ class Public(object):
             'get',
         )
 
+    def _put(self, endpoint, data):
+        return request(
+            self.host + '/v3/' + endpoint,
+            'put',
+            {},
+            data,
+        )
+
     # ============ Requests ============
 
     def check_if_user_exists(self, ethereum_address):
@@ -237,3 +245,24 @@ class Public(object):
         '''
         uri = '/v3/time'
         return self._get(uri)
+
+    def verify_email(
+        self,
+        token,
+    ):
+        '''
+        Verify email with token
+
+        :param token: required
+        :type token: string
+
+        :returns: empty object
+
+        :raises: DydxAPIError
+        '''
+        return self._put(
+            'emails/verify-email',
+            {
+                'token': token,
+            }
+        )
