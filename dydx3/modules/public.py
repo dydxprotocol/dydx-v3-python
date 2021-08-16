@@ -210,6 +210,8 @@ class Public(object):
             "1DAY",
             "4HOURS"
             "1HOUR",
+            "30MINS",
+            "15MINS",
             "5MINS",
             "1MIN",
         ]
