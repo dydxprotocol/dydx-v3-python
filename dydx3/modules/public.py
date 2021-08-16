@@ -208,7 +208,10 @@ class Public(object):
         :param resolution: optional
         :type resolution: str in list [
             "1DAY",
+            "4HOURS"
             "1HOUR",
+            "5MINS",
+            "1MIN",
         ]
 
         :param from_iso: optional
@@ -265,4 +268,25 @@ class Public(object):
             {
                 'token': token,
             }
+        )
+
+    def get_public_retroactive_mining_rewards(
+        self,
+        ethereum_address,
+    ):
+        '''
+        Get public retroactive mining rewards
+
+        :param ethereumAddress: required
+        :type ethereumAddress: str
+
+        :returns: PublicRetroactiveMiningRewards
+
+        :raises: DydxAPIError
+        '''
+        return self._get(
+            '/v3/rewards/public-retroactive-mining',
+            {
+                'ethereumAddress': ethereum_address,
+            },
         )

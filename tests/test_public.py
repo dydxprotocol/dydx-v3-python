@@ -68,3 +68,8 @@ class TestPublic():
             # No userId gotten with token: token so no verification
             # has occurred
             assert e.status_code == 400
+
+    def test_public_retroactive_mining(self):
+        public = Client(API_HOST).public
+        json = public.get_public_retroactive_mining_rewards(ADDRESS_1)
+        assert json != {}

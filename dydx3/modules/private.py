@@ -217,7 +217,7 @@ class Private(object):
         '''
         Get accounts
 
-        :returns: Arrat of accounts for a user
+        :returns: Array of accounts for a user
 
         :raises: DydxAPIError
         '''
@@ -911,6 +911,60 @@ class Private(object):
             'emails/send-verification-email',
             {},
         )
+
+    def get_trading_rewards(
+        self,
+        epoch=None,
+    ):
+        '''
+        Get trading rewards
+
+        :param epoch: optional
+        :type epoch: int
+
+        :returns: TradingRewards
+
+        :raises: DydxAPIError
+        '''
+        return self._get(
+            'rewards/weight',
+            {
+                'epoch': epoch,
+            },
+        )
+
+    def get_liquidity_provider_rewards(
+        self,
+        epoch=None,
+    ):
+        '''
+        Get liquidity rewards
+
+        :param epoch: optional
+        :type epoch: int
+
+        :returns: LiquidityRewards
+
+        :raises: DydxAPIError
+        '''
+        return self._get(
+            'rewards/liquidity',
+            {
+                'epoch': epoch,
+            },
+        )
+
+    def get_retroactive_mining_rewards(
+        self,
+    ):
+        '''
+        Get retroactive mining rewards
+
+        :returns: RetroactiveMiningRewards
+
+        :raises: DydxAPIError
+        '''
+        return self._get('rewards/retroactive-mining')
 
     # ============ Signing ============
 
