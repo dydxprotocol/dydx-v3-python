@@ -285,7 +285,7 @@ class Public(object):
         :raises: DydxAPIError
         '''
         return self._get(
-            'rewards/public-retroactive-mining',
+            '/v3/rewards/public-retroactive-mining',
             {
                 'ethereumAddress': ethereum_address,
             },
