@@ -119,3 +119,16 @@ web3_client_with_keys = Client(
 web3_client_with_keys.onboarding.create_user()
 web3_client_with_keys.api_keys.create_api_key()
 ```
+
+### Using the C++ Library for STARK Signing
+
+By default, STARK curve operations such as signing and verification will use the Python native implementation. These operations occur whenever placing an order or requesting a withdrawal. To use the C++ implementation, initialize the client object with `crypto_c_exports_path`:
+
+```python
+client = Client(
+    crypto_c_exports_path='./libcrypto_c_exports.so',
+    ...
+)
+```
+
+The path should point to a C++ shared library file, built from Starkware's `crypto-cpp` library ([CMake target](https://github.com/starkware-libs/crypto-cpp/blob/601de408bee9f897315b8a5cb0c88e2450a91282/src/starkware/crypto/ffi/CMakeLists.txt#L3)) for the particular platform (e.g. Linux, etc.) that you are running your trading program on.
