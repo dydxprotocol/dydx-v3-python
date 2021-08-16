@@ -277,7 +277,7 @@ class Public(object):
         '''
         Get public retroactive mining rewards
 
-        :param ethereumAddress: optional
+        :param ethereumAddress: required
         :type ethereumAddress: str
 
         :returns: PublicRetroactiveMiningRewards
