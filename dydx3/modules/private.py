@@ -137,6 +137,8 @@ class Private(object):
         user_data={},
         email=None,
         username=None,
+        is_sharing_username=None,
+        is_sharing_address=None,
     ):
         '''
         Update user information
@@ -150,6 +152,12 @@ class Private(object):
         :param username: optional
         :type username: str
 
+        :param is_sharing_username: optional
+        :type is_sharing_username: str
+
+        :param is_sharing_address: optional
+        :type is_sharing_address: str
+
         :returns: User
 
         :raises: DydxAPIError
@@ -159,6 +167,8 @@ class Private(object):
             {
                 'email': email,
                 'username': username,
+                'isSharingUsername': is_sharing_username,
+                'isSharingAddress': is_sharing_address,
                 'userData': json_stringify(user_data),
             },
         )
