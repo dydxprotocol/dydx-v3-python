@@ -98,11 +98,11 @@ class Public(object):
         uri = '/'.join(['/v3/orderbook', market])
         return self._get(uri)
 
-    def get_stats(self, market, days=None):
+    def get_stats(self, market=None, days=None):
         '''
         Get one or more day statistics for a market
 
-        :param market: required
+        :param market: optional
         :type market: str in list [
             "BTC-USD",
             "ETH-USD",
@@ -122,7 +122,12 @@ class Public(object):
 
         :raises: DydxAPIError
         '''
-        uri = '/'.join(['/v3/stats', market])
+        uri = (
+            '/'.join(['/v3/stats', market])
+            if market is not None
+            else '/v3/stats'
+        )
+
         return self._get(uri, {'days': days})
 
     def get_trades(self, market, starting_before_or_at=None):
