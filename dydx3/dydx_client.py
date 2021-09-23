@@ -3,6 +3,7 @@ from web3 import Web3
 from dydx3.constants import NETWORK_ID_MAINNET
 from dydx3.eth_signing import SignWithWeb3
 from dydx3.eth_signing import SignWithKey
+from dydx3.helpers.requests import _RequestManager
 from dydx3.modules.api_keys import ApiKeys
 from dydx3.modules.eth import Eth
 from dydx3.modules.private import Private
@@ -14,12 +15,12 @@ from dydx3.starkex.starkex_resources.cpp_signature import (
 )
 
 
-class Client(object):
+class Client(_RequestManager):
 
     def __init__(
         self,
         host,
-        api_timeout=3000,  # TODO: Actually use this.
+        api_timeout=3000,
         default_ethereum_address=None,
         eth_private_key=None,
         eth_send_options=None,
@@ -73,7 +74,12 @@ class Client(object):
 
         # Initialize the public module. Other modules are initialized on
         # demand, if the necessary configuration options were provided.
+
+        self._set_session()
+
         self._public = Public(host)
+        self._public._session = self._session
+        self._public.api_timeout = self.api_timeout
         self._private = None
         self._api_keys = None
         self._eth = None
@@ -140,6 +146,8 @@ class Client(object):
                     default_address=self.default_address,
                     api_key_credentials=self.api_key_credentials,
                 )
+                self._private._session = self._session
+                self._private.api_timeout = self.api_timeout
             else:
                 raise Exception(
                     'Private endpoints not supported ' +
@@ -161,6 +169,8 @@ class Client(object):
                     network_id=self.network_id,
                     default_address=self.default_address,
                 )
+                self._api_keys._session = self._session
+                self._api_keys.api_timeout = self.api_timeout
             else:
                 raise Exception(
                     'API keys module is not supported since no Ethereum ' +
@@ -187,6 +197,8 @@ class Client(object):
                         self.stark_public_key_y_coordinate
                     ),
                 )
+                self._onboarding._session = self._session
+                self._onboarding.api_timeout = self.api_timeout
             else:
                 raise Exception(
                     'Onboarding is not supported since no Ethereum ' +
@@ -218,3 +230,13 @@ class Client(object):
                     'eth_private_key nor web3_account was provided',
                 )
         return self._eth
+
+
+class TorClient(Client):
+
+    def _set_session(self):
+        super()._set_session()
+        self._session.proxies = {
+            'http':  'socks5://127.0.0.1:9050',
+            'https': 'socks5://127.0.0.1:9050'
+            }

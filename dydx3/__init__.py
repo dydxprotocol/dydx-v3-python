@@ -1,4 +1,4 @@
-from dydx3.dydx_client import Client
+from dydx3.dydx_client import Client, TorClient
 from dydx3.errors import DydxError
 from dydx3.errors import DydxApiError
 from dydx3.errors import TransactionReverted

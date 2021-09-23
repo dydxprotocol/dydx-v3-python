@@ -5,10 +5,10 @@ from web3 import Web3
 from dydx3.constants import OFF_CHAIN_ONBOARDING_ACTION
 from dydx3.constants import OFF_CHAIN_KEY_DERIVATION_ACTION
 from dydx3.eth_signing import SignOnboardingAction
-from dydx3.helpers.requests import request
+from dydx3.helpers.requests import _RequestManager
 
 
-class Onboarding(object):
+class Onboarding(_RequestManager):
 
     def __init__(
         self,
@@ -42,7 +42,7 @@ class Onboarding(object):
         )
 
         request_path = '/'.join(['/v3', endpoint])
-        return request(
+        return self.request(
             self.host + request_path,
             'post',
             {

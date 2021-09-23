@@ -1,8 +1,8 @@
 from dydx3.helpers.request_helpers import generate_query_path
-from dydx3.helpers.requests import request
+from dydx3.helpers.requests import _RequestManager
 
 
-class Public(object):
+class Public(_RequestManager):
 
     def __init__(
         self,
@@ -13,13 +13,13 @@ class Public(object):
     # ============ Request Helpers ============
 
     def _get(self, request_path, params={}):
-        return request(
+        return self.request(
             generate_query_path(self.host + request_path, params),
             'get',
         )
 
     def _put(self, endpoint, data):
-        return request(
+        return self.request(
             self.host + '/v3/' + endpoint,
             'put',
             {},

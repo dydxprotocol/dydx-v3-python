@@ -2,10 +2,10 @@ from dydx3.helpers.request_helpers import generate_now_iso
 from dydx3.helpers.request_helpers import generate_query_path
 from dydx3.helpers.request_helpers import json_stringify
 from dydx3.eth_signing import SignApiKeyAction
-from dydx3.helpers.requests import request
+from dydx3.helpers.requests import _RequestManager
 
 
-class ApiKeys(object):
+class ApiKeys(_RequestManager):
     """Module for adding, querying, and deleting API keys."""
 
     def __init__(
@@ -41,7 +41,7 @@ class ApiKeys(object):
             timestamp=timestamp,
         )
 
-        return request(
+        return self.request(
             self.host + request_path,
             method,
             {
