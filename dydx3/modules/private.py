@@ -15,7 +15,7 @@ from dydx3.helpers.request_helpers import random_client_id
 from dydx3.helpers.request_helpers import iso_to_epoch_seconds
 from dydx3.helpers.request_helpers import json_stringify
 from dydx3.helpers.request_helpers import remove_nones
-from dydx3.helpers.requests import request
+from dydx3.helpers.requests import _RequestManager
 from dydx3.starkex.helpers import get_transfer_erc20_fact
 from dydx3.starkex.helpers import nonce_from_client_id
 from dydx3.starkex.order import SignableOrder
@@ -23,7 +23,7 @@ from dydx3.starkex.withdrawal import SignableWithdrawal
 from dydx3.starkex.conditional_transfer import SignableConditionalTransfer
 
 
-class Private(object):
+class Private(_RequestManager):
 
     def __init__(
         self,
@@ -61,7 +61,7 @@ class Private(object):
             'DYDX-TIMESTAMP': now_iso_string,
             'DYDX-PASSPHRASE': self.api_key_credentials['passphrase'],
         }
-        return request(
+        return self.request(
             self.host + request_path,
             method,
             headers,
