@@ -8,6 +8,7 @@ from dydx3.modules.eth import Eth
 from dydx3.modules.private import Private
 from dydx3.modules.public import Public
 from dydx3.modules.onboarding import Onboarding
+from dydx3.modules.websocket import WSClient
 from dydx3.starkex.helpers import private_key_to_public_key_pair_hex
 from dydx3.starkex.starkex_resources.cpp_signature import (
     get_cpp_lib,
@@ -78,6 +79,7 @@ class Client(object):
         self._api_keys = None
         self._eth = None
         self._onboarding = None
+        self._ws = None
 
         # Derive the public keys.
         if stark_private_key is not None:
@@ -117,6 +119,21 @@ class Client(object):
                     'Warning: Failed to derive default API key credentials:',
                     e,
                 )
+
+    @property
+    def ws(self):
+        '''
+        Get the ws client module, used for interacting with websocket endpoints.
+        '''
+        if self._ws:
+            return self._ws
+        host = self.host
+        if host.startswith('https'):
+            host = host.replace('https', 'wss')
+        if host.startswith('http'):
+            host = host.replace('http', 'wss')
+        self._ws = WSClient(host + '/v3/ws')
+        return self._ws
 
     @property
     def public(self):
