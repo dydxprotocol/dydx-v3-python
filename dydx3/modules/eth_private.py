@@ -1,12 +1,12 @@
 from dydx3.helpers.request_helpers import generate_now_iso
 from dydx3.helpers.request_helpers import generate_query_path
 from dydx3.helpers.request_helpers import json_stringify
-from dydx3.eth_signing import SignApiKeyAction
+from dydx3.eth_signing import SignEthPrivateAction
 from dydx3.helpers.requests import request
 
 
-class ApiKeys(object):
-    """Module for adding, querying, and deleting API keys."""
+class EthPrivate(object):
+    """Module for adding/deleting API keys and recovery."""
 
     def __init__(
         self,
@@ -18,7 +18,7 @@ class ApiKeys(object):
         self.host = host
         self.default_address = default_address
 
-        self.signer = SignApiKeyAction(eth_signer, network_id)
+        self.signer = SignEthPrivateAction(eth_signer, network_id)
 
     # ============ Request Helpers ============
 
@@ -76,6 +76,19 @@ class ApiKeys(object):
             opt_ethereum_address,
         )
 
+    def _get(
+        self,
+        endpoint,
+        opt_ethereum_address,
+        params={},
+    ):
+        url = generate_query_path(endpoint, params)
+        return self._request(
+            'get',
+            url,
+            opt_ethereum_address,
+        )
+
 # ============ Requests ============
 
     def create_api_key(
@@ -121,4 +134,26 @@ class ApiKeys(object):
             {
                 'apiKey': api_key,
             },
+        )
+
+    def recovery(
+        self,
+        ethereum_address=None
+    ):
+        '''
+        This is for if you can't recover your starkKey or apiKey and need an
+        additional way to get your starkKey and balance on our exchange,
+        both of which are needed to call the L1 solidity function needed to
+        recover your funds.
+
+        :param ethereum_address: optional
+        :type ethereum_address: str
+
+        :returns: None
+
+        :raises: DydxAPIError
+        '''
+        return self._get(
+            'recovery',
+            ethereum_address,
         )

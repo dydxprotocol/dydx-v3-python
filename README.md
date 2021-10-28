@@ -104,7 +104,7 @@ web3_client.onboarding.create_user(
     stark_public_key='...',
     ethereum_address='...',
 )
-web3_client.api_keys.create_api_key(
+web3_client.eth_private.create_api_key(
     ethereum_address='...',
 )
 
@@ -117,7 +117,7 @@ web3_client_with_keys = Client(
     eth_private_key='...',
 )
 web3_client_with_keys.onboarding.create_user()
-web3_client_with_keys.api_keys.create_api_key()
+web3_client_with_keys.eth_private.create_api_key()
 ```
 
 ### Using the C++ Library for STARK Signing

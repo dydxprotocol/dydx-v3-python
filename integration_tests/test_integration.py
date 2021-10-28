@@ -51,7 +51,7 @@ class TestIntegration():
         client.onboarding.create_user()
 
         # Register a new API key.
-        client.api_keys.create_api_key()
+        client.eth_private.create_api_key()
 
         # Get the primary account.
         get_account_result = client.private.get_account(
@@ -322,7 +322,7 @@ class TestIntegration():
         )
 
         # Register a new API key.
-        create_api_key_result = client.api_keys.create_api_key()
+        create_api_key_result = client.eth_private.create_api_key()
         new_api_key_credentials = create_api_key_result['apiKey']
 
         # Get all API keys.
@@ -333,7 +333,7 @@ class TestIntegration():
         assert api_key_credentials['key'] in api_keys_public_keys
 
         # Delete an API key.
-        client.api_keys.delete_api_key(
+        client.eth_private.delete_api_key(
             api_key=new_api_key_credentials['key'],
             ethereum_address=ethereum_address,
         )

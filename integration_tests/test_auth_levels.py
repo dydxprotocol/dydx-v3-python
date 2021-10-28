@@ -163,11 +163,11 @@ class TestAuthLevels():
         client.onboarding.create_user()
 
         # Register and then revoke a second API key.
-        client.api_keys.create_api_key()
+        client.eth_private.create_api_key()
         client.private.get_api_keys()
 
         # TODO
-        # client.api_keys.delete_api_key(api_public_key_2)
+        # client.eth_private.delete_api_key(api_public_key_2)
 
     def test_onboard_with_web3_provider(self):
         # Generate private key.
@@ -201,11 +201,11 @@ class TestAuthLevels():
             pass
 
         # Register and then revoke a second API key.
-        client.api_keys.create_api_key(
+        client.eth_private.create_api_key(
             ethereum_address=ethereum_address,
         )
         client.private.get_api_keys()
-        client.api_keys.delete_api_key(
+        client.eth_private.delete_api_key(
             api_key=client.api_key_credentials['key'],
             ethereum_address=ethereum_address,
         )
@@ -242,8 +242,8 @@ class TestAuthLevels():
             pass
 
         # Register and then revoke a second API key.
-        client.api_keys.create_api_key()
+        client.eth_private.create_api_key()
         client.private.get_api_keys()
-        client.api_keys.delete_api_key(
+        client.eth_private.delete_api_key(
             api_key=client.api_key_credentials['key'],
         )
