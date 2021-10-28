@@ -3,7 +3,7 @@ from web3 import Web3
 from dydx3.constants import NETWORK_ID_MAINNET
 from dydx3.eth_signing import SignWithWeb3
 from dydx3.eth_signing import SignWithKey
-from dydx3.eth_signing import SignApiKeyAction
+from dydx3.eth_signing import SignEthPrivateAction
 
 GANACHE_ADDRESS = '0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1'
 GANACHE_PRIVATE_KEY = (
@@ -28,7 +28,7 @@ class TestApiKeyAction():
         web3 = Web3()  # Connect to a local Ethereum node.
         signer = SignWithWeb3(web3)
 
-        action_signer = SignApiKeyAction(signer, NETWORK_ID_MAINNET)
+        action_signer = SignEthPrivateAction(signer, NETWORK_ID_MAINNET)
         signature = action_signer.sign(GANACHE_ADDRESS, **PARAMS)
         assert action_signer.verify(
             signature,
@@ -42,7 +42,7 @@ class TestApiKeyAction():
         web3_account = web3.eth.account.create()
         signer = SignWithKey(web3_account.key)
 
-        action_signer = SignApiKeyAction(signer, NETWORK_ID_MAINNET)
+        action_signer = SignEthPrivateAction(signer, NETWORK_ID_MAINNET)
         signature = action_signer.sign(signer.address, **PARAMS)
         assert action_signer.verify(
             signature,
@@ -53,7 +53,7 @@ class TestApiKeyAction():
     def test_sign_via_private_key(self):
         signer = SignWithKey(GANACHE_PRIVATE_KEY)
 
-        action_signer = SignApiKeyAction(signer, NETWORK_ID_MAINNET)
+        action_signer = SignEthPrivateAction(signer, NETWORK_ID_MAINNET)
         signature = action_signer.sign(GANACHE_ADDRESS, **PARAMS)
         assert action_signer.verify(
             signature,
