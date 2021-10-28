@@ -3,7 +3,7 @@ from web3 import Web3
 from dydx3.constants import NETWORK_ID_MAINNET
 from dydx3.eth_signing import SignWithWeb3
 from dydx3.eth_signing import SignWithKey
-from dydx3.modules.api_keys import ApiKeys
+from dydx3.modules.eth_private import EthPrivate
 from dydx3.modules.eth import Eth
 from dydx3.modules.private import Private
 from dydx3.modules.public import Public
@@ -75,7 +75,7 @@ class Client(object):
         # demand, if the necessary configuration options were provided.
         self._public = Public(host)
         self._private = None
-        self._api_keys = None
+        self._eth_private = None
         self._eth = None
         self._onboarding = None
 
@@ -148,14 +148,14 @@ class Client(object):
         return self._private
 
     @property
-    def api_keys(self):
+    def eth_private(self):
         '''
-        Get the api_keys module, used for managing API keys. Requires
-        Ethereum key auth.
+        Get the eth_private module, used for managing API keys and recovery.
+        Requires Ethereum key auth.
         '''
-        if not self._api_keys:
+        if not self._eth_private:
             if self.eth_signer:
-                self._api_keys = ApiKeys(
+                self._eth_private = EthPrivate(
                     host=self.host,
                     eth_signer=self.eth_signer,
                     network_id=self.network_id,
@@ -163,11 +163,11 @@ class Client(object):
                 )
             else:
                 raise Exception(
-                    'API keys module is not supported since no Ethereum ' +
+                    'Eth private module is not supported since no Ethereum ' +
                     'signing method (web3, web3_account, web3_provider) was ' +
                     'provided',
                 )
-        return self._api_keys
+        return self._eth_private
 
     @property
     def onboarding(self):

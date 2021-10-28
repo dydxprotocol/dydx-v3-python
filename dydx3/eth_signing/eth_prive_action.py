@@ -3,13 +3,13 @@ from web3 import Web3
 from dydx3.eth_signing import util
 from dydx3.eth_signing.sign_off_chain_action import SignOffChainAction
 
-EIP712_API_KEY_ACTION_STRUCT = [
+EIP712_ETH_PRIVATE_ACTION_STRUCT_STRING = [
     {'type': 'string', 'name': 'method'},
     {'type': 'string', 'name': 'requestPath'},
     {'type': 'string', 'name': 'body'},
     {'type': 'string', 'name': 'timestamp'},
 ]
-EIP712_API_KEY_ACTION_STRUCT_STRING = (
+EIP712_ETH_PRIVATE_ACTION_STRUCT_STRING_STRING = (
     'dYdX(' +
     'string method,' +
     'string requestPath,' +
@@ -20,10 +20,10 @@ EIP712_API_KEY_ACTION_STRUCT_STRING = (
 EIP712_STRUCT_NAME = 'dYdX'
 
 
-class SignApiKeyAction(SignOffChainAction):
+class SignEthPrivateAction(SignOffChainAction):
 
     def get_eip712_struct(self):
-        return EIP712_API_KEY_ACTION_STRUCT
+        return EIP712_ETH_PRIVATE_ACTION_STRUCT_STRING
 
     def get_eip712_struct_name(self):
         return EIP712_STRUCT_NAME
@@ -35,7 +35,7 @@ class SignApiKeyAction(SignOffChainAction):
         body,
         timestamp,
     ):
-        return super(SignApiKeyAction, self).get_eip712_message(
+        return super(SignEthPrivateAction, self).get_eip712_message(
             method=method,
             requestPath=request_path,
             body=body,
@@ -58,7 +58,9 @@ class SignApiKeyAction(SignOffChainAction):
                 'bytes32',
             ],
             [
-                util.hash_string(EIP712_API_KEY_ACTION_STRUCT_STRING),
+                util.hash_string(
+                    EIP712_ETH_PRIVATE_ACTION_STRUCT_STRING_STRING,
+                ),
                 util.hash_string(method),
                 util.hash_string(request_path),
                 util.hash_string(body),
