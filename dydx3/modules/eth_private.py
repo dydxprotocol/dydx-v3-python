@@ -149,7 +149,12 @@ class EthPrivate(object):
         :param ethereum_address: optional
         :type ethereum_address: str
 
-        :returns: None
+        :returns: {
+            starkKey: str,
+            positionId: str,
+            quoteBalance: str,
+            positions: array of open positions
+        }
 
         :raises: DydxAPIError
         '''
