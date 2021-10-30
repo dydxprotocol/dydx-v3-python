@@ -297,3 +297,14 @@ class Public(object):
                 'ethereumAddress': ethereum_address,
             },
         )
+
+    def get_config(self):
+        '''
+        Get global config variables
+
+        :returns: GlobalConfigVariables
+
+        :raises: DydxAPIError
+        '''
+        uri = '/v3/config'
+        return self._get(uri)
