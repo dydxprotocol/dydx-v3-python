@@ -301,8 +301,8 @@ class Public(object):
     def get_config(self):
         '''
         Get global config variables for the exchange as a whole.
-        This includes (but is not limited to) details on the exchange, including addresses,
-        fees, transfers, and rate limits.
+        This includes (but is not limited to) details on the exchange,
+        including addresses, fees, transfers, and rate limits.
 
         :returns: GlobalConfigVariables
 
