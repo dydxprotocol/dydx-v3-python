@@ -14,6 +14,12 @@ session.headers.update({
 })
 
 
+class Response(object):
+    def __init__(self, data={}, headers=None):
+        self.data = data
+        self.headers = headers
+
+
 def request(uri, method, headers=None, data_values={}):
     response = send_request(
         uri,
@@ -25,7 +31,11 @@ def request(uri, method, headers=None, data_values={}):
     )
     if not str(response.status_code).startswith('2'):
         raise DydxApiError(response)
-    return response.json() if response.content else '{}'
+
+    if response.content:
+        return Response(response.json(), response.headers)
+    else:
+        return Response('{}', response.headers)
 
 
 def send_request(uri, method, headers=None, **kwargs):
