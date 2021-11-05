@@ -14,51 +14,60 @@ class TestPublic():
 
     def test_check_if_user_exists(self):
         public = Client(API_HOST).public
-        json = public.check_if_user_exists(ADDRESS_1)
-        assert json == {'exists': False}
+        resp = public.check_if_user_exists(ADDRESS_1)
+        assert resp.data == {'exists': False}
+        assert resp.headers != {}
 
     def test_check_if_username_exists(self):
         public = Client(API_HOST).public
-        json = public.check_if_username_exists('foo')
-        assert json == {'exists': False}
+        resp = public.check_if_username_exists('foo')
+        assert resp.data == {'exists': False}
+        assert resp.headers != {}
 
     def test_get_markets(self):
         public = Client(API_HOST).public
-        json = public.get_markets()
-        assert json != {}
+        resp = public.get_markets()
+        assert resp.data != {}
+        assert resp.headers != {}
 
     def test_get_orderbook(self):
         public = Client(API_HOST).public
-        json = public.get_orderbook(MARKET_BTC_USD)
-        assert json != {}
+        resp = public.get_orderbook(MARKET_BTC_USD)
+        assert resp.data != {}
+        assert resp.headers != {}
 
     def test_get_stats(self):
         public = Client(API_HOST).public
-        json = public.get_stats(
+        resp = public.get_stats(
             MARKET_BTC_USD,
             MARKET_STATISTIC_DAY_ONE,
         )
-        assert json != {}
+        assert resp.data != {}
+        assert resp.headers != {}
 
     def test_get_trades(self):
         public = Client(API_HOST).public
-        json = public.get_trades(MARKET_BTC_USD)
-        assert json != {}
+        resp = public.get_trades(MARKET_BTC_USD)
+        assert resp.data != {}
+        assert resp.headers != {}
 
     def test_get_historical_funding(self):
         public = Client(API_HOST).public
-        json = public.get_historical_funding(MARKET_BTC_USD)
-        assert json != {}
+        resp = public.get_historical_funding(MARKET_BTC_USD)
+        assert resp.data != {}
+        assert resp.headers != {}
 
     def test_get_candles(self):
         public = Client(API_HOST).public
-        json = public.get_candles(MARKET_BTC_USD)
-        assert json != {}
+        resp = public.get_candles(MARKET_BTC_USD)
+        assert resp.data != {}
+        assert resp.headers != {}
 
     def test_get_fast_withdrawal(self):
         public = Client(API_HOST).public
-        json = public.get_fast_withdrawal()
-        assert json != {}
+        resp = public.get_fast_withdrawal()
+        assert resp.data != {}
+        assert resp.headers != {}
 
     def test_verify_email(self):
         try:
@@ -71,5 +80,6 @@ class TestPublic():
 
     def test_public_retroactive_mining(self):
         public = Client(API_HOST).public
-        json = public.get_public_retroactive_mining_rewards(ADDRESS_1)
-        assert json != {}
+        resp = public.get_public_retroactive_mining_rewards(ADDRESS_1)
+        assert resp.data != {}
+        assert resp.headers != {}
