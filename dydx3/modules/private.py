@@ -981,6 +981,19 @@ class Private(object):
         '''
         return self._get('rewards/retroactive-mining')
 
+    def request_testnet_tokens(
+        self,
+    ):
+        '''
+        Requests tokens on dYdX's staging server.
+        NOTE: this will not work on Mainnet/Production.
+
+        :returns: Transfer
+
+        :raises: DydxAPIError
+        '''
+        return self._post('testnet/tokens')
+
     # ============ Signing ============
 
     def sign(
