@@ -992,6 +992,9 @@ class Private(object):
 
         :raises: DydxAPIError
         '''
+        if (this.network_id != 3):
+            raise ValueError('network_id is not Ropsten')
+
         return self._post('testnet/tokens')
 
     # ============ Signing ============
