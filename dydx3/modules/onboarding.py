@@ -59,7 +59,8 @@ class Onboarding(object):
         stark_public_key=None,
         stark_public_key_y_coordinate=None,
         ethereum_address=None,
-        referred_by_affiliate_link=None
+        referred_by_affiliate_link=None,
+        country=None,
     ):
         '''
         Onboard a user with an Ethereum address and STARK key.
@@ -79,6 +80,9 @@ class Onboarding(object):
         :param referred_by_affiliate_link: optional
         :type referred_by_affiliate_link: str
 
+        :param country optional
+        :type country: str (ISO 3166-1 Alpha-2)
+
         :returns: { apiKey, user, account }
 
         :raises: DydxAPIError
@@ -91,7 +95,7 @@ class Onboarding(object):
             raise ValueError(
                 'STARK private key or public key is required'
             )
-        if stark_key is None:
+        if stark_key_y is None:
             raise ValueError(
                 'STARK private key or public key y-coordinate is required'
             )
@@ -101,6 +105,7 @@ class Onboarding(object):
                 'starkKey': stark_key,
                 'starkKeyYCoordinate': stark_key_y,
                 'referredByAffiliateLink': referred_by_affiliate_link,
+                'country': country,
             },
             ethereum_address,
         )
