@@ -152,6 +152,8 @@ class EthPrivate(object):
         :returns: {
             starkKey: str,
             positionId: str,
+            equity: str,
+            freeCollateral: str,
             quoteBalance: str,
             positions: array of open positions
         }
