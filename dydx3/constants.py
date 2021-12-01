@@ -265,7 +265,6 @@ ASSET_RESOLUTION = {
     ASSET_TRX: '1e4',
     ASSET_XTZ: '1e6',
     ASSET_HNT: '1e7',
-
 }
 
 # ------------ Ethereum Transactions ------------
