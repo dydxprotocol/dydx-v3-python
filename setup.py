@@ -3,16 +3,16 @@ from setuptools import setup, find_packages
 LONG_DESCRIPTION = open('README.md', 'r').read()
 
 REQUIREMENTS = [
-    'dateparser==1.0.0',
-    'ecdsa==0.16.0',
+    'dateparser>=1.0.0',
+    'ecdsa>=0.16.0',
     'eth_keys',
     'eth-account>=0.4.0,<0.6.0',
-    'mpmath==1.0.0',
+    'mpmath>=1.0.0',
     'pytest>=4.4.0,<5.0.0',
     'requests-mock==1.6.0',
     'requests>=2.22.0,<3.0.0',
-    'setuptools==50.3.2',
-    'sympy==1.6',
+    'setuptools>=50.3.2',
+    'sympy>=1.6',
     'tox>=3.13.2',
     'web3>=5.0.0,<6.0.0',
 ]
