@@ -339,7 +339,7 @@ class Private(object):
         :param returnLatestOrders: optional
         :type returnLatestOrders: boolean
 
-        :returns: Array of orders
+        :returns: Array of Orders
 
         :raises: DydxAPIError
         '''
@@ -353,6 +353,45 @@ class Private(object):
                 'limit': limit,
                 'createdBeforeOrAt': created_before_or_at,
                 'returnLatestOrders': returnLatestOrders,
+            },
+        )
+
+    def get_active_orders(
+        self,
+        market,
+        side=None,
+        id=None,
+    ):
+        '''
+        Get ActiveOrders
+
+        :param market: required
+        :type market: str in list [
+            "BTC-USD",
+            "ETH-USD",
+            "LINK-USD",
+            ...
+        ]
+
+        :param side: optional (required if id is passed in)
+        :type side: str in list [
+            "BUY",
+            "SELL",
+        ]
+
+        param id: optional
+        :type id: str
+
+        :returns: Array of ActiveOrders
+
+        :raises: DydxAPIError
+        '''
+        return self._get(
+            'active-orders',
+            {
+                'market': market,
+                'side': side,
+                'id': id,
             },
         )
 
@@ -582,6 +621,45 @@ class Private(object):
         return self._delete(
             'orders',
             params,
+        )
+
+    def cancel_active_orders(
+        self,
+        market,
+        side=None,
+        id=None,
+    ):
+        '''
+        Cancel ActiveOrders
+
+        :param market: required
+        :type market: str in list [
+            "BTC-USD",
+            "ETH-USD",
+            "LINK-USD",
+            ...
+        ]
+
+        :param side: optional (required if id is passed in)
+        :type side: str in list [
+            "BUY",
+            "SELL",
+        ]
+
+        param id: optional
+        :type id: str
+
+        :returns: Array of ActiveOrders
+
+        :raises: DydxAPIError
+        '''
+        return self._delete(
+            'active-orders',
+            {
+                'market': market,
+                'side': side,
+                'id': id,
+            },
         )
 
     def get_fills(
