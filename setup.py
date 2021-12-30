@@ -8,7 +8,6 @@ REQUIREMENTS = [
     'eth_keys',
     'eth-account>=0.4.0,<0.6.0',
     'mpmath>=1.0.0',
-    'pytest>=4.4.0,<5.0.0',
     'requests-mock==1.6.0',
     'requests>=2.22.0,<3.0.0',
     'setuptools>=50.3.2',
