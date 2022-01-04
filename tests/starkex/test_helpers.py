@@ -1,3 +1,5 @@
+from dydx3.constants import MARKET_ETH_USD
+from dydx3.constants import SYNTHETIC_ASSET_MAP
 from dydx3.starkex.helpers import fact_to_condition
 from dydx3.starkex.helpers import generate_private_key_hex_unsafe
 from dydx3.starkex.helpers import get_transfer_erc20_fact
@@ -5,6 +7,9 @@ from dydx3.starkex.helpers import nonce_from_client_id
 from dydx3.starkex.helpers import private_key_from_bytes
 from dydx3.starkex.helpers import private_key_to_public_hex
 from dydx3.starkex.helpers import private_key_to_public_key_pair_hex
+from dydx3.starkex.helpers import to_quantums_exact
+from dydx3.starkex.helpers import to_quantums_round_down
+from dydx3.starkex.helpers import to_quantums_round_up
 
 
 class TestHelpers():
@@ -83,3 +88,21 @@ class TestHelpers():
         assert y == (
             '0x717e78b98a53888aa7685b91137fa01b9336ce7d25f874dbfb8d752c6ac610d'
         )
+
+    def test_to_quantums_exact(self):
+        human_amount = '145.000600001'
+        synthetic_asset = SYNTHETIC_ASSET_MAP[MARKET_ETH_USD]
+        res = to_quantums_exact(human_amount, synthetic_asset)
+        assert res == 145000600001
+
+    def test_to_quantums_round_down(self):
+        human_amount = '145.0006000001'
+        synthetic_asset = SYNTHETIC_ASSET_MAP[MARKET_ETH_USD]
+        res = to_quantums_round_down(human_amount, synthetic_asset)
+        assert res == 145000600000
+
+    def test_to_quantums_round_up(self):
+        human_amount = '145.0006000011'
+        synthetic_asset = SYNTHETIC_ASSET_MAP[MARKET_ETH_USD]
+        res = to_quantums_round_up(human_amount, synthetic_asset)
+        assert res == 145000600002
