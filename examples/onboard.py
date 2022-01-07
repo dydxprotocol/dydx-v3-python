@@ -9,16 +9,16 @@ from dydx3.constants import API_HOST_ROPSTEN
 from dydx3.constants import NETWORK_ID_ROPSTEN
 from web3 import Web3
 
-# Ganache test address.
-ETHEREUM_ADDRESS = '0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b'
+# Private key for your ethereum address
+ETHEREUM_PRIVATE_KEY = ''
 
-# Ganache node.
-WEB_PROVIDER_URL = 'http://localhost:8545'
+# HTTP Provider URL
+WEB_PROVIDER_URL = 'https://ropsten.infura.io/v3/<INFURA_API_KEY>'
 
 client = Client(
     network_id=NETWORK_ID_ROPSTEN,
     host=API_HOST_ROPSTEN,
-    default_ethereum_address=ETHEREUM_ADDRESS,
+    eth_private_key=ETHEREUM_PRIVATE_KEY,
     web3=Web3(Web3.HTTPProvider(WEB_PROVIDER_URL)),
 )
 
