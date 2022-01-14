@@ -4,7 +4,7 @@ LONG_DESCRIPTION = open('README.md', 'r').read()
 
 REQUIREMENTS = [
     'dateparser==1.0.0',
-    'ecdsa==0.16.0',
+    'ecdsa>=0.16.0',
     'eth_keys',
     'eth-account>=0.4.0,<0.6.0',
     'mpmath==1.0.0',
