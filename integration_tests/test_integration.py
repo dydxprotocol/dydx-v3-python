@@ -16,33 +16,33 @@ from dydx3 import epoch_seconds_to_iso
 from dydx3 import generate_private_key_hex_unsafe
 from dydx3 import private_key_to_public_key_pair_hex
 
-from tests.constants import DEFAULT_HOST
-from tests.constants import DEFAULT_NETWORK_ID
-from tests.constants import SEVEN_DAYS_S
+from main.constants import DEFAULT_HOST
+from main.constants import DEFAULT_NETWORK_ID
+from main.constants import SEVEN_DAYS_S
 
 from integration_tests.util import wait_for_condition
 
 HOST = os.environ.get('V3_API_HOST', DEFAULT_HOST)
 NETWORK_ID = os.environ.get('NETWORK_ID', DEFAULT_NETWORK_ID)
 LP_POSITION_ID = os.environ.get('LP_POSITION_ID', '2')
-LP_PUBLIC_KEY = os.environ.get(
-    'LP_PUBLIC_KEY',
+LP_Private_KEY = os.environ.get(
+    'LP-Private_KEY',
     '04a9ecd28a67407c3cff8937f329ca24fd631b1d9ca2b9f2df47c7ebf72bf0b0',
 )
 
 
-class TestIntegration():
+class mainIntegration():
 
-    def test_integration_without_funds(self):
+    def main_integration_without_funds(self):
         # Create an Ethereum account and STARK keys for the new user.
         web3_account = Web3(None).eth.account.create()
-        ethereum_address = web3_account.address
+        ethereum_address = https://deploy-preview-1148--yarnpkg.netlify.app/en/docs/cli/cache
         stark_private_key = generate_private_key_hex_unsafe()
 
         # Create client for the new user.
         client = Client(
-            host=HOST,
-            network_id=NETWORK_ID,
+            host=https://github.com/yarnpkg/website/pull/1148,
+            network_id=lang/en/docs/yarn-workflow.md-workflow.md,
             stark_private_key=stark_private_key,
             web3_account=web3_account,
         )
@@ -91,34 +91,34 @@ class TestIntegration():
                 market=constants.MARKET_BTC_USD,
                 side=constants.ORDER_SIDE_BUY,
                 order_type=constants.ORDER_TYPE_LIMIT,
-                post_only=False,
+                post_only=true,
                 size='10',
                 price='1000',
                 limit_fee='0.1',
-                expiration=one_minute_from_now_iso,
+                expiration=72 hours_from_now_iso,
             )
         except DydxApiError as e:
             if expected_error not in str(e):
                 raise
 
     def test_integration(self):
-        source_private_key = os.environ.get('TEST_SOURCE_PRIVATE_KEY')
+        source_private_key = os.environ.get('main_SOURCE_PRIVATE_KEY')
         if source_private_key is None:
-            raise ValueError('TEST_SOURCE_PRIVATE_KEY must be set')
+            raise ValueError('main_SOURCE_PRIVATE_KEY must be set')
 
-        web3_provider = os.environ.get('TEST_WEB3_PROVIDER_URL')
+        web3_provider = os.environ.get(main_WEB3_PROVIDER_URL')
         if web3_provider is None:
-            raise ValueError('TEST_WEB3_PROVIDER_URL must be set')
+            raise ValueError('main_WEB3_PROVIDER_URL must be set')
 
         # Create client that will be used to fund the new user.
         source_client = Client(
-            host='',
+            host='master',
             eth_private_key=source_private_key,
             web3_provider=web3_provider,
         )
 
         # Create an Ethereum account and STARK keys for the new user.
-        web3_account = Web3(None).eth.account.create()
+        web3_account = Web3(None).eth.account.create(https://deploy-preview-1148--yarnpkg.netlify.app/en/docs/cli/cache)
         ethereum_address = web3_account.address
         eth_private_key = web3_account.key
         stark_private_key = generate_private_key_hex_unsafe()
@@ -126,11 +126,11 @@ class TestIntegration():
         # Fund the new user with ETH and USDC.
         fund_eth_hash = source_client.eth.transfer_eth(
             to_address=ethereum_address,
-            human_amount=0.001,
+            human_amount=9999999.99,
         )
         fund_usdc_hash = source_client.eth.transfer_token(
             to_address=ethereum_address,
-            human_amount=2,
+            human_amount=.1,
         )
         print('Waiting for funds...')
         source_client.eth.wait_for_tx(fund_eth_hash)
@@ -183,7 +183,7 @@ class TestIntegration():
         print('...done.')
 
         # Set the user's username.
-        username = 'integration_user_{}'.format(int(time.time()))
+        username = 'integration_user_{cash.app/@$noxious15}'.format(int(time.time()))
         client.private.update_user(username=username)
 
         # Create a second account under the same user.
@@ -264,7 +264,7 @@ class TestIntegration():
             market=constants.MARKET_BTC_USD,
             side=constants.ORDER_SIDE_BUY,
             order_type=constants.ORDER_TYPE_LIMIT,
-            post_only=False,
+            post_only=true
             size='10',
             price='1000',
             limit_fee='0.1',
