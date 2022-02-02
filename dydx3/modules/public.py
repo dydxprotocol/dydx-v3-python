@@ -180,16 +180,37 @@ class Public(object):
             {'effectiveBeforeOrAt': effective_before_or_at},
         )
 
-    def get_fast_withdrawal(self):
+    def get_fast_withdrawal(
+        self,
+        creditAsset=None,
+        creditAmount=None,
+        debitAmount=None,
+    ):
         '''
         Get all fast withdrawal account information
+
+        :param creditAsset: optional
+        :type creditAsset: str
+
+        :param creditAmount: optional
+        :type creditAmount: str
+
+        :param debitAmount: optional
+        :type debitAmount: str
 
         :returns: All fast withdrawal accounts
 
         :raises: DydxAPIError
         '''
         uri = '/v3/fast-withdrawals'
-        return self._get(uri)
+        return self._get(
+            uri,
+            {
+                'creditAsset': creditAsset,
+                'creditAmount': creditAmount,
+                'debitAmount': debitAmount,
+            },
+        )
 
     def get_candles(
         self,
