@@ -330,3 +330,13 @@ class Public(object):
         :raises: DydxAPIError
         '''
         return self._get('/v3/config')
+
+    def get_insurance_fund_balance(self):
+        '''
+        Get the balance of the dYdX insurance fund
+
+        :returns: Balance of the dYdX insurance fund in USD
+
+        :raises: DydxAPIError
+        '''
+        return self._get('/v3/insurance-fund/balance')

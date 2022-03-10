@@ -1,4 +1,9 @@
-from dydx3.constants import SYNTHETIC_ASSET_MAP, SYNTHETIC_ASSET_ID_MAP, ASSET_RESOLUTION, COLLATERAL_ASSET
+from dydx3.constants import (
+    SYNTHETIC_ASSET_MAP,
+    SYNTHETIC_ASSET_ID_MAP,
+    ASSET_RESOLUTION,
+    COLLATERAL_ASSET,
+)
 
 
 class TestConstants():
@@ -10,7 +15,8 @@ class TestConstants():
             assert quote_token == 'USD'
             assert len(market_parts) == 2
 
-        assert list(SYNTHETIC_ASSET_MAP.values()) == list(SYNTHETIC_ASSET_ID_MAP.keys())
+        assert list(SYNTHETIC_ASSET_MAP.values()) \
+            == list(SYNTHETIC_ASSET_ID_MAP.keys())
 
         assets = [x for x in ASSET_RESOLUTION.keys() if x != COLLATERAL_ASSET]
         assert assets == list(SYNTHETIC_ASSET_MAP.values())
