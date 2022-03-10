@@ -1,8 +1,8 @@
 from dydx3.constants import (
     SYNTHETIC_ASSET_MAP,
     SYNTHETIC_ASSET_ID_MAP,
-     ASSET_RESOLUTION,
-     COLLATERAL_ASSET,
+    ASSET_RESOLUTION,
+    COLLATERAL_ASSET,
 )
 
 
