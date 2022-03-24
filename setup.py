@@ -19,7 +19,7 @@ REQUIREMENTS = [
 
 setup(
     name='dydx-v3-python',
-    version='1.4.8',
+    version='1.4.9',
     packages=find_packages(),
     package_data={
         'dydx3': [
