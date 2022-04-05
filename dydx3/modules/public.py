@@ -340,3 +340,52 @@ class Public(object):
         :raises: DydxAPIError
         '''
         return self._get('/v3/insurance-fund/balance')
+
+    def get_profile(
+        self,
+        publicId,
+    ):
+        '''
+        Get Public Profile
+
+        :param publicId: required
+        :type publicId: str
+
+        :returns: PublicProfile
+
+        :raises: DydxAPIError
+        '''
+        uri = '/'.join(['/v3/profile', publicId])
+        return self._get(uri)
+
+    def get_historical_leaderboard_pnls(
+        self,
+        period,
+        limit=None,
+    ):
+        '''
+        Get Historical Leaderboard Pnls
+
+        :param period: required
+        :type period: str
+        :type period: str in list [
+            "LEAGUES",
+            "DAILY",
+            "DAILY_COMPETITION",
+            ...
+        ]
+
+        :param limit: optional
+        :type limit: str
+
+        :returns: HistoricalLeaderboardPnl
+
+        :raises: DydxAPIError
+        '''
+        uri = '/'.join(['/v3/accounts/historical-leaderboard-pnls', period])
+        return self._get(
+            uri,
+            {
+                'limit': limit,
+            }
+        )

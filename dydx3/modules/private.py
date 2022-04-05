@@ -1080,6 +1080,18 @@ class Private(object):
 
         return self._post('testnet/tokens', {})
 
+    def get_profile(
+        self,
+    ):
+        '''
+        Get Private Profile
+
+        :returns: PrivateProfile
+
+        :raises: DydxAPIError
+        '''
+        return self._get('profile/private', {})
+
     # ============ Signing ============
 
     def sign(
