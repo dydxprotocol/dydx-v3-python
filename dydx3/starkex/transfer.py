@@ -31,8 +31,6 @@ class SignableTransfer(Signable):
     """
     Wrapper object to convert a transfer, and hash, sign, and verify its
     signature.
-
-    Adapted from dydxprotocol/starkex-lib/src/signable/transfer.ts
     """
 
     def __init__(
@@ -42,8 +40,6 @@ class SignableTransfer(Signable):
         receiver_public_key,
         human_amount,
         client_id,
-        # adapted from expiration_iso_timestamp in transfer.ts, to be
-        # consistent with params of SignableConditionalTransfer.
         expiration_epoch_seconds,
         network_id,
     ):
@@ -51,7 +47,9 @@ class SignableTransfer(Signable):
 
         # The transfer asset is always the collateral asset.
         quantums_amount = to_quantums_exact(
-            human_amount, COLLATERAL_ASSET)
+            human_amount,
+            COLLATERAL_ASSET,
+        )
 
         # Convert to a Unix timestamp (in hours).
         expiration_epoch_hours = math.ceil(

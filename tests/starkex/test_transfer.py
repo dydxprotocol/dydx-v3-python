@@ -2,8 +2,6 @@ from dydx3.constants import NETWORK_ID_ROPSTEN
 from dydx3.helpers.request_helpers import iso_to_epoch_seconds
 from dydx3.starkex.transfer import SignableTransfer
 
-# All test values are identical to those in
-# dydxprotocol/starkex-lib/__tests__/signable/transfer.test.ts
 MOCK_PUBLIC_KEY = (
     '3b865a18323b8d147a12c556bfb1d502516c325b1477a23ba6c77af31f020fd'
 )
@@ -39,6 +37,28 @@ class TestTransfer():
             **TRANSFER_PARAMS, network_id=NETWORK_ID_ROPSTEN)
         signature = transfer.sign(MOCK_PRIVATE_KEY)
         assert signature == MOCK_SIGNATURE
+
+    def test_sign_transfer_different_client_id(self):
+        alternative_transfer_params = {**TRANSFER_PARAMS}
+        alternative_transfer_params['client_id'] += '!'
+
+        transfer = SignableTransfer(
+            **alternative_transfer_params,
+            network_id=NETWORK_ID_ROPSTEN
+        )
+        signature = transfer.sign(MOCK_PRIVATE_KEY)
+        assert signature != MOCK_SIGNATURE
+
+    def test_sign_transfer_different_receiver_position_id(self):
+        alternative_transfer_params = {**TRANSFER_PARAMS}
+        alternative_transfer_params['receiver_position_id'] += 1
+
+        transfer = SignableTransfer(
+            **alternative_transfer_params,
+            network_id=NETWORK_ID_ROPSTEN
+        )
+        signature = transfer.sign(MOCK_PRIVATE_KEY)
+        assert signature != MOCK_SIGNATURE
 
     def test_verify_signature(self):
         transfer = SignableTransfer(
