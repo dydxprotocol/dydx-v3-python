@@ -135,9 +135,12 @@ The path should point to a C++ shared library file, built from Starkware's `cryp
 
 ## Running tests
 
+If you want to run tests when developing the library locally, clone the repo and run:
+
 ```
+pip install -r requirements.txt
 docker-compose up # In a separate terminal
 V3_API_HOST=<api-host> tox
 ```
 
-NOTE: `api-host` should be `https://api.stage.dydx.exchange`
+NOTE: `api-host` should be `https://api.stage.dydx.exchange` to test in staging.
