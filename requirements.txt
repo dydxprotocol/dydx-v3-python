@@ -11,3 +11,4 @@ six==1.12
 sympy==1.6
 tox==3.13.2
 web3>=5.0.0,<6.0.0
+importlib-metadata>=1.6.1
