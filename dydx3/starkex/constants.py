@@ -3,6 +3,8 @@
 ONE_HOUR_IN_SECONDS = 60 * 60
 ORDER_SIGNATURE_EXPIRATION_BUFFER_HOURS = 24 * 7  # Seven days.
 
+TRANSFER_PREFIX = 4
+TRANSFER_PADDING_BITS = 81
 CONDITIONAL_TRANSFER_PADDING_BITS = 81
 CONDITIONAL_TRANSFER_PREFIX = 5
 ORDER_PREFIX = 3
@@ -10,9 +12,21 @@ ORDER_PADDING_BITS = 17
 WITHDRAWAL_PADDING_BITS = 49
 WITHDRAWAL_PREFIX = 6
 
-# Note: Fees are not supported for conditional transfers.
+# Note: Fees are not supported for conditional transfers or transfers.
+TRANSFER_FEE_ASSET_ID = 0
+TRANSFER_MAX_AMOUNT_FEE = 0
+
 CONDITIONAL_TRANSFER_FEE_ASSET_ID = 0
 CONDITIONAL_TRANSFER_MAX_AMOUNT_FEE = 0
+
+TRANSFER_FIELD_BIT_LENGTHS = {
+    "asset_id": 250,
+    "receiver_public_key": 251,
+    "position_id": 64,
+    "quantums_amount": 64,
+    "nonce": 32,
+    "expiration_epoch_hours": 32,
+}
 
 CONDITIONAL_TRANSFER_FIELD_BIT_LENGTHS = {
     "asset_id": 250,
