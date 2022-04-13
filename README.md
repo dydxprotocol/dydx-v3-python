@@ -132,3 +132,12 @@ client = Client(
 ```
 
 The path should point to a C++ shared library file, built from Starkware's `crypto-cpp` library ([CMake target](https://github.com/starkware-libs/crypto-cpp/blob/601de408bee9f897315b8a5cb0c88e2450a91282/src/starkware/crypto/ffi/CMakeLists.txt#L3)) for the particular platform (e.g. Linux, etc.) that you are running your trading program on.
+
+## Running tests
+
+```
+docker-compose up # In a separate terminal
+V3_API_HOST=<api-host> tox
+```
+
+NOTE: `api-host` should be `https://api.stage.dydx.exchange`
