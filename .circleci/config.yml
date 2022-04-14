@@ -10,7 +10,7 @@ jobs:
       - checkout
       - run:
           name: install dependencies
-          command: sudo pip install --upgrade pip && sudo pip install -r requirements.txt
+          command: sudo pip install -r requirements.txt
       - run:
           name: test
           command: tox
@@ -22,7 +22,7 @@ jobs:
       - checkout
       - run:
           name: install dependencies
-          command: sudo pip install --upgrade pip && sudo pip install -r requirements-lint.txt
+          command: sudo pip install -r requirements-lint.txt
       - run:
           name: lint
           command: flake8
@@ -34,7 +34,7 @@ jobs:
       - checkout
       - run:
           name: install dependencies
-          command: sudo pip install --upgrade pip && sudo pip install -r requirements-publish.txt
+          command: sudo pip install -r requirements-publish.txt
       - run:
           name: init .pypirc
           command: |
