@@ -883,7 +883,8 @@ class Private(object):
             expiration_epoch_seconds or iso_to_epoch_seconds(expiration)
         )
 
-        if not signature:
+        transfer_signature = signature
+        if not transfer_signature:
             if not self.stark_private_key:
                 raise Exception(
                     'No signature provided and client was not'
@@ -898,13 +899,13 @@ class Private(object):
                 client_id=client_id,
                 expiration_epoch_seconds=expiration_epoch_seconds,
             )
-            signature = transfer_to_sign.sign(self.stark_private_key)
+            transfer_signature = transfer_to_sign.sign(self.stark_private_key)
 
         params = {
             'amount': amount,
             'receiverAccountId': receiver_account_id,
             'clientId': client_id,
-            'signature': signature,
+            'signature': transfer_signature,
             'expiration': expiration,
         }
         return self._post('transfers', params)
