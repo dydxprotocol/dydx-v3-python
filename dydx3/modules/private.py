@@ -823,11 +823,10 @@ class Private(object):
         }
         return self._post('withdrawals', params)
 
-
     def create_transfer(
         self,
         amount,
-        position_id,
+        sender_position_id,
         receiver_account_id,
         receiver_public_key,
         receiver_position_id,
@@ -836,6 +835,40 @@ class Private(object):
         expiration_epoch_seconds=None,
         signature=None,
     ):
+        '''
+        Create a L2 transfer.
+
+        :param amount: required
+        :type amount: str
+
+        :param sender_position_id: required
+        :type sender_position_id: int or str
+
+        :param receiver_account_id: required
+        :type receiver_account_id: str
+
+        :param receiver_public_key: required
+        :type receiver_public_key: str
+
+        :param receiver_position_id: required
+        :type receiver_position_id: int or str
+
+        :param client_id: optional
+        :type client_id: str
+
+        :param expiration: optional
+        :type expiration: ISO str
+
+        :param expiration_epoch_seconds: optional
+        :type expiration_epoch_seconds: int
+
+        :param signature: optional
+        :type signature: str
+
+        :returns: Transfer
+
+        :raises: DydxAPIError
+        '''
         client_id = client_id or random_client_id()
 
         if bool(expiration) == bool(expiration_epoch_seconds):
@@ -858,8 +891,8 @@ class Private(object):
                 )
             transfer_to_sign = SignableTransfer(
                 network_id=self.network_id,
-                sender_position_id=position_id,
-                receiver_position_id=receiver_position_id,
+                sender_position_id=int(sender_position_id),
+                receiver_position_id=int(receiver_position_id),
                 receiver_public_key=receiver_public_key,
                 human_amount=amount,
                 client_id=client_id,
@@ -875,7 +908,6 @@ class Private(object):
             'expiration': expiration,
         }
         return self._post('transfers', params)
-
 
     def create_fast_withdrawal(
         self,

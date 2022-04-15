@@ -63,8 +63,8 @@ class SignableTransfer(Signable):
         )
 
         message = StarkwareTransfer(
-            sender_position_id=sender_position_id,
-            receiver_position_id=receiver_position_id,
+            sender_position_id=int(sender_position_id),
+            receiver_position_id=int(receiver_position_id),
             receiver_public_key=receiver_public_key,
             quantums_amount=quantums_amount,
             nounce=nounce,
