@@ -21,6 +21,7 @@ from dydx3.starkex.helpers import nonce_from_client_id
 from dydx3.starkex.order import SignableOrder
 from dydx3.starkex.withdrawal import SignableWithdrawal
 from dydx3.starkex.conditional_transfer import SignableConditionalTransfer
+from dydx3.starkex.transfer import SignableTransfer
 
 
 class Private(object):
@@ -821,6 +822,93 @@ class Private(object):
             'signature': signature,
         }
         return self._post('withdrawals', params)
+
+    def create_transfer(
+        self,
+        amount,
+        sender_position_id,
+        receiver_account_id,
+        receiver_public_key,
+        receiver_position_id,
+        client_id=None,
+        expiration=None,
+        expiration_epoch_seconds=None,
+        signature=None,
+    ):
+        '''
+        Create a L2 transfer.
+
+        :param amount: required
+        :type amount: str
+
+        :param sender_position_id: required
+        :type sender_position_id: int or str
+
+        :param receiver_account_id: required
+        :type receiver_account_id: str
+
+        :param receiver_public_key: required
+        :type receiver_public_key: str
+
+        :param receiver_position_id: required
+        :type receiver_position_id: int or str
+
+        :param client_id: optional
+        :type client_id: str
+
+        :param expiration: optional
+        :type expiration: ISO str
+
+        :param expiration_epoch_seconds: optional
+        :type expiration_epoch_seconds: int
+
+        :param signature: optional
+        :type signature: str
+
+        :returns: Transfer
+
+        :raises: DydxAPIError
+        '''
+        client_id = client_id or random_client_id()
+
+        if bool(expiration) == bool(expiration_epoch_seconds):
+            raise ValueError(
+                'Exactly one of expiration and expiration_epoch_seconds must '
+                'be specified',
+            )
+        expiration = expiration or epoch_seconds_to_iso(
+            expiration_epoch_seconds,
+        )
+        expiration_epoch_seconds = (
+            expiration_epoch_seconds or iso_to_epoch_seconds(expiration)
+        )
+
+        transfer_signature = signature
+        if not transfer_signature:
+            if not self.stark_private_key:
+                raise Exception(
+                    'No signature provided and client was not'
+                    + 'initialized with stark_private_key'
+                )
+            transfer_to_sign = SignableTransfer(
+                network_id=self.network_id,
+                sender_position_id=int(sender_position_id),
+                receiver_position_id=int(receiver_position_id),
+                receiver_public_key=receiver_public_key,
+                human_amount=amount,
+                client_id=client_id,
+                expiration_epoch_seconds=expiration_epoch_seconds,
+            )
+            transfer_signature = transfer_to_sign.sign(self.stark_private_key)
+
+        params = {
+            'amount': amount,
+            'receiverAccountId': receiver_account_id,
+            'clientId': client_id,
+            'signature': transfer_signature,
+            'expiration': expiration,
+        }
+        return self._post('transfers', params)
 
     def create_fast_withdrawal(
         self,
