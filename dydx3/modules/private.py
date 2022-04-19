@@ -826,7 +826,7 @@ class Private(object):
     def create_transfer(
         self,
         amount,
-        sender_position_id,
+        position_id,
         receiver_account_id,
         receiver_public_key,
         receiver_position_id,
@@ -841,8 +841,8 @@ class Private(object):
         :param amount: required
         :type amount: str
 
-        :param sender_position_id: required
-        :type sender_position_id: int or str
+        :param position_id: required
+        :type position_id: int or str
 
         :param receiver_account_id: required
         :type receiver_account_id: str
@@ -892,7 +892,7 @@ class Private(object):
                 )
             transfer_to_sign = SignableTransfer(
                 network_id=self.network_id,
-                sender_position_id=int(sender_position_id),
+                sender_position_id=int(position_id),
                 receiver_position_id=int(receiver_position_id),
                 receiver_public_key=receiver_public_key,
                 human_amount=amount,
