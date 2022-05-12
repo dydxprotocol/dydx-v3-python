@@ -1016,7 +1016,7 @@ class Private(object):
             'creditAsset': credit_asset,
             'creditAmount': credit_amount,
             'debitAmount': debit_amount,
-            'slippageTolerance': str(slippage_tolerance), # convert float to str
+            'slippageTolerance': str(slippage_tolerance), # float -> str
             # TODO: Signature verification should work regardless of case.
             'toAddress': to_address.lower(),
             'lpPositionId': lp_position_id,
