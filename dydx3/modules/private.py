@@ -953,7 +953,7 @@ class Private(object):
         :type lp_stark_public_key: str
 
         :param slippage_tolerance: optional
-        :type slippage_tolerance: str or float
+        :type slippage_tolerance: str
 
         :param client_id: optional
         :type client_id: str
@@ -1011,9 +1011,6 @@ class Private(object):
                 expiration_epoch_seconds=expiration_epoch_seconds,
             )
             signature = transfer_to_sign.sign(self.stark_private_key)
-
-        if type(slippage_tolerance) is float:
-            slippage_tolerance = str(slippage_tolerance)
 
         params = {
             'creditAsset': credit_asset,
