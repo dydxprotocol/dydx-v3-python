@@ -1012,11 +1012,14 @@ class Private(object):
             )
             signature = transfer_to_sign.sign(self.stark_private_key)
 
+        if type(slippage_tolerance) is float:
+            slippage_tolerance = str(slippage_tolerance)
+
         params = {
             'creditAsset': credit_asset,
             'creditAmount': credit_amount,
             'debitAmount': debit_amount,
-            'slippageTolerance': str(slippage_tolerance),  # float -> str
+            'slippageTolerance': slippage_tolerance,
             # TODO: Signature verification should work regardless of case.
             'toAddress': to_address.lower(),
             'lpPositionId': lp_position_id,
