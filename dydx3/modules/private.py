@@ -953,7 +953,7 @@ class Private(object):
         :type lp_stark_public_key: str
 
         :param slippage_tolerance: optional
-        :type slippage_tolerance: str or float
+        :type slippage_tolerance: str
 
         :param client_id: optional
         :type client_id: str
@@ -1016,7 +1016,7 @@ class Private(object):
             'creditAsset': credit_asset,
             'creditAmount': credit_amount,
             'debitAmount': debit_amount,
-            'slippageTolerance': str(slippage_tolerance),  # float -> str
+            'slippageTolerance': slippage_tolerance,
             # TODO: Signature verification should work regardless of case.
             'toAddress': to_address.lower(),
             'lpPositionId': lp_position_id,
