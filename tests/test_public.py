@@ -15,7 +15,7 @@ class TestPublic():
     def test_check_if_user_exists(self):
         public = Client(API_HOST).public
         resp = public.check_if_user_exists(ADDRESS_1)
-        assert resp.data == {'exists': False}
+        assert resp.data == {'exists': False, 'contractAddress': '', 'isProxySigner': False}
         assert resp.headers != {}
 
     def test_check_if_username_exists(self):
