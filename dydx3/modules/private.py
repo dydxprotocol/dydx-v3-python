@@ -1198,9 +1198,9 @@ class Private(object):
         return self._get('users/links', {})
 
     def send_link_request(
+        self,
         action,
         address,
-        self,
     ):
         '''
         Send Link Request Action
