@@ -1185,6 +1185,62 @@ class Private(object):
         '''
         return self._get('profile/private', {})
 
+    def get_user_links(
+        self,
+    ):
+        '''
+        Get Active Linked Users
+
+        :returns: UserLinks
+
+        :raises: DydxAPIError
+        '''
+        return self._get('users/links', {})
+
+    def send_link_request(
+        action,
+        address,
+        self,
+    ):
+        '''
+        Send Link Request Action
+
+        :param action: required
+        :type action: str in list [
+            "CREATE_SECONDARY_REQUEST",
+            "DELETE_SECONDARY_REQUEST",
+            "ACCEPT_PRIMARY_REQUEST",
+            "REJECT_PRIMARY_REQUEST",
+            "REMOVE",
+        ]
+
+        :param address: required
+        :type address: str
+
+        :returns: {}
+
+        :raises: DydxAPIError
+        '''
+        return self._post(
+            'users/links',
+            {
+                'action': action,
+                'address': address,
+            },
+        )
+
+    def get_user_pending_link_requests(
+        self,
+    ):
+        '''
+        Get Pending Linked User Requests
+
+        :returns: UserLinkRequests
+
+        :raises: DydxAPIError
+        '''
+        return self._get('users/links/requests', {})
+
     # ============ Signing ============
 
     def sign(
