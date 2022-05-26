@@ -20,7 +20,7 @@ EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_MAINNET = {
         '0x39d88860b99b1809a63add01f7dfa59676ae006bbcdf38ff30b6a69dcf55ed3',
     'public_key_y_coordinate':
         '0x2bdd58a2c2acb241070bc5d55659a85bba65211890a8c47019a33902aba8400',
-    'privateKey':
+    'private_key':
         '0x170d807cafe3d8b5758f3f698331d292bf5aeb71f6fd282f0831dee094ee891',
 }
 EXPECTED_API_KEY_CREDENTIALS_ROPSTEN = {
