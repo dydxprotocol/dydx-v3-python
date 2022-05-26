@@ -16,9 +16,12 @@ EXPECTED_API_KEY_CREDENTIALS_MAINNET = {
     'passphrase': '12_1LuuJMZUxcj3kGBWc',
 }
 EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_MAINNET = {
-    'public_key': '0x39d88860b99b1809a63add01f7dfa59676ae006bbcdf38ff30b6a69dcf55ed3',
-    'public_key_y_coordinate': '0x2bdd58a2c2acb241070bc5d55659a85bba65211890a8c47019a33902aba8400',
-    'privateKey': '0x170d807cafe3d8b5758f3f698331d292bf5aeb71f6fd282f0831dee094ee891',
+    'public_key':
+        '0x39d88860b99b1809a63add01f7dfa59676ae006bbcdf38ff30b6a69dcf55ed3',
+    'public_key_y_coordinate':
+        '0x2bdd58a2c2acb241070bc5d55659a85bba65211890a8c47019a33902aba8400',
+    'privateKey':
+        '0x170d807cafe3d8b5758f3f698331d292bf5aeb71f6fd282f0831dee094ee891',
 }
 EXPECTED_API_KEY_CREDENTIALS_ROPSTEN = {
     'key': '9c1d91a5-0a30-1ed4-2d3d-b840a479b965',
@@ -26,9 +29,12 @@ EXPECTED_API_KEY_CREDENTIALS_ROPSTEN = {
     'passphrase': '9z5Ew7m2DLQd87Xlk7Hd',
 }
 EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_ROPSTEN = {
-    'public_key': '0x35e23a936e596969a6b3131cfccbd18b71779f28276d30e8215cd0d3e9252c2',
-    'public_key_y_coordinate': '0x557d1a1be389d9921b9d16415eac12bd276b05e2564c4b30a7730ace13a0e19',
-    'private_key': '0x50505654b282eb3debadddeddfa1bc76545a6837dcd59d7d41f6a282a4bbccc'
+    'public_key':
+        '0x35e23a936e596969a6b3131cfccbd18b71779f28276d30e8215cd0d3e9252c2',
+    'public_key_y_coordinate':
+        '0x557d1a1be389d9921b9d16415eac12bd276b05e2564c4b30a7730ace13a0e19',
+    'private_key':
+        '0x50505654b282eb3debadddeddfa1bc76545a6837dcd59d7d41f6a282a4bbccc'
 }
 
 
@@ -42,8 +48,11 @@ class TestOnboarding():
             web3=web3,
         )
         signer_address = web3.eth.accounts[0]
-        stark_key_pair_with_y_coordinate = client.onboarding.derive_stark_key(signer_address)
-        assert stark_key_pair_with_y_coordinate == EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_MAINNET
+        stark_key_pair_with_y_coordinate = client.onboarding.derive_stark_key(
+            signer_address,
+        )
+        assert stark_key_pair_with_y_coordinate == \
+            EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_MAINNET
 
     def test_recover_default_api_key_credentials_on_mainnet_from_web3(self):
         web3 = Web3()  # Connect to a local Ethereum node.
@@ -68,8 +77,11 @@ class TestOnboarding():
             web3=web3,
         )
         signer_address = web3.eth.accounts[0]
-        stark_key_pair_with_y_coordinate = client.onboarding.derive_stark_key(signer_address)
-        assert stark_key_pair_with_y_coordinate == EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_ROPSTEN
+        stark_key_pair_with_y_coordinate = client.onboarding.derive_stark_key(
+            signer_address,
+        )
+        assert stark_key_pair_with_y_coordinate == \
+            EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_ROPSTEN
 
     def test_recover_default_api_key_credentials_on_ropsten_from_web3(self):
         web3 = Web3()  # Connect to a local Ethereum node.
@@ -94,8 +106,11 @@ class TestOnboarding():
             api_key_credentials={'key': 'value'},
         )
         signer_address = client.default_address
-        stark_key_pair_with_y_coordinate = client.onboarding.derive_stark_key(signer_address)
-        assert stark_key_pair_with_y_coordinate == EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_MAINNET
+        stark_key_pair_with_y_coordinate = client.onboarding.derive_stark_key(
+            signer_address,
+        )
+        assert stark_key_pair_with_y_coordinate == \
+            EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_MAINNET
 
     def test_recover_default_api_key_credentials_on_mainnet_from_priv(self):
         client = Client(
@@ -118,8 +133,11 @@ class TestOnboarding():
             eth_private_key=GANACHE_PRIVATE_KEY,
         )
         signer_address = client.default_address
-        stark_key_pair_with_y_coordinate = client.onboarding.derive_stark_key(signer_address)
-        assert stark_key_pair_with_y_coordinate == EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_ROPSTEN
+        stark_key_pair_with_y_coordinate = client.onboarding.derive_stark_key(
+            signer_address,
+        )
+        assert stark_key_pair_with_y_coordinate == \
+            EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_ROPSTEN
 
     def test_recover_default_api_key_credentials_on_ropsten_from_priv(self):
         client = Client(

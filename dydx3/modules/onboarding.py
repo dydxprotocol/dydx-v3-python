@@ -8,6 +8,7 @@ from dydx3.eth_signing import SignOnboardingAction
 from dydx3.helpers.requests import request
 from dydx3.starkex.helpers import private_key_to_public_key_pair_hex
 
+
 class Onboarding(object):
 
     def __init__(
@@ -134,7 +135,9 @@ class Onboarding(object):
         hashed_signature = Web3.solidityKeccak(['uint256'], [signature_int])
         private_key_int = int(hashed_signature.hex(), 16) >> 5
         private_key_hex = hex(private_key_int)
-        public_x, public_y = private_key_to_public_key_pair_hex(private_key_hex)
+        public_x, public_y = private_key_to_public_key_pair_hex(
+            private_key_hex,
+        )
         return {
             'public_key': public_x,
             'public_key_y_coordinate': public_y,
