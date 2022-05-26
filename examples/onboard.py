@@ -23,9 +23,8 @@ client = Client(
 )
 
 # Set STARK key.
-stark_private_key = client.onboarding.derive_stark_key()
-client.stark_private_key = stark_private_key
-public_x, public_y = private_key_to_public_key_pair_hex(stark_private_key)
+stark_key_pair_with_y_coordinate = client.onboarding.derive_stark_key()
+client.stark_private_key = stark_key_pair_with_y_coordinate.stark_private_key
 
 # Onboard the account.
 onboarding_response = client.onboarding.create_user(
