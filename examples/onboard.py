@@ -4,7 +4,6 @@ Usage: python -m examples.onboard
 '''
 
 from dydx3 import Client
-from dydx3 import private_key_to_public_key_pair_hex
 from dydx3.constants import API_HOST_ROPSTEN
 from dydx3.constants import NETWORK_ID_ROPSTEN
 from web3 import Web3
@@ -23,9 +22,12 @@ client = Client(
 )
 
 # Set STARK key.
-stark_private_key = client.onboarding.derive_stark_key()
-client.stark_private_key = stark_private_key
-public_x, public_y = private_key_to_public_key_pair_hex(stark_private_key)
+stark_key_pair_with_y_coordinate = client.onboarding.derive_stark_key()
+client.stark_private_key = stark_key_pair_with_y_coordinate.stark_private_key
+(public_x, public_y) = (
+    stark_key_pair_with_y_coordinate.public_x,
+    stark_key_pair_with_y_coordinate.public_y,
+)
 
 # Onboard the account.
 onboarding_response = client.onboarding.create_user(
