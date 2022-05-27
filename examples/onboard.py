@@ -23,10 +23,10 @@ client = Client(
 
 # Set STARK key.
 stark_key_pair_with_y_coordinate = client.onboarding.derive_stark_key()
-client.stark_private_key = stark_key_pair_with_y_coordinate.stark_private_key
+client.stark_private_key = stark_key_pair_with_y_coordinate['private_key']
 (public_x, public_y) = (
-    stark_key_pair_with_y_coordinate.public_x,
-    stark_key_pair_with_y_coordinate.public_y,
+    stark_key_pair_with_y_coordinate['public_key'],
+    stark_key_pair_with_y_coordinate['public_key_y_coordinate'],
 )
 
 # Onboard the account.
