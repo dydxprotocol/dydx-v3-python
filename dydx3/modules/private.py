@@ -545,6 +545,8 @@ class Private(object):
                     'No signature provided and client was not ' +
                     'initialized with stark_private_key'
                 )
+            if float(size) <= 0:
+                raise ValueError(f"Method `create_order` expects a positive size, but received: {size=}")
             order_to_sign = SignableOrder(
                 network_id=self.network_id,
                 position_id=position_id,
