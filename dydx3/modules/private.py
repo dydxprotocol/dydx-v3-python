@@ -141,6 +141,7 @@ class Private(object):
         is_sharing_username=None,
         is_sharing_address=None,
         country=None,
+        language_code=None,
     ):
         '''
         Update user information
@@ -162,6 +163,9 @@ class Private(object):
 
         :param country optional
         :type country: str (ISO 3166-1 Alpha-2)
+
+        :param language_code optional
+        :type language_code: str (ISO 639-1, including 'zh-CN')
 
         :returns: User
 
