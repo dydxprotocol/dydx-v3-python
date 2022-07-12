@@ -32,12 +32,14 @@ class Private(object):
         network_id,
         stark_private_key,
         default_address,
+        api_timeout,
         api_key_credentials,
     ):
         self.host = host
         self.network_id = network_id
         self.stark_private_key = stark_private_key
         self.default_address = default_address
+        self.api_timeout = api_timeout
         self.api_key_credentials = api_key_credentials
 
     # ============ Request Helpers ============
@@ -67,6 +69,7 @@ class Private(object):
             method,
             headers,
             data,
+            self.api_timeout,
         )
 
     def _get(self, endpoint, params):

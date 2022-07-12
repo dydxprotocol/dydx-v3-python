@@ -17,11 +17,13 @@ class Onboarding(object):
         eth_signer,
         network_id,
         default_address,
+        api_timeout,
         stark_public_key=None,
         stark_public_key_y_coordinate=None,
     ):
         self.host = host
         self.default_address = default_address
+        self.api_timeout = api_timeout
         self.stark_public_key = stark_public_key
         self.stark_public_key_y_coordinate = stark_public_key_y_coordinate
 
@@ -51,6 +53,7 @@ class Onboarding(object):
                 'DYDX-ETHEREUM-ADDRESS': ethereum_address,
             },
             data,
+            self.api_timeout,
         )
 
     # ============ Requests ============
