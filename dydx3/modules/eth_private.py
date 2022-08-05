@@ -14,9 +14,11 @@ class EthPrivate(object):
         eth_signer,
         network_id,
         default_address,
+        api_timeout,
     ):
         self.host = host
         self.default_address = default_address
+        self.api_timeout = api_timeout
 
         self.signer = SignEthPrivateAction(eth_signer, network_id)
 
@@ -50,6 +52,7 @@ class EthPrivate(object):
                 'DYDX-ETHEREUM-ADDRESS': ethereum_address,
             },
             data,
+            self.api_timeout,
         )
 
     def _post(

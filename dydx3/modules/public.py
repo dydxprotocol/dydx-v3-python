@@ -7,8 +7,10 @@ class Public(object):
     def __init__(
         self,
         host,
+        api_timeout,
     ):
         self.host = host
+        self.api_timeout = api_timeout
 
     # ============ Request Helpers ============
 
@@ -16,6 +18,7 @@ class Public(object):
         return request(
             generate_query_path(self.host + request_path, params),
             'get',
+            api_timeout=self.api_timeout,
         )
 
     def _put(self, endpoint, data):
@@ -24,6 +27,7 @@ class Public(object):
             'put',
             {},
             data,
+            self.api_timeout,
         )
 
     # ============ Requests ============
