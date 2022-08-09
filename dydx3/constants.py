@@ -388,3 +388,7 @@ COLLATERAL_TOKEN_DECIMALS = 6
 # ------------ Off-Chain Ethereum-Signed Actions ------------
 OFF_CHAIN_ONBOARDING_ACTION = 'dYdX Onboarding'
 OFF_CHAIN_KEY_DERIVATION_ACTION = 'dYdX STARK Key'
+
+
+# ------------ API Defaults ------------
+DEFAULT_API_TIMEOUT = 3000

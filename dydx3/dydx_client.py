@@ -1,6 +1,6 @@
 from web3 import Web3
 
-from dydx3.constants import NETWORK_ID_MAINNET
+from dydx3.constants import DEFAULT_API_TIMEOUT, NETWORK_ID_MAINNET
 from dydx3.eth_signing import SignWithWeb3
 from dydx3.eth_signing import SignWithKey
 from dydx3.modules.eth_private import EthPrivate
@@ -19,7 +19,7 @@ class Client(object):
     def __init__(
         self,
         host,
-        api_timeout=3000,  # TODO: Actually use this.
+        api_timeout=DEFAULT_API_TIMEOUT,
         default_ethereum_address=None,
         eth_private_key=None,
         eth_send_options=None,
@@ -54,7 +54,9 @@ class Client(object):
 
         if web3 is not None or web3_provider is not None:
             if isinstance(web3_provider, str):
-                web3_provider = Web3.HTTPProvider(web3_provider)
+                web3_provider = Web3.HTTPProvider(
+                    web3_provider, request_kwargs={'timeout': self.api_timeout}
+                )
             self.web3 = web3 or Web3(web3_provider)
             self.eth_signer = SignWithWeb3(self.web3)
             self.default_address = self.web3.eth.defaultAccount or None
@@ -138,6 +140,7 @@ class Client(object):
                     network_id=self.network_id,
                     stark_private_key=self.stark_private_key,
                     default_address=self.default_address,
+                    api_timeout=self.api_timeout,
                     api_key_credentials=self.api_key_credentials,
                 )
             else:
@@ -160,6 +163,7 @@ class Client(object):
                     eth_signer=self.eth_signer,
                     network_id=self.network_id,
                     default_address=self.default_address,
+                    api_timeout=self.api_timeout,
                 )
             else:
                 raise Exception(
@@ -182,6 +186,7 @@ class Client(object):
                     eth_signer=self.eth_signer,
                     network_id=self.network_id,
                     default_address=self.default_address,
+                    api_timeout=self.api_timeout,
                     stark_public_key=self.stark_public_key,
                     stark_public_key_y_coordinate=(
                         self.stark_public_key_y_coordinate
