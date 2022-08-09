@@ -487,10 +487,15 @@ class Private(object):
             "STOP",
             "TRAILING_STOP",
             "TAKE_PROFIT",
+            "STOP_MARKET",
+            "TAKE_PROFIT_MARKET",
         ]
 
         :param post_only: required
         :type post_only: bool
+
+        :param reduce_only: optional
+        :type reduce_only: bool
 
         :param size: required
         :type size: str
