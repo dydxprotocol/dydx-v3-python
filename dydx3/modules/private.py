@@ -459,6 +459,7 @@ class Private(object):
         expiration=None,
         expiration_epoch_seconds=None,
         signature=None,
+        reduce_only=False,
     ):
         '''
         Post an order
@@ -580,6 +581,7 @@ class Private(object):
             'postOnly': post_only,
             'clientId': client_id,
             'signature': order_signature,
+            'reduceOnly': reduce_only,
         }
 
         return self._post(
