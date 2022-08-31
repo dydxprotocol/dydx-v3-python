@@ -1,4 +1,4 @@
-from dydx3.constants import DEFAULT_API_TIMEOUT, NETWORK_ID_MAINNET
+from dydx3.constants import DEFAULT_API_TIMEOUT
 from dydx3.helpers.request_helpers import generate_query_path
 from dydx3.helpers.requests import request
 
