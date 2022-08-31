@@ -1131,11 +1131,33 @@ class Private(object):
             },
         )
 
+    def get_liquidity_provider_rewards_v2(
+        self,
+        epoch=None,
+    ):
+        '''
+        Get liquidity provider rewards
+
+        :param epoch: optional
+        :type epoch: int
+
+        :returns: LiquidityProviderRewards
+
+        :raises: DydxAPIError
+        '''
+        return self._get(
+            'rewards/liquidity-provider',
+            {
+                'epoch': epoch,
+            },
+        )
+
     def get_liquidity_provider_rewards(
         self,
         epoch=None,
     ):
         '''
+        (Deprecated, please use get_liquidity_provider_rewards_v2)
         Get liquidity rewards
 
         :param epoch: optional

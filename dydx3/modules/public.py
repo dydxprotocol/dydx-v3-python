@@ -1,3 +1,4 @@
+from dydx3.constants import DEFAULT_API_TIMEOUT, NETWORK_ID_MAINNET
 from dydx3.helpers.request_helpers import generate_query_path
 from dydx3.helpers.requests import request
 
@@ -7,10 +8,10 @@ class Public(object):
     def __init__(
         self,
         host,
-        api_timeout,
+        api_timeout=None,
     ):
         self.host = host
-        self.api_timeout = api_timeout
+        self.api_timeout = api_timeout or DEFAULT_API_TIMEOUT
 
     # ============ Request Helpers ============
 
