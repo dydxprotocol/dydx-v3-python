@@ -19,7 +19,7 @@ class Client(object):
     def __init__(
         self,
         host,
-        api_timeout=DEFAULT_API_TIMEOUT,
+        api_timeout=None,
         default_ethereum_address=None,
         eth_private_key=None,
         eth_send_options=None,
@@ -38,7 +38,7 @@ class Client(object):
             host = host[:-1]
 
         self.host = host
-        self.api_timeout = api_timeout
+        self.api_timeout = api_timeout or DEFAULT_API_TIMEOUT
         self.eth_send_options = eth_send_options or {}
         self.stark_private_key = stark_private_key
         self.api_key_credentials = api_key_credentials
