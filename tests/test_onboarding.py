@@ -2,7 +2,7 @@ from web3 import Web3
 
 from dydx3 import Client
 from dydx3.constants import NETWORK_ID_MAINNET
-from dydx3.constants import NETWORK_ID_ROPSTEN
+from dydx3.constants import NETWORK_ID_GOERLI
 
 from tests.constants import DEFAULT_HOST
 
@@ -23,18 +23,18 @@ EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_MAINNET = {
     'private_key':
         '0x170d807cafe3d8b5758f3f698331d292bf5aeb71f6fd282f0831dee094ee891',
 }
-EXPECTED_API_KEY_CREDENTIALS_ROPSTEN = {
-    'key': '9c1d91a5-0a30-1ed4-2d3d-b840a479b965',
-    'secret': 'hHYEswFe5MHMm8gFb81Jas9b7iLQUicsVv5YBRMY',
-    'passphrase': '9z5Ew7m2DLQd87Xlk7Hd',
+EXPECTED_API_KEY_CREDENTIALS_GOERLI = {
+    'key': '1871d1ba-537c-7fe8-743c-172bcd4ae5c6',
+    'secret': 'tQxclqFWip0HL4Q-xkwZb_lTfOQz4GD5CHHpYzWa',
+    'passphrase': 'B8JFepDVn8eixnor7Imv',
 }
-EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_ROPSTEN = {
+EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_GOERLI = {
     'public_key':
-        '0x35e23a936e596969a6b3131cfccbd18b71779f28276d30e8215cd0d3e9252c2',
+        '0x3ea05770b452df14427b3f07ff600faa132ecc3d7643275042cb4da6ad99972',
     'public_key_y_coordinate':
-        '0x557d1a1be389d9921b9d16415eac12bd276b05e2564c4b30a7730ace13a0e19',
+        '0x7310e2ab01978806a6fb6e51a9ee1c9a5c5117c63530ad7dead2b9f72094cc3',
     'private_key':
-        '0x50505654b282eb3debadddeddfa1bc76545a6837dcd59d7d41f6a282a4bbccc'
+        '0x1019187d91b8effe153ab1932930e27c8d01c56ad9cc937c777633c0ffc5a7e'
 }
 
 
@@ -69,11 +69,11 @@ class TestOnboarding():
         )
         assert api_key_credentials == EXPECTED_API_KEY_CREDENTIALS_MAINNET
 
-    def test_derive_stark_key_on_ropsten_from_web3(self):
+    def test_derive_stark_key_on_GOERLI_from_web3(self):
         web3 = Web3()  # Connect to a local Ethereum node.
         client = Client(
             host=DEFAULT_HOST,
-            network_id=NETWORK_ID_ROPSTEN,
+            network_id=NETWORK_ID_GOERLI,
             web3=web3,
         )
         signer_address = web3.eth.accounts[0]
@@ -81,13 +81,13 @@ class TestOnboarding():
             signer_address,
         )
         assert stark_key_pair_with_y_coordinate == \
-            EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_ROPSTEN
+            EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_GOERLI
 
-    def test_recover_default_api_key_credentials_on_ropsten_from_web3(self):
+    def test_recover_default_api_key_credentials_on_GOERLI_from_web3(self):
         web3 = Web3()  # Connect to a local Ethereum node.
         client = Client(
             host=DEFAULT_HOST,
-            network_id=NETWORK_ID_ROPSTEN,
+            network_id=NETWORK_ID_GOERLI,
             web3=web3,
         )
         signer_address = web3.eth.accounts[0]
@@ -96,7 +96,7 @@ class TestOnboarding():
                 signer_address,
             )
         )
-        assert api_key_credentials == EXPECTED_API_KEY_CREDENTIALS_ROPSTEN
+        assert api_key_credentials == EXPECTED_API_KEY_CREDENTIALS_GOERLI
 
     def test_derive_stark_key_on_mainnet_from_priv(self):
         client = Client(
@@ -126,10 +126,10 @@ class TestOnboarding():
         )
         assert api_key_credentials == EXPECTED_API_KEY_CREDENTIALS_MAINNET
 
-    def test_derive_stark_key_on_ropsten_from_priv(self):
+    def test_derive_stark_key_on_GOERLI_from_priv(self):
         client = Client(
             host=DEFAULT_HOST,
-            network_id=NETWORK_ID_ROPSTEN,
+            network_id=NETWORK_ID_GOERLI,
             eth_private_key=GANACHE_PRIVATE_KEY,
         )
         signer_address = client.default_address
@@ -137,12 +137,12 @@ class TestOnboarding():
             signer_address,
         )
         assert stark_key_pair_with_y_coordinate == \
-            EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_ROPSTEN
+            EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_GOERLI
 
-    def test_recover_default_api_key_credentials_on_ropsten_from_priv(self):
+    def test_recover_default_api_key_credentials_on_GOERLI_from_priv(self):
         client = Client(
             host=DEFAULT_HOST,
-            network_id=NETWORK_ID_ROPSTEN,
+            network_id=NETWORK_ID_GOERLI,
             eth_private_key=GANACHE_PRIVATE_KEY,
         )
         signer_address = client.default_address
@@ -151,4 +151,4 @@ class TestOnboarding():
                 signer_address,
             )
         )
-        assert api_key_credentials == EXPECTED_API_KEY_CREDENTIALS_ROPSTEN
+        assert api_key_credentials == EXPECTED_API_KEY_CREDENTIALS_GOERLI

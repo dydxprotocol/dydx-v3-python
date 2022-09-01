@@ -1197,8 +1197,8 @@ class Private(object):
 
         :raises: DydxAPIError
         '''
-        if (self.network_id != 3):
-            raise ValueError('network_id is not Ropsten')
+        if (self.network_id != 5):
+            raise ValueError('network_id is not Goerli')
 
         return self._post('testnet/tokens', {})
 
