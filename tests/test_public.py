@@ -64,7 +64,7 @@ class TestPublic():
 
     def test_get_candles(self):
         public = Client(API_HOST).public
-        resp = public.get_candles(MARKET_BTC_USD)
+        resp = public.get_candles(MARKET_BTC_USD, resolution='1HOUR')
         assert resp.data != {}
         assert resp.headers != {}
 
