@@ -1,4 +1,4 @@
-from dydx3.constants import NETWORK_ID_ROPSTEN
+from dydx3.constants import NETWORK_ID_GOERLI
 from dydx3.helpers.request_helpers import iso_to_epoch_seconds
 from dydx3.starkex.withdrawal import SignableWithdrawal
 
@@ -9,13 +9,13 @@ MOCK_PRIVATE_KEY = (
     '58c7d5a90b1776bde86ebac077e053ed85b0f7164f53b080304a531947f46e3'
 )
 MOCK_SIGNATURE = (
-    '05e48c33f8205a5359c95f1bd7385c1c1f587e338a514298c07634c0b6c952ba' +
-    '0687d6980502a5d7fa84ef6fdc00104db22c43c7fb83e88ca84f19faa9ee3de1'
+    '0572e1628e196282ee246dbe5c8394251bf3fb1fab7be40e77b69b64c030920e' +
+    '025f94283b9f3b9aa18503f7c500db89cc1ac914cb84b00e2263552a3d31a479'
 )
 
 # Mock withdrawal params.
 WITHDRAWAL_PARAMS = {
-    "network_id": NETWORK_ID_ROPSTEN,
+    "network_id": NETWORK_ID_GOERLI,
     "position_id": 12345,
     "human_amount": '49.478023',
     "client_id": (

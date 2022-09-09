@@ -1,4 +1,4 @@
-from dydx3.constants import NETWORK_ID_ROPSTEN
+from dydx3.constants import NETWORK_ID_GOERLI
 from dydx3.helpers.request_helpers import iso_to_epoch_seconds
 from dydx3.starkex.transfer import SignableTransfer
 
@@ -9,8 +9,8 @@ MOCK_PRIVATE_KEY = (
     '58c7d5a90b1776bde86ebac077e053ed85b0f7164f53b080304a531947f46e3'
 )
 MOCK_SIGNATURE = (
-    '06b72146028a7f0092557a3a04e9916bd4ae1fba0a4bd92670ef80e2293f7386'
-    + '04c0918a7a8e622e463d40f24984c23fd8bab2cd32980676ba666f55c6efeaf3'
+    '07a64843a0fb9bd455696139f6230d3152d9df2e863d54587f1f8bdbb07eb032' +
+    '0699b82593aa2e02915694ffc39c1001e81337b8fcc73f5b91f73ce5146c50bd'
 )
 
 # Mock transfer params.
@@ -34,7 +34,7 @@ class TestTransfer():
 
     def test_sign_transfer(self):
         transfer = SignableTransfer(
-            **TRANSFER_PARAMS, network_id=NETWORK_ID_ROPSTEN)
+            **TRANSFER_PARAMS, network_id=NETWORK_ID_GOERLI)
         signature = transfer.sign(MOCK_PRIVATE_KEY)
         assert signature == MOCK_SIGNATURE
 
@@ -44,7 +44,7 @@ class TestTransfer():
 
         transfer = SignableTransfer(
             **alternative_transfer_params,
-            network_id=NETWORK_ID_ROPSTEN
+            network_id=NETWORK_ID_GOERLI
         )
         signature = transfer.sign(MOCK_PRIVATE_KEY)
         assert signature != MOCK_SIGNATURE
@@ -55,19 +55,19 @@ class TestTransfer():
 
         transfer = SignableTransfer(
             **alternative_transfer_params,
-            network_id=NETWORK_ID_ROPSTEN
+            network_id=NETWORK_ID_GOERLI
         )
         signature = transfer.sign(MOCK_PRIVATE_KEY)
         assert signature != MOCK_SIGNATURE
 
     def test_verify_signature(self):
         transfer = SignableTransfer(
-            **TRANSFER_PARAMS, network_id=NETWORK_ID_ROPSTEN)
+            **TRANSFER_PARAMS, network_id=NETWORK_ID_GOERLI)
         assert transfer.verify_signature(MOCK_SIGNATURE, MOCK_PUBLIC_KEY)
 
     def test_starkware_representation(self):
         transfer = SignableTransfer(
-            **TRANSFER_PARAMS, network_id=NETWORK_ID_ROPSTEN)
+            **TRANSFER_PARAMS, network_id=NETWORK_ID_GOERLI)
         starkware_transfer = transfer.to_starkware()
         assert starkware_transfer.quantums_amount == 49478023
 

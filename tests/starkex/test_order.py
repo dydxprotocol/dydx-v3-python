@@ -1,5 +1,5 @@
 from dydx3.constants import MARKET_ETH_USD
-from dydx3.constants import NETWORK_ID_ROPSTEN
+from dydx3.constants import NETWORK_ID_GOERLI
 from dydx3.constants import ORDER_SIDE_BUY
 from dydx3.helpers.request_helpers import iso_to_epoch_seconds
 from dydx3.starkex.order import SignableOrder
@@ -12,8 +12,8 @@ MOCK_PRIVATE_KEY = (
     '58c7d5a90b1776bde86ebac077e053ed85b0f7164f53b080304a531947f46e3'
 )
 MOCK_SIGNATURE = (
-    '00cecbe513ecdbf782cd02b2a5efb03e58d5f63d15f2b840e9bc0029af04e8dd' +
-    '0090b822b16f50b2120e4ea9852b340f7936ff6069d02acca02f2ed03029ace5'
+    '07670488d9d2c6ff980ca86e6d05b89414de0f2bfd462a1058fb05add68d034a' +
+    '036268ae33e8e21d324e975678f56b66dacb2502a7de1512a46b96fc0e106f79'
 )
 
 # Test data where the public key y-coordinate is even.
@@ -21,13 +21,13 @@ MOCK_PUBLIC_KEY_EVEN_Y = (
     '5c749cd4c44bdc730bc90af9bfbdede9deb2c1c96c05806ce1bc1cb4fed64f7'
 )
 MOCK_SIGNATURE_EVEN_Y = (
-    '00fc0756522d78bef51f70e3981dc4d1e82273f59cdac6bc31c5776baabae6ec' +
-    '0158963bfd45d88a99fb2d6d72c9bbcf90b24c3c0ef2394ad8d05f9d3983443a'
+    '0618bcd2a8a027cf407116f88f2fa0d866154ee421cdf8a9deca0fecfda5277b' +
+    '03e42fa1d039522fc77c23906253e537cc5b2f392dba6f2dbb35d51cbe37273a'
 )
 
 # Mock order params.
 ORDER_PARAMS = {
-    "network_id": NETWORK_ID_ROPSTEN,
+    "network_id": NETWORK_ID_GOERLI,
     "market": MARKET_ETH_USD,
     "side": ORDER_SIDE_BUY,
     "position_id": 12345,

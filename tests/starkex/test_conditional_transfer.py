@@ -1,4 +1,4 @@
-from dydx3.constants import NETWORK_ID_ROPSTEN
+from dydx3.constants import NETWORK_ID_GOERLI
 from dydx3.helpers.request_helpers import iso_to_epoch_seconds
 from dydx3.starkex.conditional_transfer import SignableConditionalTransfer
 
@@ -9,13 +9,13 @@ MOCK_PRIVATE_KEY = (
     '58c7d5a90b1776bde86ebac077e053ed85b0f7164f53b080304a531947f46e3'
 )
 MOCK_SIGNATURE = (
-    '04814c5d3501863134108802cab5d12df4b959654332103b837252549d24e9a6'
-    + '06bc01225e9f1690b08b63de2a3b179fb2927d4564b3440bbb0da4c37caf597e'
+    '01b437ac15bb89417edcfb2d304c3efad6256def3cc24e60c4980a88d08cb953' +
+    '045df9fbe4a4895409e1011c60be439d65c1a2637013b74a19cb5b8ab62db434'
 )
 
 # Mock conditional transfer params.
 CONDITIONAL_TRANSFER_PARAMS = {
-    "network_id": NETWORK_ID_ROPSTEN,
+    "network_id": NETWORK_ID_GOERLI,
     'sender_position_id': 12345,
     'receiver_position_id': 67890,
     'receiver_public_key': (
