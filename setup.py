@@ -3,6 +3,7 @@ from setuptools import setup, find_packages
 LONG_DESCRIPTION = open('README.md', 'r').read()
 
 REQUIREMENTS = [
+    'aiohttp==3.8.1',
     'cytoolz==0.11.2',
     'dateparser==1.0.0',
     'ecdsa==0.16.0',
@@ -20,7 +21,7 @@ REQUIREMENTS = [
 
 setup(
     name='dydx-v3-python',
-    version='1.8.0',
+    version='1.9.0',
     packages=find_packages(),
     package_data={
         'dydx3': [
