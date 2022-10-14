@@ -120,15 +120,7 @@ class Eth(object):
         auto_detect_nonce = 'nonce' not in options
         if auto_detect_nonce:
             options['nonce'] = self.get_next_nonce(options['from'])
-        if 'gasPrice' not in options:
-            try:
-                options['gasPrice'] = (
-                    self.web3.eth.gasPrice + DEFAULT_GAS_PRICE_ADDITION
-                )
-            except Exception:
-                options['gasPrice'] = DEFAULT_GAS_PRICE
-        if 'value' not in options:
-            options['value'] = 0
+
         gas_multiplier = options.pop('gasMultiplier', DEFAULT_GAS_MULTIPLIER)
         if 'gas' not in options:
             try:
