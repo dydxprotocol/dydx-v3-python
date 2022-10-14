@@ -460,6 +460,7 @@ class Private(object):
         expiration=None,
         expiration_epoch_seconds=None,
         signature=None,
+        reduce_only=False,
     ):
         '''
         Post an order
@@ -487,10 +488,15 @@ class Private(object):
             "STOP",
             "TRAILING_STOP",
             "TAKE_PROFIT",
+            "STOP_MARKET",
+            "TAKE_PROFIT_MARKET",
         ]
 
         :param post_only: required
         :type post_only: bool
+
+        :param reduce_only: optional
+        :type reduce_only: bool
 
         :param size: required
         :type size: str
@@ -579,6 +585,7 @@ class Private(object):
             'triggerPrice': trigger_price,
             'trailingPercent': trailing_percent,
             'postOnly': post_only,
+            'reduceOnly': reduce_only,
             'clientId': client_id,
             'signature': order_signature,
         }
