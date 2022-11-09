@@ -120,7 +120,8 @@ class Eth(object):
         auto_detect_nonce = 'nonce' not in options
         if auto_detect_nonce:
             options['nonce'] = self.get_next_nonce(options['from'])
-
+        if 'value' not in options:
+            options['value'] = 0
         gas_multiplier = options.pop('gasMultiplier', DEFAULT_GAS_MULTIPLIER)
         if 'gas' not in options:
             try:
