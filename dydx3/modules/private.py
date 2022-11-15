@@ -460,6 +460,7 @@ class Private(object):
         expiration=None,
         expiration_epoch_seconds=None,
         signature=None,
+        reduce_only=None
     ):
         '''
         Post an order
@@ -529,6 +530,9 @@ class Private(object):
         :param signature: optional
         type signature: str
 
+        :param reduce_only: optional
+        type reduce_only: bool
+
         :returns: Order
 
         :raises: DydxAPIError
@@ -581,6 +585,7 @@ class Private(object):
             'postOnly': post_only,
             'clientId': client_id,
             'signature': order_signature,
+            'reduceOnly': reduce_only,
         }
 
         return self._post(
