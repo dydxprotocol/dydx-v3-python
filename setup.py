@@ -3,10 +3,10 @@ from setuptools import setup, find_packages
 LONG_DESCRIPTION = open('README.md', 'r').read()
 
 REQUIREMENTS = [
-    'aiohttp==3.8.1',
+    'aiohttp>=3.8.1',
     'cytoolz==0.11.2',
     'dateparser==1.0.0',
-    'ecdsa==0.16.0',
+    'ecdsa>=0.16.0',
     'eth_keys',
     'eth-account>=0.4.0,<0.6.0',
     'mpmath==1.0.0',
