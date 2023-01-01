@@ -15,7 +15,7 @@
 
 Python client for dYdX (v3 API).
 
-The library is currently tested against Python versions 2.7, 3.4, 3.5, and 3.6
+The library is currently tested against Python versions 2.7, 3.4, 3.5, 3.6, 3.9, and 3.11.
 
 ## Installation
 
