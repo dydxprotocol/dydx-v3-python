@@ -3,10 +3,10 @@ from setuptools import setup, find_packages
 LONG_DESCRIPTION = open('README.md', 'r').read()
 
 REQUIREMENTS = [
-    'aiohttp==3.8.1',
+    'aiohttp>=3.8.1',
     'cytoolz==0.11.2',
     'dateparser==1.0.0',
-    'ecdsa==0.16.0',
+    'ecdsa>=0.16.0',
     'eth_keys',
     'eth-account>=0.4.0,<0.6.0',
     'mpmath==1.0.0',
@@ -21,7 +21,7 @@ REQUIREMENTS = [
 
 setup(
     name='dydx-v3-python',
-    version='1.9.1',
+    version='1.9.2',
     packages=find_packages(),
     package_data={
         'dydx3': [
@@ -48,6 +48,8 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.11',
         'Programming Language :: Python',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
