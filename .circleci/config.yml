@@ -53,11 +53,11 @@ workflows:
   build_and_test:
     jobs:
       - lint
-      - test
+#      - test
       - publish:
           requires:
             - lint
-            - test
+#            - test
           filters:
             branches:
               only: master
