@@ -1,0 +1,35 @@
+name: Push to ECR
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+
+      - name: Install Dependencies
+        run: sudo pip install -r requirements-publish.txt
+
+      - name: init .pypirc
+          env:
+            PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+          run: |
+            echo -e "[pypi]" >> ~/.pypirc
+            echo -e "username = __token__" >> ~/.pypirc
+            echo -e "password = $PYPI_TOKEN" >> ~/.pypirc
+
+      - name: create packages
+          run: python3 setup.py sdist bdist_wheel
+
+      - name: upload to pypi
+          run: python3 -m twine upload dist/* --skip-existing
