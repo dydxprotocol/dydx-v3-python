@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  test:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
@@ -20,16 +20,10 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements-publish.txt
 
-      - name: init .pypirc
-        env:
-          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-        run: |
-          echo -e "[pypi]" >> ~/.pypirc
-          echo -e "username = __token__" >> ~/.pypirc
-          echo -e "password = $PYPI_TOKEN" >> ~/.pypirc
-
       - name: create packages
         run: python setup.py sdist bdist_wheel
 
       - name: upload to pypi
-        run: python -m twine upload dist/* --skip-existing
+        env:
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+        run: python -m twine upload -u __token__ -p $PYPI_TOKEN dist/* --skip-existing
