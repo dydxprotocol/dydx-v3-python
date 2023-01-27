@@ -1,4 +1,4 @@
-name: Push to ECR
+name: Publish to PyPI
 
 on:
   push:
@@ -29,7 +29,7 @@ jobs:
           echo -e "password = $PYPI_TOKEN" >> ~/.pypirc
 
       - name: create packages
-        run: python3 setup.py sdist bdist_wheel
+        run: python setup.py sdist bdist_wheel
 
       - name: upload to pypi
-        run: python3 -m twine upload dist/* --skip-existing
+        run: python -m twine upload dist/* --skip-existing
