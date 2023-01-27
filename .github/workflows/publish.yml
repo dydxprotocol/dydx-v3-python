@@ -13,12 +13,12 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Python 3.11
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: 3.11
 
       - name: Install Dependencies
-        run: sudo pip install -r requirements-publish.txt
+        run: pip install -r requirements-publish.txt
 
       - name: init .pypirc
         env:
