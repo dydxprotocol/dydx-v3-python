@@ -10,18 +10,14 @@ REQUIREMENTS = [
     'eth_keys',
     'eth-account>=0.4.0,<0.6.0',
     'mpmath==1.0.0',
-    'pytest>=4.4.0,<5.0.0',
-    'requests-mock==1.6.0',
     'requests>=2.22.0,<3.0.0',
-    'setuptools==50.3.2',
     'sympy==1.6',
-    'tox==3.13.2',
     'web3>=5.0.0,<6.0.0',
 ]
 
 setup(
     name='dydx-v3-python',
-    version='1.9.2',
+    version='2.0.0',
     packages=find_packages(),
     package_data={
         'dydx3': [
