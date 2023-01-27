@@ -22,7 +22,7 @@ jobs:
         run: docker-compose up -d
 
       - name: Install Dependencies
-        run: pip install -r requirements-test.txt
+        run: sudo pip install -r requirements-test.txt
 
       - name: Test
         env:
