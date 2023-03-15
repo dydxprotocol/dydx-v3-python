@@ -84,7 +84,7 @@ class Eth(object):
                     self.network_id,
                 )
             )
-        contract_address = Web3.toChecksumAddress(contract_address)
+        contract_address = Web3.to_checksum_address(contract_address)
         return self.get_contract(contract_address, STARKWARE_PERPETUALS_ABI)
 
     def get_token_contract(
@@ -101,7 +101,7 @@ class Eth(object):
                     self.network_id,
                 )
             )
-        token_address = Web3.toChecksumAddress(token_address)
+        token_address = Web3.to_checksum_address(token_address)
         return self.get_contract(token_address, ERC20_ABI)
 
     def send_eth_transaction(
@@ -123,7 +123,7 @@ class Eth(object):
         if 'gasPrice' not in options:
             try:
                 options['gasPrice'] = (
-                    self.web3.eth.gasPrice + DEFAULT_GAS_PRICE_ADDITION
+                    self.web3.eth.gas_price + DEFAULT_GAS_PRICE_ADDITION
                 )
             except Exception:
                 options['gasPrice'] = DEFAULT_GAS_PRICE
@@ -140,7 +140,7 @@ class Eth(object):
 
         signed = self.sign_tx(method, options)
         try:
-            tx_hash = self.web3.eth.sendRawTransaction(signed.rawTransaction)
+            tx_hash = self.web3.eth.send_raw_transaction(signed.rawTransaction)
         except ValueError as error:
             while (
                 auto_detect_nonce and
@@ -152,7 +152,7 @@ class Eth(object):
                 try:
                     options['nonce'] += 1
                     signed = self.sign_tx(method, options)
-                    tx_hash = self.web3.eth.sendRawTransaction(
+                    tx_hash = self.web3.eth.send_raw_transaction(
                         signed.rawTransaction,
                     )
                 except ValueError as inner_error:
@@ -173,7 +173,7 @@ class Eth(object):
     ):
         if self._next_nonce_for_address.get(ethereum_address) is None:
             self._next_nonce_for_address[ethereum_address] = (
-                self.web3.eth.getTransactionCount(ethereum_address)
+                self.web3.eth.get_transaction_count(ethereum_address)
             )
         return self._next_nonce_for_address[ethereum_address]
 
@@ -205,7 +205,7 @@ class Eth(object):
 
         :raises: TransactionReverted
         '''
-        tx_receipt = self.web3.eth.waitForTransactionReceipt(tx_hash)
+        tx_receipt = self.web3.eth.wait_for_transaction_receipt(tx_hash)
         if tx_receipt['status'] == 0:
             raise TransactionReverted(tx_receipt)
 
@@ -400,7 +400,7 @@ class Eth(object):
             options=dict(
                 send_options,
                 to=to_address,
-                value=Web3.toWei(human_amount, 'ether'),
+                value=Web3.to_wei(human_amount, 'ether'),
             ),
         )
 
@@ -512,8 +512,8 @@ class Eth(object):
                 'owner was not provided, and no default address is set',
             )
 
-        wei_balance = self.web3.eth.getBalance(owner)
-        return Web3.fromWei(wei_balance, 'ether')
+        wei_balance = self.web3.eth.get_eth_balance(owner)
+        return Web3.from_wei(wei_balance, 'ether')
 
     def get_token_balance(
         self,

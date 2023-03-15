@@ -43,12 +43,12 @@ class SignWithWeb3(Signer):
         message_hash,  # Ignored.
         opt_signer_address,
     ):
-        signer_address = opt_signer_address or self.web3.eth.defaultAccount
+        signer_address = opt_signer_address or self.web3.eth.default_account
         if not signer_address:
             raise ValueError(
                 'Must set ethereum_address or web3.eth.defaultAccount',
             )
-        raw_signature = self.web3.eth.signTypedData(
+        raw_signature = self.web3.eth.sign_typed_data(
             signer_address,
             eip712_message,
         )
