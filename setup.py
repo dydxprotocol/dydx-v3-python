@@ -8,11 +8,11 @@ REQUIREMENTS = [
     'dateparser==1.0.0',
     'ecdsa>=0.16.0',
     'eth_keys',
-    'eth-account>=0.4.0,<0.6.0',
+    'eth-account>=0.4.0,<=0.9.0',
     'mpmath==1.0.0',
     'requests>=2.22.0,<3.0.0',
     'sympy==1.6',
-    'web3>=5.0.0,<6.0.0',
+    'web3>=5.0.0,<=6.9.0',
 ]
 
 setup(
@@ -46,6 +46,7 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.11.4',
         'Programming Language :: Python',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
