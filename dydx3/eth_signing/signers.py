@@ -48,7 +48,7 @@ class SignWithWeb3(Signer):
             raise ValueError(
                 'Must set ethereum_address or web3.eth.defaultAccount',
             )
-        raw_signature = self.web3.eth.signTypedData(
+        raw_signature = self.web3.eth.sign_typed_data(
             signer_address,
             eip712_message,
         )

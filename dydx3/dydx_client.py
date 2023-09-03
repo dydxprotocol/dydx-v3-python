@@ -59,7 +59,7 @@ class Client(object):
                 )
             self.web3 = web3 or Web3(web3_provider)
             self.eth_signer = SignWithWeb3(self.web3)
-            self.default_address = self.web3.eth.defaultAccount or None
+            self.default_address = self.web3.eth.default_account or None
             self.network_id = self.web3.net.version
 
         if eth_private_key is not None or web3_account is not None:

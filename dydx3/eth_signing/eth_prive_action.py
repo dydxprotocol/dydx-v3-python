@@ -67,5 +67,5 @@ class SignEthPrivateAction(SignOffChainAction):
                 util.hash_string(timestamp),
             ],
         ]
-        struct_hash = Web3.solidityKeccak(*data)
+        struct_hash = Web3.solidity_keccak(*data)
         return self.get_eip712_hash(struct_hash)
