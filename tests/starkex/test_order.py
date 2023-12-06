@@ -52,7 +52,6 @@ class TestOrder():
     def test_sign_order(self):
         order = SignableOrder(**ORDER_PARAMS)
         signature = order.sign(MOCK_PRIVATE_KEY)
-        print('ajsekljaflksejfalk1')
         assert signature == MOCK_SIGNATURE
 
     def test_verify_signature_odd_y(self):
@@ -63,7 +62,10 @@ class TestOrder():
         order = SignableOrder(**ORDER_PARAMS)
         signature = order.sign(MOCK_PRIVATE_KEY_EVEN_Y)
         assert signature == MOCK_SIGNATURE_EVEN_Y
-        assert order.verify_signature(MOCK_SIGNATURE_EVEN_Y, MOCK_PUBLIC_KEY_EVEN_Y)
+        assert order.verify_signature(
+            MOCK_SIGNATURE_EVEN_Y,
+            MOCK_PUBLIC_KEY_EVEN_Y
+        )
 
     def test_starkware_representation(self):
         order = SignableOrder(**ORDER_PARAMS)
