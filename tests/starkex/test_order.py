@@ -20,9 +20,12 @@ MOCK_SIGNATURE = (
 MOCK_PUBLIC_KEY_EVEN_Y = (
     '5c749cd4c44bdc730bc90af9bfbdede9deb2c1c96c05806ce1bc1cb4fed64f7'
 )
+MOCK_PRIVATE_KEY_EVEN_Y = (
+    '65b7bb244e019b45a521ef990fb8a002f76695d1fc6c1e31911680f2ed78b84'
+)
 MOCK_SIGNATURE_EVEN_Y = (
-    '5c749cd4c44bdc730bc90af9bfbdede9deb2c1c96c05806ce1bc1cb4fed64f7' +
-    '003e38aa083f72c9db89a7a80b98a6eb92edce7294d917d8489767740affc6ed'
+    '06f593fcec14720cd895e7edf0830b668b6104c0de4be6d22befe4ced0868dc3' +
+    '0507259e9634a140d83a8fcfc43b5a08af6cec7f85d3606cc7a974465aff334e'
 )
 
 # Mock order params.
@@ -49,6 +52,7 @@ class TestOrder():
     def test_sign_order(self):
         order = SignableOrder(**ORDER_PARAMS)
         signature = order.sign(MOCK_PRIVATE_KEY)
+        print('ajsekljaflksejfalk1')
         assert signature == MOCK_SIGNATURE
 
     def test_verify_signature_odd_y(self):
@@ -57,12 +61,9 @@ class TestOrder():
 
     def test_verify_signature_even_y(self):
         order = SignableOrder(**ORDER_PARAMS)
-        signature = order.sign(MOCK_SIGNATURE_EVEN_Y)
+        signature = order.sign(MOCK_PRIVATE_KEY_EVEN_Y)
         assert signature == MOCK_SIGNATURE_EVEN_Y
-        assert order.verify_signature(
-            MOCK_SIGNATURE_EVEN_Y,
-            MOCK_PUBLIC_KEY_EVEN_Y,
-        )
+        assert order.verify_signature(MOCK_SIGNATURE_EVEN_Y, MOCK_PUBLIC_KEY_EVEN_Y)
 
     def test_starkware_representation(self):
         order = SignableOrder(**ORDER_PARAMS)
