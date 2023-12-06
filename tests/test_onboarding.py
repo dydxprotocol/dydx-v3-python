@@ -51,6 +51,7 @@ class TestOnboarding():
         stark_key_pair_with_y_coordinate = client.onboarding.derive_stark_key(
             signer_address,
         )
+        print(stark_key_pair_with_y_coordinate)
         assert stark_key_pair_with_y_coordinate == \
             EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_MAINNET
 
@@ -67,6 +68,7 @@ class TestOnboarding():
                 signer_address,
             )
         )
+        print(api_key_credentials)
         assert api_key_credentials == EXPECTED_API_KEY_CREDENTIALS_MAINNET
 
     def test_derive_stark_key_on_SEPOLIA_from_web3(self):
@@ -80,6 +82,7 @@ class TestOnboarding():
         stark_key_pair_with_y_coordinate = client.onboarding.derive_stark_key(
             signer_address,
         )
+        print(stark_key_pair_with_y_coordinate)
         assert stark_key_pair_with_y_coordinate == \
             EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_SEPOLIA
 
@@ -96,6 +99,7 @@ class TestOnboarding():
                 signer_address,
             )
         )
+        print(api_key_credentials)
         assert api_key_credentials == EXPECTED_API_KEY_CREDENTIALS_SEPOLIA
 
     def test_derive_stark_key_on_mainnet_from_priv(self):
@@ -109,6 +113,7 @@ class TestOnboarding():
         stark_key_pair_with_y_coordinate = client.onboarding.derive_stark_key(
             signer_address,
         )
+        print(stark_key_pair_with_y_coordinate)
         assert stark_key_pair_with_y_coordinate == \
             EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_MAINNET
 
@@ -124,6 +129,7 @@ class TestOnboarding():
                 signer_address,
             )
         )
+        print(api_key_credentials)
         assert api_key_credentials == EXPECTED_API_KEY_CREDENTIALS_MAINNET
 
     def test_derive_stark_key_on_SEPOLIA_from_priv(self):
@@ -136,6 +142,7 @@ class TestOnboarding():
         stark_key_pair_with_y_coordinate = client.onboarding.derive_stark_key(
             signer_address,
         )
+        print(stark_key_pair_with_y_coordinate)
         assert stark_key_pair_with_y_coordinate == \
             EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_SEPOLIA
 
@@ -151,4 +158,5 @@ class TestOnboarding():
                 signer_address,
             )
         )
+        print(api_key_credentials)
         assert api_key_credentials == EXPECTED_API_KEY_CREDENTIALS_SEPOLIA

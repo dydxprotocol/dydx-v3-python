@@ -40,6 +40,7 @@ class TestConditionalTransfer():
     def test_sign_conditional_transfer(self):
         transfer = SignableConditionalTransfer(**CONDITIONAL_TRANSFER_PARAMS)
         signature = transfer.sign(MOCK_PRIVATE_KEY)
+        print(signature)
         assert signature == MOCK_SIGNATURE
 
     def test_verify_signature(self):

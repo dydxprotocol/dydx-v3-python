@@ -33,6 +33,7 @@ class TestWithdrawal():
     def test_sign_withdrawal(self):
         withdrawal = SignableWithdrawal(**WITHDRAWAL_PARAMS)
         signature = withdrawal.sign(MOCK_PRIVATE_KEY)
+        print(signature)
         assert signature == MOCK_SIGNATURE
 
     def test_verify_signature(self):

@@ -49,6 +49,7 @@ class TestOrder():
     def test_sign_order(self):
         order = SignableOrder(**ORDER_PARAMS)
         signature = order.sign(MOCK_PRIVATE_KEY)
+        print(signature)
         assert signature == MOCK_SIGNATURE
 
     def test_verify_signature_odd_y(self):

@@ -36,6 +36,7 @@ class TestTransfer():
         transfer = SignableTransfer(
             **TRANSFER_PARAMS, network_id=NETWORK_ID_SEPOLIA)
         signature = transfer.sign(MOCK_PRIVATE_KEY)
+        print(signature)
         assert signature == MOCK_SIGNATURE
 
     def test_sign_transfer_different_client_id(self):
