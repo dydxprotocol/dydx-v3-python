@@ -21,8 +21,8 @@ MOCK_PUBLIC_KEY_EVEN_Y = (
     '5c749cd4c44bdc730bc90af9bfbdede9deb2c1c96c05806ce1bc1cb4fed64f7'
 )
 MOCK_SIGNATURE_EVEN_Y = (
-    '0618bcd2a8a027cf407116f88f2fa0d866154ee421cdf8a9deca0fecfda5277b' +
-    '03e42fa1d039522fc77c23906253e537cc5b2f392dba6f2dbb35d51cbe37273a'
+    '0500a22a8c8b14fbb3b7d26366604c446b9d059420d7db2a8f94bc52691d2626' +
+    '003e38aa083f72c9db89a7a80b98a6eb92edce7294d917d8489767740affc6ed'
 )
 
 # Mock order params.
@@ -49,7 +49,6 @@ class TestOrder():
     def test_sign_order(self):
         order = SignableOrder(**ORDER_PARAMS)
         signature = order.sign(MOCK_PRIVATE_KEY)
-        print(signature)
         assert signature == MOCK_SIGNATURE
 
     def test_verify_signature_odd_y(self):

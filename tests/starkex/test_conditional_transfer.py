@@ -9,8 +9,8 @@ MOCK_PRIVATE_KEY = (
     '58c7d5a90b1776bde86ebac077e053ed85b0f7164f53b080304a531947f46e3'
 )
 MOCK_SIGNATURE = (
-    '01b437ac15bb89417edcfb2d304c3efad6256def3cc24e60c4980a88d08cb953' +
-    '045df9fbe4a4895409e1011c60be439d65c1a2637013b74a19cb5b8ab62db434'
+    '030044e03ab5efbaeaa43f472aa637bca8542835da60e8dcda8d145a619546d2' +
+    '03c7f9007fd6b1963de156bfadf6e90fe4fe4b29674013b7de32f61527c70f00'
 )
 
 # Mock conditional transfer params.
@@ -40,7 +40,6 @@ class TestConditionalTransfer():
     def test_sign_conditional_transfer(self):
         transfer = SignableConditionalTransfer(**CONDITIONAL_TRANSFER_PARAMS)
         signature = transfer.sign(MOCK_PRIVATE_KEY)
-        print(signature)
         assert signature == MOCK_SIGNATURE
 
     def test_verify_signature(self):
