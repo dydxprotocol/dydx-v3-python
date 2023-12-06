@@ -6,9 +6,9 @@ Usage: python -m examples.orders
 import time
 
 from dydx3 import Client
-from dydx3.constants import API_HOST_GOERLI
+from dydx3.constants import API_HOST_SEPOLIA
 from dydx3.constants import MARKET_BTC_USD
-from dydx3.constants import NETWORK_ID_GOERLI
+from dydx3.constants import NETWORK_ID_SEPOLIA
 from dydx3.constants import ORDER_SIDE_BUY
 from dydx3.constants import ORDER_STATUS_OPEN
 from dydx3.constants import ORDER_TYPE_LIMIT
@@ -21,8 +21,8 @@ ETHEREUM_ADDRESS = '0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b'
 WEB_PROVIDER_URL = 'http://localhost:8545'
 
 client = Client(
-    network_id=NETWORK_ID_GOERLI,
-    host=API_HOST_GOERLI,
+    network_id=NETWORK_ID_SEPOLIA,
+    host=API_HOST_SEPOLIA,
     default_ethereum_address=ETHEREUM_ADDRESS,
     web3=Web3(Web3.HTTPProvider(WEB_PROVIDER_URL)),
 )

@@ -1,4 +1,4 @@
-from dydx3.constants import NETWORK_ID_GOERLI
+from dydx3.constants import NETWORK_ID_SEPOLIA
 from dydx3.helpers.request_helpers import iso_to_epoch_seconds
 from dydx3.starkex.transfer import SignableTransfer
 
@@ -34,7 +34,7 @@ class TestTransfer():
 
     def test_sign_transfer(self):
         transfer = SignableTransfer(
-            **TRANSFER_PARAMS, network_id=NETWORK_ID_GOERLI)
+            **TRANSFER_PARAMS, network_id=NETWORK_ID_SEPOLIA)
         signature = transfer.sign(MOCK_PRIVATE_KEY)
         assert signature == MOCK_SIGNATURE
 
@@ -44,7 +44,7 @@ class TestTransfer():
 
         transfer = SignableTransfer(
             **alternative_transfer_params,
-            network_id=NETWORK_ID_GOERLI
+            network_id=NETWORK_ID_SEPOLIA
         )
         signature = transfer.sign(MOCK_PRIVATE_KEY)
         assert signature != MOCK_SIGNATURE
@@ -55,19 +55,19 @@ class TestTransfer():
 
         transfer = SignableTransfer(
             **alternative_transfer_params,
-            network_id=NETWORK_ID_GOERLI
+            network_id=NETWORK_ID_SEPOLIA
         )
         signature = transfer.sign(MOCK_PRIVATE_KEY)
         assert signature != MOCK_SIGNATURE
 
     def test_verify_signature(self):
         transfer = SignableTransfer(
-            **TRANSFER_PARAMS, network_id=NETWORK_ID_GOERLI)
+            **TRANSFER_PARAMS, network_id=NETWORK_ID_SEPOLIA)
         assert transfer.verify_signature(MOCK_SIGNATURE, MOCK_PUBLIC_KEY)
 
     def test_starkware_representation(self):
         transfer = SignableTransfer(
-            **TRANSFER_PARAMS, network_id=NETWORK_ID_GOERLI)
+            **TRANSFER_PARAMS, network_id=NETWORK_ID_SEPOLIA)
         starkware_transfer = transfer.to_starkware()
         assert starkware_transfer.quantums_amount == 49478023
 

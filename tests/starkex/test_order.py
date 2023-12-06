@@ -1,5 +1,5 @@
 from dydx3.constants import MARKET_ETH_USD
-from dydx3.constants import NETWORK_ID_GOERLI
+from dydx3.constants import NETWORK_ID_SEPOLIA
 from dydx3.constants import ORDER_SIDE_BUY
 from dydx3.helpers.request_helpers import iso_to_epoch_seconds
 from dydx3.starkex.order import SignableOrder
@@ -27,7 +27,7 @@ MOCK_SIGNATURE_EVEN_Y = (
 
 # Mock order params.
 ORDER_PARAMS = {
-    "network_id": NETWORK_ID_GOERLI,
+    "network_id": NETWORK_ID_SEPOLIA,
     "market": MARKET_ETH_USD,
     "side": ORDER_SIDE_BUY,
     "position_id": 12345,
