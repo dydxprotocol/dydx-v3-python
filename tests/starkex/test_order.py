@@ -12,8 +12,8 @@ MOCK_PRIVATE_KEY = (
     '58c7d5a90b1776bde86ebac077e053ed85b0f7164f53b080304a531947f46e3'
 )
 MOCK_SIGNATURE = (
-    '07670488d9d2c6ff980ca86e6d05b89414de0f2bfd462a1058fb05add68d034a' +
-    '036268ae33e8e21d324e975678f56b66dacb2502a7de1512a46b96fc0e106f79'
+    '0500a22a8c8b14fbb3b7d26366604c446b9d059420d7db2a8f94bc52691d2626' +
+    '003e38aa083f72c9db89a7a80b98a6eb92edce7294d917d8489767740affc6ed'
 )
 
 # Test data where the public key y-coordinate is even.
@@ -21,7 +21,7 @@ MOCK_PUBLIC_KEY_EVEN_Y = (
     '5c749cd4c44bdc730bc90af9bfbdede9deb2c1c96c05806ce1bc1cb4fed64f7'
 )
 MOCK_SIGNATURE_EVEN_Y = (
-    '0500a22a8c8b14fbb3b7d26366604c446b9d059420d7db2a8f94bc52691d2626' +
+    '5c749cd4c44bdc730bc90af9bfbdede9deb2c1c96c05806ce1bc1cb4fed64f7' +
     '003e38aa083f72c9db89a7a80b98a6eb92edce7294d917d8489767740affc6ed'
 )
 
@@ -57,6 +57,8 @@ class TestOrder():
 
     def test_verify_signature_even_y(self):
         order = SignableOrder(**ORDER_PARAMS)
+        signature = order.sign(MOCK_SIGNATURE_EVEN_Y)
+        assert signature == MOCK_SIGNATURE_EVEN_Y
         assert order.verify_signature(
             MOCK_SIGNATURE_EVEN_Y,
             MOCK_PUBLIC_KEY_EVEN_Y,
