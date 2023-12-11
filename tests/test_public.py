@@ -25,8 +25,8 @@ class TestPublic():
 
     def test_check_if_username_exists(self):
         public = Client(API_HOST).public
-        resp = public.check_if_username_exists('fuchur')
-        assert resp.data == {'exists': False}
+        resp = public.check_if_username_exists('foo')
+        assert resp.data == {'exists': True}
         assert resp.headers != {}
 
     def test_get_markets(self):

@@ -5,7 +5,7 @@ import base64
 from dydx3.constants import COLLATERAL_ASSET
 from dydx3.constants import COLLATERAL_TOKEN_DECIMALS
 from dydx3.constants import FACT_REGISTRY_CONTRACT
-from dydx3.constants import NETWORK_ID_GOERLI
+from dydx3.constants import NETWORK_ID_SEPOLIA
 from dydx3.constants import TIME_IN_FORCE_GTT
 from dydx3.constants import TOKEN_CONTRACTS
 from dydx3.helpers.db import get_account_id
@@ -1203,8 +1203,8 @@ class Private(object):
 
         :raises: DydxAPIError
         '''
-        if (self.network_id != NETWORK_ID_GOERLI):
-            raise ValueError('network_id is not Goerli')
+        if (self.network_id != NETWORK_ID_SEPOLIA):
+            raise ValueError('network_id is not Sepolia')
 
         return self._post('testnet/tokens', {})
 

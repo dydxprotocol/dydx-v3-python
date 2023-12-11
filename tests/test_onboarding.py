@@ -2,7 +2,7 @@ from web3 import Web3
 
 from dydx3 import Client
 from dydx3.constants import NETWORK_ID_MAINNET
-from dydx3.constants import NETWORK_ID_GOERLI
+from dydx3.constants import NETWORK_ID_SEPOLIA
 
 from tests.constants import DEFAULT_HOST
 
@@ -23,18 +23,18 @@ EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_MAINNET = {
     'private_key':
         '0x170d807cafe3d8b5758f3f698331d292bf5aeb71f6fd282f0831dee094ee891',
 }
-EXPECTED_API_KEY_CREDENTIALS_GOERLI = {
-    'key': '1871d1ba-537c-7fe8-743c-172bcd4ae5c6',
-    'secret': 'tQxclqFWip0HL4Q-xkwZb_lTfOQz4GD5CHHpYzWa',
-    'passphrase': 'B8JFepDVn8eixnor7Imv',
+EXPECTED_API_KEY_CREDENTIALS_SEPOLIA = {
+    'key': '30cb6046-8f4a-5677-a19c-a494ccb7c7e5',
+    'secret': '4Yd_6JtH_-I2taoNQKAhkCifnVHQ2Unue88sIeuc',
+    'passphrase': 'Db1GQK5KpI_qeddgjF66',
 }
-EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_GOERLI = {
+EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_SEPOLIA = {
     'public_key':
-        '0x3ea05770b452df14427b3f07ff600faa132ecc3d7643275042cb4da6ad99972',
+        '0x15e2e074a7ac9e78edb2ee9f11a0c0c0a080c79758ab81616eea9c032c75265',
     'public_key_y_coordinate':
-        '0x7310e2ab01978806a6fb6e51a9ee1c9a5c5117c63530ad7dead2b9f72094cc3',
+        '0x360408546b64238f80d7a8a336d7304d75f122a7e5bb22cbb7a14f550eac5a8',
     'private_key':
-        '0x1019187d91b8effe153ab1932930e27c8d01c56ad9cc937c777633c0ffc5a7e'
+        '0x2d21c094fedea3e72bef27fbcdceaafd34e88fc4b7586859e26e98b21e63a60'
 }
 
 
@@ -69,11 +69,11 @@ class TestOnboarding():
         )
         assert api_key_credentials == EXPECTED_API_KEY_CREDENTIALS_MAINNET
 
-    def test_derive_stark_key_on_GOERLI_from_web3(self):
+    def test_derive_stark_key_on_SEPOLIA_from_web3(self):
         web3 = Web3()  # Connect to a local Ethereum node.
         client = Client(
             host=DEFAULT_HOST,
-            network_id=NETWORK_ID_GOERLI,
+            network_id=NETWORK_ID_SEPOLIA,
             web3=web3,
         )
         signer_address = web3.eth.accounts[0]
@@ -81,13 +81,13 @@ class TestOnboarding():
             signer_address,
         )
         assert stark_key_pair_with_y_coordinate == \
-            EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_GOERLI
+            EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_SEPOLIA
 
-    def test_recover_default_api_key_credentials_on_GOERLI_from_web3(self):
+    def test_recover_default_api_key_credentials_on_SEPOLIA_from_web3(self):
         web3 = Web3()  # Connect to a local Ethereum node.
         client = Client(
             host=DEFAULT_HOST,
-            network_id=NETWORK_ID_GOERLI,
+            network_id=NETWORK_ID_SEPOLIA,
             web3=web3,
         )
         signer_address = web3.eth.accounts[0]
@@ -96,7 +96,7 @@ class TestOnboarding():
                 signer_address,
             )
         )
-        assert api_key_credentials == EXPECTED_API_KEY_CREDENTIALS_GOERLI
+        assert api_key_credentials == EXPECTED_API_KEY_CREDENTIALS_SEPOLIA
 
     def test_derive_stark_key_on_mainnet_from_priv(self):
         client = Client(
@@ -126,10 +126,10 @@ class TestOnboarding():
         )
         assert api_key_credentials == EXPECTED_API_KEY_CREDENTIALS_MAINNET
 
-    def test_derive_stark_key_on_GOERLI_from_priv(self):
+    def test_derive_stark_key_on_SEPOLIA_from_priv(self):
         client = Client(
             host=DEFAULT_HOST,
-            network_id=NETWORK_ID_GOERLI,
+            network_id=NETWORK_ID_SEPOLIA,
             eth_private_key=GANACHE_PRIVATE_KEY,
         )
         signer_address = client.default_address
@@ -137,12 +137,12 @@ class TestOnboarding():
             signer_address,
         )
         assert stark_key_pair_with_y_coordinate == \
-            EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_GOERLI
+            EXPECTED_STARK_KEY_PAIR_WITH_Y_COORDINATE_SEPOLIA
 
-    def test_recover_default_api_key_credentials_on_GOERLI_from_priv(self):
+    def test_recover_default_api_key_credentials_on_SEPOLIA_from_priv(self):
         client = Client(
             host=DEFAULT_HOST,
-            network_id=NETWORK_ID_GOERLI,
+            network_id=NETWORK_ID_SEPOLIA,
             eth_private_key=GANACHE_PRIVATE_KEY,
         )
         signer_address = client.default_address
@@ -151,4 +151,4 @@ class TestOnboarding():
                 signer_address,
             )
         )
-        assert api_key_credentials == EXPECTED_API_KEY_CREDENTIALS_GOERLI
+        assert api_key_credentials == EXPECTED_API_KEY_CREDENTIALS_SEPOLIA
