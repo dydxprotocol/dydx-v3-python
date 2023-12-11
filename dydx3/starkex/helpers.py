@@ -121,7 +121,7 @@ def get_transfer_erc20_fact(
                 token_decimals,
             )
         )
-    hex_bytes = Web3.solidityKeccak(
+    hex_bytes = Web3.solidity_keccak(
         [
             'address',
             'uint256',
