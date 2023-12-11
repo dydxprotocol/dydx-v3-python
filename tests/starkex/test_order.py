@@ -1,5 +1,5 @@
 from dydx3.constants import MARKET_ETH_USD
-from dydx3.constants import NETWORK_ID_GOERLI
+from dydx3.constants import NETWORK_ID_SEPOLIA
 from dydx3.constants import ORDER_SIDE_BUY
 from dydx3.helpers.request_helpers import iso_to_epoch_seconds
 from dydx3.starkex.order import SignableOrder
@@ -12,22 +12,25 @@ MOCK_PRIVATE_KEY = (
     '58c7d5a90b1776bde86ebac077e053ed85b0f7164f53b080304a531947f46e3'
 )
 MOCK_SIGNATURE = (
-    '07670488d9d2c6ff980ca86e6d05b89414de0f2bfd462a1058fb05add68d034a' +
-    '036268ae33e8e21d324e975678f56b66dacb2502a7de1512a46b96fc0e106f79'
+    '0500a22a8c8b14fbb3b7d26366604c446b9d059420d7db2a8f94bc52691d2626' +
+    '003e38aa083f72c9db89a7a80b98a6eb92edce7294d917d8489767740affc6ed'
 )
 
 # Test data where the public key y-coordinate is even.
 MOCK_PUBLIC_KEY_EVEN_Y = (
     '5c749cd4c44bdc730bc90af9bfbdede9deb2c1c96c05806ce1bc1cb4fed64f7'
 )
+MOCK_PRIVATE_KEY_EVEN_Y = (
+    '65b7bb244e019b45a521ef990fb8a002f76695d1fc6c1e31911680f2ed78b84'
+)
 MOCK_SIGNATURE_EVEN_Y = (
-    '0618bcd2a8a027cf407116f88f2fa0d866154ee421cdf8a9deca0fecfda5277b' +
-    '03e42fa1d039522fc77c23906253e537cc5b2f392dba6f2dbb35d51cbe37273a'
+    '06f593fcec14720cd895e7edf0830b668b6104c0de4be6d22befe4ced0868dc3' +
+    '0507259e9634a140d83a8fcfc43b5a08af6cec7f85d3606cc7a974465aff334e'
 )
 
 # Mock order params.
 ORDER_PARAMS = {
-    "network_id": NETWORK_ID_GOERLI,
+    "network_id": NETWORK_ID_SEPOLIA,
     "market": MARKET_ETH_USD,
     "side": ORDER_SIDE_BUY,
     "position_id": 12345,
@@ -57,9 +60,11 @@ class TestOrder():
 
     def test_verify_signature_even_y(self):
         order = SignableOrder(**ORDER_PARAMS)
+        signature = order.sign(MOCK_PRIVATE_KEY_EVEN_Y)
+        assert signature == MOCK_SIGNATURE_EVEN_Y
         assert order.verify_signature(
             MOCK_SIGNATURE_EVEN_Y,
-            MOCK_PUBLIC_KEY_EVEN_Y,
+            MOCK_PUBLIC_KEY_EVEN_Y
         )
 
     def test_starkware_representation(self):
