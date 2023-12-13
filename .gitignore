@@ -35,6 +35,9 @@ var/
 # VS Code
 .vscode/
 
+# IntelliJ IDEA
+.idea/
+
 # Unit test / coverage reports
 htmlcov/
 .tox/
