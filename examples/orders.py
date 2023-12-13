@@ -33,7 +33,7 @@ client.stark_private_key = stark_private_key
 
 # Get our position ID.
 account_response = client.private.get_account()
-position_id = account_response['account']['positionId']
+position_id = account_response.data['account']['positionId']
 
 # Post an bid at a price that is unlikely to match.
 order_params = {
