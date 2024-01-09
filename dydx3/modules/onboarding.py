@@ -135,7 +135,7 @@ class Onboarding(object):
             action=OFF_CHAIN_KEY_DERIVATION_ACTION,
         )
         signature_int = int(signature, 16)
-        hashed_signature = Web3.solidityKeccak(['uint256'], [signature_int])
+        hashed_signature = Web3.solidity_keccak(['uint256'], [signature_int])
         private_key_int = int(hashed_signature.hex(), 16) >> 5
         private_key_hex = hex(private_key_int)
         public_x, public_y = private_key_to_public_key_pair_hex(
@@ -163,11 +163,11 @@ class Onboarding(object):
         )
         r_hex = signature[2:66]
         r_int = int(r_hex, 16)
-        hashed_r_bytes = bytes(Web3.solidityKeccak(['uint256'], [r_int]))
+        hashed_r_bytes = bytes(Web3.solidity_keccak(['uint256'], [r_int]))
         secret_bytes = hashed_r_bytes[:30]
         s_hex = signature[66:130]
         s_int = int(s_hex, 16)
-        hashed_s_bytes = bytes(Web3.solidityKeccak(['uint256'], [s_int]))
+        hashed_s_bytes = bytes(Web3.solidity_keccak(['uint256'], [s_int]))
         key_bytes = hashed_s_bytes[:16]
         passphrase_bytes = hashed_s_bytes[16:31]
 

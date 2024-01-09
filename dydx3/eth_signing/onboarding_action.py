@@ -82,5 +82,5 @@ class SignOnboardingAction(SignOffChainAction):
             data[0].append('bytes32')
             data[1].append(util.hash_string(ONLY_SIGN_ON_DOMAIN_MAINNET))
 
-        struct_hash = Web3.solidityKeccak(*data)
+        struct_hash = Web3.solidity_keccak(*data)
         return self.get_eip712_hash(struct_hash)
